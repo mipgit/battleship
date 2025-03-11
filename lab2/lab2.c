@@ -1,9 +1,11 @@
 #include <lcom/lcf.h>
 #include <lcom/lab2.h>
 #include <lcom/timer.h>
+
 #include <stdbool.h>
 #include <stdint.h>
 
+extern int counter;
 
 int main(int argc, char *argv[]) {
 
@@ -71,7 +73,8 @@ int(timer_test_int)(uint8_t time) { // time in seconds
                     timer_int_handler();  // Handle the timer interrupt
 
                     if (counter % ticks_per_second == 0) {
-                        printf("One second has passed.\n");
+                        //printf("One second has passed.\n");
+                        timer_print_elapsed_time();
                     }
                 }
             }

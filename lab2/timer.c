@@ -2,16 +2,13 @@
 #include <lcom/timer.h>
 
 #include <stdint.h>
-
 #include "i8254.h"
 
-
-static int counter = 0;  // Global variable to count timer interrupts
-
+int counter = 0;  // Global variable to count timer interrupts
 int hook_id;  // Global variable for interrupt ID
 
-
 int (timer_set_frequency)(uint8_t timer, uint32_t freq) { //This function adjusts the timer's frequency by configuring the control register and writing a new divisor.
+  
   if (freq < 19 || freq > TIMER_FREQ) return 1;  // Invalid frequency
 
     uint16_t div = TIMER_FREQ / freq;  // Compute the divisor
@@ -29,7 +26,6 @@ int (timer_set_frequency)(uint8_t timer, uint32_t freq) { //This function adjust
     if (sys_outb(TIMER_0 + timer, div >> 8) != 0) return 1;  // MSB
 
     return 0;
-
   return 1;
 }
 
@@ -52,7 +48,6 @@ int (timer_unsubscribe_int)() { //This function unsubscribes Timer 0 interrupts.
 void (timer_int_handler)() { //This function handles Timer 0 interrupts. (its called on each interrupt)
 
     counter++;
-
 }
 
 
