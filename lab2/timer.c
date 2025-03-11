@@ -12,7 +12,6 @@ int hook_id;  // Global variable for interrupt ID
 
 
 int (timer_set_frequency)(uint8_t timer, uint32_t freq) { //This function adjusts the timer's frequency by configuring the control register and writing a new divisor.
-  /* To be implemented by the students */
   if (freq < 19 || freq > TIMER_FREQ) return 1;  // Invalid frequency
 
     uint16_t div = TIMER_FREQ / freq;  // Compute the divisor
@@ -30,13 +29,11 @@ int (timer_set_frequency)(uint8_t timer, uint32_t freq) { //This function adjust
     if (sys_outb(TIMER_0 + timer, div >> 8) != 0) return 1;  // MSB
 
     return 0;
-  //printf("%s is not yet implemented!\n", __func__);
 
   return 1;
 }
 
 int (timer_subscribe_int)(uint8_t *bit_no) { //This function subscribes and enables Timer 0 interrupts.
-    /* To be implemented by the students */
 
     hook_id = TIMER0_IRQ;  // Set IRQ line
     *bit_no = hook_id;  // Return the interrupt bit
@@ -46,17 +43,16 @@ int (timer_subscribe_int)(uint8_t *bit_no) { //This function subscribes and enab
 }
 
 int (timer_unsubscribe_int)() { //This function unsubscribes Timer 0 interrupts.
-  /* To be implemented by the students */
+
     if (sys_irqrmpolicy(&hook_id) != 0) return 1;  // Unsubscribe
     return 0;
 }
 
 
 void (timer_int_handler)() { //This function handles Timer 0 interrupts. (its called on each interrupt)
-  /* To be implemented by the students */
+
     counter++;
 
-  //printf("%s is not yet implemented!\n", __func__);
 }
 
 

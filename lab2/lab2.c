@@ -5,9 +5,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-static int counter = 0;  // Global variable to count timer interrupts
-
-
 
 int main(int argc, char *argv[]) {
 
@@ -49,7 +46,6 @@ int(timer_test_time_base)(uint8_t timer, uint32_t freq) {
 }
 
 int(timer_test_int)(uint8_t time) {
-  /* To be implemented by the students */
 
     int ipc_status;
     message msg;
@@ -83,8 +79,9 @@ int(timer_test_int)(uint8_t time) {
         }
     }
 
-    if (timer_unsubscribe_int() != 0) return 1;
+    if (timer_unsubscribe_int() != 0) {
+      return 1; }
 
-    return 0;  // Ensure function always returns a value
+    return 0;
 
 }
