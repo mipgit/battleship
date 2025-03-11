@@ -1,7 +1,6 @@
 #include <lcom/lcf.h>
 #include <lcom/lab2.h>
 #include <lcom/timer.h>
-
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -45,7 +44,7 @@ int(timer_test_time_base)(uint8_t timer, uint32_t freq) {
   return 1;
 }
 
-int(timer_test_int)(uint8_t time) {
+int(timer_test_int)(uint8_t time) { // time in seconds
 
     int ipc_status;
     message msg;
@@ -81,7 +80,5 @@ int(timer_test_int)(uint8_t time) {
 
     if (timer_unsubscribe_int() != 0) {
       return 1; }
-
     return 0;
-
 }
