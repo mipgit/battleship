@@ -5,30 +5,58 @@
 
 #include "i8254.h"
 
-int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
+
+static int counter = 0;  // Global variable to count timer interrupts
+
+int hook_id;  // Global variable for interrupt ID
+
+
+int (timer_set_frequency)(uint8_t timer, uint32_t freq) { //This function adjusts the timer's frequency by configuring the control register and writing a new divisor.
   /* To be implemented by the students */
-  printf("%s is not yet implemented!\n", __func__);
+  if (freq < 19 || freq > TIMER_FREQ) return 1;  // Invalid frequency
+
+    uint16_t div = TIMER_FREQ / freq;  // Compute the divisor
+
+    uint8_t control_word;
+    if (util_sys_inb(TIMER_CTRL, &control_word) != 0) return 1;  // Read current control word
+    control_word &= 0x0F;  // Keep only the 4 least significant bits (preserves timer selection)
+
+    control_word |= TIMER_LSB_MSB | (timer << 6);  // Set LSB then MSB mode and select timer
+
+    if (sys_outb(TIMER_CTRL, control_word) != 0) return 1;  // Write new control word
+
+    // Write LSB and MSB of the divisor to the selected timer
+    if (sys_outb(TIMER_0 + timer, div & 0xFF) != 0) return 1;  // LSB
+    if (sys_outb(TIMER_0 + timer, div >> 8) != 0) return 1;  // MSB
+
+    return 0;
+  //printf("%s is not yet implemented!\n", __func__);
 
   return 1;
 }
 
-int (timer_subscribe_int)(uint8_t *bit_no) {
+int (timer_subscribe_int)(uint8_t *bit_no) { //This function subscribes and enables Timer 0 interrupts.
     /* To be implemented by the students */
-  printf("%s is not yet implemented!\n", __func__);
 
-  return 1;
+    hook_id = TIMER0_IRQ;  // Set IRQ line
+    *bit_no = hook_id;  // Return the interrupt bit
+
+    if (sys_irqsetpolicy(TIMER0_IRQ, IRQ_REENABLE, &hook_id) != 0) return 1;  // Subscribe
+    return 0;
 }
 
-int (timer_unsubscribe_int)() {
+int (timer_unsubscribe_int)() { //This function unsubscribes Timer 0 interrupts.
   /* To be implemented by the students */
-  printf("%s is not yet implemented!\n", __func__);
-
-  return 1;
+    if (sys_irqrmpolicy(&hook_id) != 0) return 1;  // Unsubscribe
+    return 0;
 }
 
-void (timer_int_handler)() {
+
+void (timer_int_handler)() { //This function handles Timer 0 interrupts. (its called on each interrupt)
   /* To be implemented by the students */
-  printf("%s is not yet implemented!\n", __func__);
+    counter++;
+
+  //printf("%s is not yet implemented!\n", __func__);
 }
 
 

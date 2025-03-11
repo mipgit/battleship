@@ -1,11 +1,16 @@
 #include <lcom/lcf.h>
 #include <lcom/lab2.h>
+#include <lcom/timer.h>
 
 #include <stdbool.h>
 #include <stdint.h>
 
+static int counter = 0;  // Global variable to count timer interrupts
+
+
 
 int main(int argc, char *argv[]) {
+
   // sets the language of LCF messages (can be either EN-US or PT-PT)
   lcf_set_language("EN-US");
 
@@ -45,7 +50,41 @@ int(timer_test_time_base)(uint8_t timer, uint32_t freq) {
 
 int(timer_test_int)(uint8_t time) {
   /* To be implemented by the students */
-  printf("%s is not yet implemented!\n", __func__);
 
-  return 1;
+    int ipc_status;
+    message msg;
+    int r;
+    uint8_t bit_no;
+    int irq_set;
+    
+    if (timer_subscribe_int(&bit_no) != 0) return 1;  // Subscribe to timer interrupts
+    irq_set = BIT(bit_no);  // Create the interrupt mask
+
+    counter = 0;  // Reset the global counter
+
+    int ticks_per_second = sys_hz();  // Get the system's tick rate
+
+    while (counter < time * ticks_per_second) {  // Run for the given number of seconds
+        if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {  // Wait for a message
+            printf("driver_receive failed with: %d\n", r);
+            continue;
+        }
+
+        if (is_ipc_notify(ipc_status)) {  // Check if it's a hardware interrupt notification
+            if (_ENDPOINT_P(msg.m_source) == HARDWARE) {
+                if (msg.m_notify.interrupts & irq_set) {
+                    timer_int_handler();  // Handle the timer interrupt
+
+                    if (counter % ticks_per_second == 0) {
+                        printf("One second has passed.\n");
+                    }
+                }
+            }
+        }
+    }
+
+    if (timer_unsubscribe_int() != 0) return 1;
+
+    return 0;  // Ensure function always returns a value
+
 }
