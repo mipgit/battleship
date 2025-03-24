@@ -53,19 +53,27 @@ int(timer_test_int)(uint8_t time) {
   message msg;
   uint8_t irq_set;
 
+  //important notice -> the default frequency is 60Hz
+  //meaning that the timer will generate an interrupt 60 times per second
+  //exactly what we need to count seconds!
+
   //we subscribe interrupt 
   if (timer_subscribe_int(&irq_set) != 0) return 1;
 
+  //and we create a loop that will run for the time we want to count
   while( time > 0 ) { /* time interval  */
     /* Get a request message. */
-    if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) { 
+    if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) {  /*ANY -> accept messages from any source; &msg -> where we store the message; &ipc_status -> stores status flags about message (+what kind of message)*/
         printf("driver_receive failed with: %d", r);
         continue;
     }
 
+    //we check the message received from driver_receive, to see if it is a notification
     if (is_ipc_notify(ipc_status)) { /* received notification */
+        //we check the source of the notification (for example, hardware...)
         switch (_ENDPOINT_P(msg.m_source)) {
             case HARDWARE: /* hardware interrupt notification */				
+                //if the interrupts that happenned (msg.m_notify...) matches the one we subscribed for the timer (in irq_set) ...
                 if (msg.m_notify.interrupts & irq_set) { /* subscribed interrupt */
                     timer_int_handler();
                     if (timer_counter%60 == 0) {   //each second we print a message !
