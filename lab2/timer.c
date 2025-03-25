@@ -5,6 +5,9 @@
 
 #include "i8254.h"
 
+int timer_hook_id = 0; //this will identify our program's subscription to an IRQ line (so that the kernel can track/manage interrupt subscriptions)
+int timer_counter = 0; //used to count the number of interrupts --- see lab2.c
+
 int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
   /* To be implemented by the students */
   printf("%s is not yet implemented!\n", __func__);
@@ -13,22 +16,30 @@ int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
 }
 
 int (timer_subscribe_int)(uint8_t *bit_no) {
-    /* To be implemented by the students */
-  printf("%s is not yet implemented!\n", __func__);
-
-  return 1;
+  
+  if(bit_no == NULL) return 1;    // we validate the input
+  *bit_no = BIT(timer_hook_id);   // the bit position of the IRQ line we're subscribing to (derived from the hook_id, using the macro)
+  
+  /*
+  sys_irqsetpolicy(interrupt, policy, *hook_id) is a sys call provided by Minix that subscribes an interrupt to an IRQ line
+  it tells the kernel that out program wants to handle interrupts from the specified IRQ line
+  
+  interrupt -> we choose which IRQ line we want to subscribe (TIMER0_IRQ meaning timer 0)
+  policy -> we choose the interrupt handling policy (IRQ_REENABLE means that the kernel will re-enable the interrupts)
+  hook_id -> used by kernel to track the subscription (it is passed to the kernel but it's also modified, it'll be set to the value of the IRQ line we are subscribing, plus other internal info)
+  */
+  if (sys_irqsetpolicy(TIMER0_IRQ,IRQ_REENABLE, &timer_hook_id) != 0) return 1;  
+  
+  return 0;
 }
 
 int (timer_unsubscribe_int)() {
-  /* To be implemented by the students */
-  printf("%s is not yet implemented!\n", __func__);
-
-  return 1;
+  if(sys_irqrmpolicy(&timer_hook_id) != 0) return 1;
+  return 0;
 }
 
 void (timer_int_handler)() {
-  /* To be implemented by the students */
-  printf("%s is not yet implemented!\n", __func__);
+  timer_counter++;
 }
 
 
