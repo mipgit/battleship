@@ -10,13 +10,6 @@ int timer_counter = 0; //used to count the number of interrupts --- see lab2.c
 
 
 
-int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
-  /* To be implemented by the students */
-  printf("%s is not yet implemented!\n", __func__);
-
-  return 1;
-}
-
 int (timer_subscribe_int)(uint8_t *bit_no) {
   if(bit_no == NULL) return 1;    
   timer_hook_id = *bit_no;  
@@ -91,3 +84,67 @@ int (timer_display_conf)(uint8_t timer, uint8_t st, enum timer_status_field fiel
   if (timer_print_config(timer, field, conf) != 0) return 1;
   return 0;
 }
+
+
+
+
+int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
+  
+  //validate inputs
+  if (freq < 19 || freq > TIMER_FREQ || timer < 0 || timer > 2) return 1;
+
+
+  /*part 1*/
+  uint8_t rb_cmd = TIMER_RB_CMD | TIMER_RB_COUNT_ | TIMER_RB_SEL(timer + 1);
+  if (sys_outb(TIMER_CTRL, rb_cmd) != 0) return 1;
+
+  uint8_t old_conf, new_conf;
+  timer_get_conf(timer, &old_conf);
+
+  //-> new configuration:
+
+  //timer selection (7,6)
+  uint8_t selectedTimer;
+
+  switch(timer) {
+      case 0: 
+        new_conf |= TIMER_SEL0; 
+        selectedTimer = TIMER_0;
+        break;
+      
+      case 1: 
+        new_conf |= TIMER_SEL1; 
+        selectedTimer = TIMER_1;
+        break;
+      
+      case 2: 
+        new_conf |= TIMER_SEL2;
+        selectedTimer = TIMER_2;
+        break;
+      
+      default: 
+        return 1;
+  }
+
+  //register selection (5,4)
+  new_conf |= TIMER_LSB_MSB;
+
+  //we keep mode and BCD/binary (3,2,1,0)
+  new_conf = old_conf & 0x0F;
+
+
+  /*part 2*/
+  uint16_t counter = TIMER_FREQ / freq; 
+  uint8_t LSB, MSB;
+  util_get_LSB(counter, &LSB);
+  util_get_MSB(counter, &MSB);
+
+
+  if (sys_outb(TIMER_CTRL, new_conf) != 0) return 1;
+
+  if (sys_outb(selectedTimer, LSB) != 0) return 1;
+  if (sys_outb(selectedTimer, MSB) != 0) return 1;
+
+  return 0;
+}
+

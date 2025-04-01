@@ -8,12 +8,7 @@
 int timer_hook_id = 0; //this will identify our program's subscription to an IRQ line (so that the kernel can track/manage interrupt subscriptions)
 int timer_counter = 0; //used to count the number of interrupts --- see lab2.c
 
-int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
-  /* To be implemented by the students */
-  printf("%s is not yet implemented!\n", __func__);
 
-  return 1;
-}
 
 int (timer_subscribe_int)(uint8_t *bit_no) {
   
@@ -136,4 +131,78 @@ int (timer_display_conf)(uint8_t timer, uint8_t st, enum timer_status_field fiel
   if (timer_print_config(timer, field, conf) != 0) return 1;
   return 0;
 
+}
+
+
+
+
+int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
+  
+  /* validamos inputs
+  valor do contador pode ser, no máximo, 2^16 = 65536
+  TIMER_FREQ no minix é 1193182
+  sendo counter = TIMER_FREQ / freq, a freq tem de ser, no mínimo, 1193182/65538 = 18.2
+
+  ->portanto, se freq < 19 o contador dá overflow!!!  */
+  if (freq < 19 || freq > TIMER_FREQ || timer < 0 || timer > 2) return 1;
+
+
+  /*parte 1*/
+  uint8_t rb_cmd = TIMER_RB_CMD | TIMER_RB_COUNT_ | TIMER_RB_SEL(timer + 1);
+  if (sys_outb(TIMER_CTRL, rb_cmd) != 0) return 1;
+
+  uint8_t old_conf, new_conf;
+  timer_get_conf(timer, &old_conf);
+
+  //-> new configuration:
+
+  //timer selection
+  uint8_t selectedTimer;
+
+  switch(timer) {
+      case 0: 
+        new_conf |= TIMER_SEL0; 
+        selectedTimer = TIMER_0;
+        break;
+      
+      case 1: 
+        new_conf |= TIMER_SEL1; 
+        selectedTimer = TIMER_1;
+        break;
+      
+      case 2: 
+        new_conf |= TIMER_SEL2;
+        selectedTimer = TIMER_2;
+        break;
+      
+      default: 
+        return 1;
+  }
+
+  //register selection
+  new_conf |= TIMER_LSB_MSB;
+
+  //-> slide 18 : we do not change 4 LSB (mode and BCD/binary)
+  new_conf = old_conf & 0x0F;
+
+
+  /*parte 2*/
+
+  //calculo do novo valor para o contador c/ nova freq
+  uint16_t counter = TIMER_FREQ / freq; //se TIMER_FREQ=100Hz e freq=4Hz, então o timer conta 25 clock ticks antes de gerar uma interrupt
+  uint8_t LSB, MSB;
+
+  util_get_LSB(counter, &LSB);
+  util_get_MSB(counter, &MSB);
+
+
+  //avisamos que vamos configurar o timer  c/ nova conf
+  if (sys_outb(TIMER_CTRL, new_conf) != 0) return 1;
+
+  //injetamos o valor do counter diretamente no timer em questão
+  if (sys_outb(selectedTimer, LSB) != 0) return 1;
+  if (sys_outb(selectedTimer, MSB) != 0) return 1;
+
+
+  return 0;
 }
