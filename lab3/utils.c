@@ -23,9 +23,7 @@ int util_sys_inb(int port, uint8_t *value) {
   int ret = sys_inb(port, &val); 
   *value = 0xFF & val;            
   
-  #ifdef LAB3
-    kbc_counter++;
-  #endif
-
+  kbc_counter++;
+  
   return ret;
 }

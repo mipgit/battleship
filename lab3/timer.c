@@ -5,7 +5,7 @@
 
 #include "i8254.h"
 
-int timer_hook_id = 0; //this will identify our program's subscription to an IRQ line (so that the kernel can track/manage interrupt subscriptions)
+int timer_hook_id; //this will identify our program's subscription to an IRQ line (so that the kernel can track/manage interrupt subscriptions)
 int timer_counter = 0; //used to count the number of interrupts --- see lab2.c
 
 
@@ -19,7 +19,7 @@ int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
 
 int (timer_subscribe_int)(uint8_t *bit_no) {
   if(bit_no == NULL) return 1;    
-  *bit_no = BIT(timer_hook_id);   
+  timer_hook_id = *bit_no;  
   if (sys_irqsetpolicy(TIMER0_IRQ,IRQ_REENABLE, &timer_hook_id) != 0) return 1;  
   return 0;
 }
