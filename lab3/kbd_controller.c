@@ -43,7 +43,7 @@ int(read_KBC_output)(uint8_t port, uint8_t *output) {
             return 1;}
     
         //we check if the output buffer is full
-        if ((status & OBF) != 0) {
+        if ((status & OBF) && !(status & AUX)) {    //see slide 22
             
             //we read the output buffer
             if(util_sys_inb(port, output) != 0) {
@@ -86,7 +86,7 @@ we need to have similar precautions when writing to the KBC
 -> but now we need to check if the input buffer is full before writing to it
 */
 
-int (write_KBC_cmd)(uint8_t port, uint8_t cmd) {
+int (write_KBC_cmd)(uint8_t port, uint8_t commandByte) {
 
     uint8_t status;
     int attempts = 10;
@@ -102,7 +102,7 @@ int (write_KBC_cmd)(uint8_t port, uint8_t cmd) {
         if ((status & IBF) == 0) {
             
             //we write the command to the KBC
-            if(sys_outb(port, cmd) != 0) {
+            if(sys_outb(port, commandByte) != 0) {
                 printf("Error writing command.\n");
                 return 1;
             }

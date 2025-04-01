@@ -55,7 +55,6 @@ int(timer_test_int)(uint8_t time) {
 
   //important notice -> the default frequency is 60Hz
   //meaning that the timer will generate an interrupt 60 times per second
-  //exactly what we need to count seconds!
 
   //we subscribe interrupt 
   if (timer_subscribe_int(&irq_set) != 0) return 1;
@@ -76,7 +75,7 @@ int(timer_test_int)(uint8_t time) {
                 //if the interrupts that happenned (msg.m_notify...) matches the one we subscribed for the timer (in irq_set) ...
                 if (msg.m_notify.interrupts & irq_set) { /* subscribed interrupt */
                     timer_int_handler();
-                    if (timer_counter%60 == 0) {   //each second we print a message !
+                    if (timer_counter%60 == 0) {   //each second we print a message ! -> 60 timer ticks have passed
                       timer_print_elapsed_time();
                       time--;
                     }

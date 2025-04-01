@@ -5,12 +5,14 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "i8042.h"
-#include "kbd_controller.h"  //we need to create the headers
+#include "kbd_controller.h"  
 #include "kbd.h"
+#include "timer.c" //<-
 
 
 extern uint8_t scancode;
 extern uint32_t kbc_counter;
+extern int timer_counter;
 
 
 int main(int argc, char *argv[]) {
@@ -50,7 +52,7 @@ int(kbd_test_scan)() {
 
   //the function is defined to run until the ESC key is pressed
   //so when we receive the breakcode for the ESC key, we must stop the loop
-  while( scancode != ESC_BREAK ) { 
+  while (scancode != ESC_BREAK) { 
     
     /* Get a request message. */
     if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) { 
@@ -62,11 +64,8 @@ int(kbd_test_scan)() {
         switch (_ENDPOINT_P(msg.m_source)) {
             case HARDWARE: /* hardware interrupt notification */				
                 if (msg.m_notify.interrupts & irq_set) { /* subscribed interrupt */
-                    kbc_ih(); //we read the scancode again to check if anything changed
-                              
-                    bool make = !(scancode & IS_BREAK);
-                    uint8_t byte_size = (scancode == 0xE0 ? 2 : 1);   //can have two bytes or 1 byte
-                    kbd_print_scancode(make, byte_size, &scancode);
+                    kbc_ih(); //we read the scancode again to check if anything changed      
+                    process_scancode(scancode);
                 }
                 break;
             default:
@@ -77,21 +76,77 @@ int(kbd_test_scan)() {
     }
   }
   
-  if(kbd_unsubscribe_int() != 0) return 1;
-  if(kbd_print_no_sysinb(kbc_counter)); 
+  if (kbd_unsubscribe_int() != 0) return 1;
+  if (kbd_print_no_sysinb(kbc_counter) != 0) return 1; 
   return 0;
 }
 
-int(kbd_test_poll)() {
-  /* To be completed by the students */
-  printf("%s is not yet implemented!\n", __func__);
 
-  return 1;
+
+//unlike before, we are continuosly reading from the OUT_BUF, even if nothing has happened
+int(kbd_test_poll)() {
+  while (scancode != ESC_BREAK) {
+    if (read_KBC_output(OUT_BUF, &scancode) == 0) {
+      process_scancode(scancode);
+    }
+  }
+
+  //we restore the previous keyboard state -> see slide 22
+  if (kbd_restore() != 0) return 1;
+  if (kbd_print_no_sysinb(kbc_counter) != 0) return 1; 
+  return 0;
 }
 
-int(kbd_test_timed_scan)(uint8_t n) {
-  /* To be completed by the students */
-  printf("%s is not yet implemented!\n", __func__);
 
-  return 1;
+
+int(kbd_test_timed_scan)(uint8_t n) {
+  int ipc_status, r;
+  message msg;
+  uint8_t irq_set_TIMER, irq_set_KBD;
+
+  int seconds = 0;
+
+  //we subscribe interrupts 
+  if (timer_subscribe_int(&irq_set_TIMER) != 0) return 1;
+  if (kbd_subscribe_int(&irq_set_KBD) != 0) return 1;
+
+  //the function is defined to stop when the ESC key is pressed
+  //or if it does not receive a scancode for a number of seconds equal to n
+  while (scancode != ESC_BREAK && seconds < n ) { 
+    
+    /* Get a request message. */
+    if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) { 
+        printf("driver_receive failed with: %d", r);
+        continue;
+    }
+
+    if (is_ipc_notify(ipc_status)) { /* received notification */
+        switch (_ENDPOINT_P(msg.m_source)) {
+            case HARDWARE: 			
+
+                if (msg.m_notify.interrupts & irq_set_KBD) { 
+                    kbc_ih();      
+                    process_scancode(scancode);
+                    timer_counter = 0;
+                    seconds = 0;
+                }
+
+                if (msg.m_notify.interrupts & irq_set_TIMER) { 
+                    timer_ih();
+                    if (timer_counter%60 == 0) seconds++; //one more second passed
+                } 
+
+                break;
+
+            default:
+                break; /* no other notifications expected: do nothing */	
+        }
+    }
+
+  }
+  
+  if (timer_unsubscribe_int() != 0) return 1;
+  if (kbd_unsubscribe_int() != 0) return 1;
+  if (kbd_print_no_sysinb(kbc_counter) != 0) return 1; 
+  return 0;
 }
