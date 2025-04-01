@@ -9,7 +9,7 @@
 #include "kbd_controller.c"
 
 uint8_t scancode = 0;
-int kbd_hookid;
+int kbd_hook_id;
 
 
 //retrieves the scancode
@@ -56,17 +56,17 @@ void (process_scancode)(uint8_t scancode) {
 
 int(kbd_subscribe_int)(uint8_t *bit_no) {
     if (bit_no == NULL) return 1;
-    kbd_hookid = (int) *bit_no;
+    kbd_hook_id = *bit_no;
     //minix already has an interrupt handler installed
     //we must disable it to prevent it from reading the OUT_BUF before our handler does it
     //how? we use also IRQ_EXCLUSIVE when setting the policy
-    if (sys_irqsetpolicy(KBD_IRQ, (IRQ_REENABLE | IRQ_EXCLUSIVE), &kbd_hookid) != 0) return 1;
+    if (sys_irqsetpolicy(KBD_IRQ, (IRQ_REENABLE | IRQ_EXCLUSIVE), &kbd_hook_id) != 0) return 1;
     return 0;
 }
 
 
 int (kbd_unsubscribe_int)() {
-    if (sys_irqrmpolicy(&kbd_hookid) != 0) return 1;
+    if (sys_irqrmpolicy(&kbd_hook_id) != 0) return 1;
     return 0;
 }
 

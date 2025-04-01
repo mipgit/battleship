@@ -127,7 +127,6 @@ int(kbd_test_timed_scan)(uint8_t n) {
             case HARDWARE: 			
 
                 if (msg.m_notify.interrupts & BIT(kbd_bit_no)) { 
-                    printf("entrei\n");
                     kbc_ih();      
                     process_scancode(scancode);
                     timer_counter = 0;
@@ -135,11 +134,12 @@ int(kbd_test_timed_scan)(uint8_t n) {
                 }
 
                 if (msg.m_notify.interrupts & BIT(timer_bit_no)) { 
-                    timer_ih();
-                    if (timer_counter%60 == 0) {
+                    timer_int_handler();
+                    if (timer_counter%60 == 0) { //one more second passed
                       seconds++;
-                      timer_print_elapsed_time();
-                    } //one more second passed
+                      //printf("seconds: %d\n", seconds);
+                      //timer_print_elapsed_time();
+                    } 
                 } 
 
                 break;
