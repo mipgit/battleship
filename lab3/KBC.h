@@ -1,5 +1,5 @@
-#ifndef _LCOM_KBD_CONTROLLER_H_
-#define _LCOM_KBD_CONTROLLER_H_
+#ifndef _LCOM_KBC_H_
+#define _LCOM_KBC_H_
 
 
 #include "stdint.h"

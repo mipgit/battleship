@@ -6,10 +6,10 @@
 #include <stdint.h>
 #include "i8042.h"
 #include "kbd.h"
-#include "kbd_controller.c"
+#include "KBC.c"
 
 uint8_t scancode = 0;
-int kbd_hook_id;
+int kbd_hook_id = 1;
 
 
 //retrieves the scancode
@@ -56,7 +56,7 @@ void (process_scancode)(uint8_t scancode) {
 
 int(kbd_subscribe_int)(uint8_t *bit_no) {
     if (bit_no == NULL) return 1;
-    kbd_hook_id = *bit_no;
+    *bit_no = BIT(kbd_hook_id);
     //minix already has an interrupt handler installed
     //we must disable it to prevent it from reading the OUT_BUF before our handler does it
     //how? we use also IRQ_EXCLUSIVE when setting the policy

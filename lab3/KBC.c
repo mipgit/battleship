@@ -1,6 +1,6 @@
 #include <lcom/lcf.h>
 #include "i8042.h"
-#include "kbd_controller.h"
+#include "KBC.h"
 
 
 // read the status register

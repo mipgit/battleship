@@ -151,7 +151,7 @@ int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
   uint8_t rb_cmd = TIMER_RB_CMD | TIMER_RB_COUNT_ | TIMER_RB_SEL(timer + 1);
   if (sys_outb(TIMER_CTRL, rb_cmd) != 0) return 1;
 
-  uint8_t old_conf, new_conf;
+  uint8_t old_conf, new_conf = 0;
   timer_get_conf(timer, &old_conf);
 
   //-> new configuration:
