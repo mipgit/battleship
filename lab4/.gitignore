@@ -1,3 +1,6 @@
 .gdbinit
 lab4
 lab4.o
+KBC.o
+utils.o
+mouse.o
