@@ -9,12 +9,8 @@
 #include "KBC.h"
 
 
-extern struct packet pp;
-extern int byte_index;
-extern bool ready;
 
-
-int (mouse_subscribe_int) (uint8_t* bit_no);
+int (mouse_subscribe_int) (uint16_t* irq_set);
 int (mouse_unsubscribe_int)();
 void (mouse_ih)();
 
@@ -25,7 +21,7 @@ int (_mouse_disable_data_reporting)();
 
 bool (mouse_sync_bytes)();
 
-void (create_packet)(uint8_t mouse_bytes[3], struct packet mouse_packet);
+void (create_packet)(struct packet* mouse_packet);
 
 
 #endif /* _MOUSE_H_ */

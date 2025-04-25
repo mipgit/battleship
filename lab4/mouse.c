@@ -3,16 +3,16 @@
 
 int mouse_hook_id = 12; 
 
-struct packet pp;
-int byte_index;
-bool ready;
+struct packet mouse_packet;
+uint8_t byte_index = 0;
+uint8_t current_byte = 0;
+uint8_t mouse_bytes[3];
 
 
 
-//diff from what we've been doing!!!! had to change it because of mouse_irq_set!!!
-int (mouse_subscribe_int)(uint8_t *bit_no) {
-    if (bit_no == NULL) return 1;
-    *bit_no = mouse_hook_id; //!!!!
+int (mouse_subscribe_int)(uint16_t *irq_set) {
+    if (irq_set == NULL) return 1;
+    *irq_set = BIT(mouse_hook_id); 
     if (sys_irqsetpolicy(MOUSE_IRQ, (IRQ_REENABLE | IRQ_EXCLUSIVE), &mouse_hook_id) != 0) return 1;
     return 0;
 }
@@ -37,7 +37,6 @@ int (mouse_unsubscribe_int)() {
 ---- mouse executes cmd ----
 5) if cmd has response, we read it from OUT_BUF (0x60) 
 */
-
 int (mouse_write_cmd)(uint8_t command) {
     
     int timeout = 0;
@@ -61,11 +60,12 @@ int (mouse_write_cmd)(uint8_t command) {
             printf("Error reading from OUT_BUF.\n");
             return 1;}
 
-        if (mouse_response == MOUSE_ACK) return 0;
+        //we check if the mouse acknowledged the command (3 times)
+        if (mouse_response == MOUSE_ACK) return 0; 
         timeout++;
     }
-    
-    return 1; 
+
+    return 1; // failed to send the command
 }
 
 
@@ -91,78 +91,79 @@ int (_mouse_disable_data_reporting)() {
 
 
 void (mouse_ih)() {
-
     uint8_t st;
-    uint8_t current_byte;
 
-
-    if (read_KBC_status(&st) != 0) {
+    if (util_sys_inb(STATUS_REG,&st) != 0) {
         printf("Error reading status.\n");
         return;
     }
 
+    tickdelay(micros_to_ticks(DELAY_US));
 
-    if (st & OBF && !(st & (PARITY | TIMEOUT))) {
+    //if the data is from mouse (and there's no errors), we read a byte from the OUT_BUF 
+    if ((st & OBF) && (st & AUX) && !(st & (PARITY | TIMEOUT))) {
 
-        //we read a byte from the OUT_BUF 
-        if (read_KBC_output(OUT_BUF, &current_byte, 1) != 0) {
+        //if (read_KBC_output(OUT_BUF, &current_byte, 1) != 0) {  (using sys_inb prevents int cascading) 
+        if (util_sys_inb(OUT_BUF, &current_byte) != 0) {
             printf("Error reading from OUT_BUF.\n");
             return;
         }
-
-
-        /*check for sync:
-        imagine we are processing the 1st byte of the packet (index=0)
-        the 1st byte of the packet is the control byte
-        a valid control byte must have its 3 bit set 
-        that's what we're checking here 
-        */
-        if (byte_index == 0 && !(current_byte & IS_FIRST_BYTE)) {
-            printf("Invalid byte!\n");
-            return;
-        }
-
-
-        //we store the byte on the packet
-        pp.bytes[byte_index] = current_byte; 
-
-
-        //depeding on the byte, we store diff information (see slide 4)
-        switch (byte_index) {
-            case 0:
-                pp.lb = current_byte & MOUSE_LB;
-                pp.rb = current_byte & MOUSE_RB;
-                pp.mb = current_byte & MOUSE_MB;
-                pp.x_ov = current_byte & MOUSE_X_OVERFLOW;
-                pp.y_ov = current_byte & MOUSE_Y_OVERFLOW;
-                break;
-
-            case 1:
-                pp.delta_x = current_byte;
-                if (pp.bytes[0] & MOUSE_MSB_X_DELTA) {
-                    pp.delta_x |= 0xFF00;
-                }
-                break;
-
-            case 2:
-                pp.delta_y = current_byte;
-                if (pp.bytes[0] & MOUSE_MSB_Y_DELTA) {
-                    pp.delta_y |= 0xFF00;
-                }
-                break;
-        }
-
-        //we move to the next byte
-        byte_index++; 
         
-
-        //if we reach index=3 it means we have processed 3 bytes and therefore completed a packet
-        if (byte_index == 3) {
-            byte_index = 0; //we reset index for the next packet
-            ready = true; //set ready to true to indicate that a complete packet has been received
-        }
-
-    }
-    
+        //printf("Read from OUT_BUF: Status=0x%x, Byte=0x%x\n", st, current_byte);
+    }    
 }
+
+
+
+/*check for sync:
+imagine we are processing the 1st byte of the packet (index=0)
+the 1st byte of the packet is the control byte
+a valid control byte must have its 3 bit set 
+that's what we're checking here 
+
+besides, we keep the data in a array that we will later use to create the packet
+and we check if the packet is complete
+if it is, we return true
+if it is not, we return false
+*/
+bool (mouse_sync_bytes)() {
+
+    if (byte_index == 0 && !(current_byte & IS_FIRST_BYTE)) {
+        printf("Invalid byte!\n");
+        return false;
+    }
+
+    if ((byte_index == 0 && (current_byte & IS_FIRST_BYTE)) || (byte_index > 0 && byte_index < 3)) {
+        mouse_bytes[byte_index] = current_byte;
+        byte_index++;
+    }
+
+    if (byte_index == 3) {
+        byte_index = 0; //we reset index for the next packet
+        return true; //we've completed the packet
+    }
+
+    return false; //we did not complete the packet yet
+}
+
+
+
+void (create_packet)(struct packet* mouse_packet) {
+
+    for (int i = 0; i < 3; i++) {
+        mouse_packet->bytes[i] = mouse_bytes[i];
+    }
+
+    mouse_packet->lb = mouse_bytes[0] & MOUSE_LB;
+    mouse_packet->rb = mouse_bytes[0] & MOUSE_RB;
+    mouse_packet->mb = mouse_bytes[0] & MOUSE_MB;
+    mouse_packet->x_ov = mouse_bytes[0] & MOUSE_X_OVERFLOW;
+    mouse_packet->y_ov = mouse_bytes[0] & MOUSE_Y_OVERFLOW;
+
+    mouse_packet->delta_x = (mouse_bytes[0] & MOUSE_MSB_X_DELTA) ? (0xFF00 | mouse_bytes[1]) : mouse_bytes[1];
+    
+    mouse_packet->delta_y = (mouse_bytes[0] & MOUSE_MSB_Y_DELTA) ? (0xFF00 | mouse_bytes[2]) : mouse_bytes[2];
+
+}
+
 

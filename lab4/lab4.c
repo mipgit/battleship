@@ -44,12 +44,10 @@ int (mouse_test_packet)(uint32_t cnt) {
   int ipc_status, r;
   message msg;
 
-  uint8_t bit_no; //!!!!
-  if (mouse_subscribe_int(&bit_no) != 0) return 1;
-  uint32_t mouse_irq_set = BIT(bit_no); //!!!!
+  uint16_t mouse_irq_set;
+  if (mouse_subscribe_int(&mouse_irq_set) != 0) return 1;
 
   if (_mouse_enable_data_reporting() != 0) {
-      printf("Failed to enable data reporting.\n");
       mouse_unsubscribe_int();
       _mouse_disable_data_reporting(); 
       return 1;
@@ -68,8 +66,9 @@ int (mouse_test_packet)(uint32_t cnt) {
         case HARDWARE: /* hardware interrupt notification */
           if (msg.m_notify.interrupts & mouse_irq_set) { /* subscribed interrupt */
             mouse_ih(); 
-            if (ready) {
-              ready = false;
+            if (mouse_sync_bytes()) {
+              struct packet pp;
+              create_packet(&pp);
               mouse_print_packet(&pp);
               cnt--;
             }
@@ -97,15 +96,14 @@ int (mouse_test_async)(uint8_t idle_time) {
   int ipc_status, r;
   message msg;
 
-  uint8_t bit_no; //!!!!
-  if (mouse_subscribe_int(&bit_no) != 0) return 1;
-  uint32_t mouse_irq_set = BIT(bit_no); //!!!!
+  uint16_t mouse_irq_set;
+  if (mouse_subscribe_int(&mouse_irq_set) != 0) return 1;
 
   uint8_t timer_irq_set;
   if (timer_subscribe_int(&timer_irq_set) != 0) return 1;
 
   if (_mouse_enable_data_reporting() != 0) {
-      printf("Failed to enable data reporting.\n");
+      timer_unsubscribe_int();
       mouse_unsubscribe_int();
       _mouse_disable_data_reporting(); 
       return 1;
@@ -126,8 +124,9 @@ int (mouse_test_async)(uint8_t idle_time) {
         
           if (msg.m_notify.interrupts & mouse_irq_set) { /* subscribed interrupt */
             mouse_ih(); 
-            if (ready) {
-              ready = false;
+            if (mouse_sync_bytes()) {
+              struct packet pp;
+              create_packet(&pp);
               mouse_print_packet(&pp);
               seconds = 0;
               timer_counter = 0;
@@ -139,8 +138,7 @@ int (mouse_test_async)(uint8_t idle_time) {
             if (timer_counter%60 == 0) {
               seconds++;
             } 
-        } 
-
+          } 
 
           break;
 
@@ -152,6 +150,7 @@ int (mouse_test_async)(uint8_t idle_time) {
     }
   }
 
+  if (timer_unsubscribe_int() != 0) return 1;
   if (mouse_unsubscribe_int() != 0) return 1;
   if (_mouse_disable_data_reporting() != 0) return 1;
   return 0;
