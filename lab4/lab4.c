@@ -44,7 +44,7 @@ int (mouse_test_packet)(uint32_t cnt) {
   int ipc_status, r;
   message msg;
 
-  uint16_t mouse_irq_set;
+  uint32_t mouse_irq_set;
   if (mouse_subscribe_int(&mouse_irq_set) != 0) return 1;
 
   if (_mouse_enable_data_reporting() != 0) {
@@ -96,7 +96,7 @@ int (mouse_test_async)(uint8_t idle_time) {
   int ipc_status, r;
   message msg;
 
-  uint16_t mouse_irq_set;
+  uint32_t mouse_irq_set;
   if (mouse_subscribe_int(&mouse_irq_set) != 0) return 1;
 
   uint8_t timer_irq_set;
@@ -136,6 +136,7 @@ int (mouse_test_async)(uint8_t idle_time) {
           if (msg.m_notify.interrupts & timer_irq_set) { 
             timer_int_handler();
             if (timer_counter%60 == 0) {
+              //timer_print_elapsed_time();
               seconds++;
             } 
           } 

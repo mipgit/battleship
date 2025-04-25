@@ -10,7 +10,7 @@
 
 
 
-int (mouse_subscribe_int) (uint16_t* irq_set);
+int (mouse_subscribe_int) (uint32_t* irq_set);
 int (mouse_unsubscribe_int)();
 void (mouse_ih)();
 

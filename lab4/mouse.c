@@ -10,7 +10,7 @@ uint8_t mouse_bytes[3];
 
 
 
-int (mouse_subscribe_int)(uint16_t *irq_set) {
+int (mouse_subscribe_int)(uint32_t *irq_set) {
     if (irq_set == NULL) return 1;
     *irq_set = BIT(mouse_hook_id); 
     if (sys_irqsetpolicy(MOUSE_IRQ, (IRQ_REENABLE | IRQ_EXCLUSIVE), &mouse_hook_id) != 0) return 1;
