@@ -54,7 +54,7 @@ void (process_scancode)(uint8_t scancode) {
 
 
 
-int(kbd_subscribe_int)(uint8_t *bit_no) {
+int(kbd_subscribe_int)(uint8_t *bit_no) {  //is uint8_t coorect?
     if (bit_no == NULL) return 1;
     *bit_no = BIT(kbd_hook_id);
     //minix already has an interrupt handler installed

@@ -45,10 +45,10 @@ int(kbd_test_scan)() {
 
   int ipc_status, r;
   message msg;
-  uint8_t kbd_iqr_set;
+  uint8_t kbd_irq_set;
 
   //we subscribe interrupt 
-  if (kbd_subscribe_int(&kbd_iqr_set) != 0) return 1;
+  if (kbd_subscribe_int(&kbd_irq_set) != 0) return 1;
 
   //the function is defined to run until the ESC key is pressed
   //so when we receive the breakcode for the ESC key, we must stop the loop
@@ -63,7 +63,7 @@ int(kbd_test_scan)() {
     if (is_ipc_notify(ipc_status)) { /* received notification */
         switch (_ENDPOINT_P(msg.m_source)) {
             case HARDWARE: /* hardware interrupt notification */				
-                if (msg.m_notify.interrupts & kbd_iqr_set) { /* subscribed interrupt */
+                if (msg.m_notify.interrupts & kbd_irq_set) { /* subscribed interrupt */
                     kbc_ih(); //we read the scancode again to check if anything changed      
                     process_scancode(scancode);
                 }
@@ -103,14 +103,14 @@ int(kbd_test_timed_scan)(uint8_t n) {
   int ipc_status, r;
   message msg;
   
-  uint8_t timer_iqr_set;
-  uint8_t kbd_iqr_set;
+  uint8_t timer_irq_set;
+  uint8_t kbd_irq_set;
 
   int seconds = 0;
 
   //we subscribe interrupts 
-  if (timer_subscribe_int(&timer_iqr_set) != 0) return 1;
-  if (kbd_subscribe_int(&kbd_iqr_set) != 0) return 1;
+  if (timer_subscribe_int(&timer_irq_set) != 0) return 1;
+  if (kbd_subscribe_int(&kbd_irq_set) != 0) return 1;
 
   //the function is defined to stop when the ESC key is pressed
   //or if it does not receive a scancode for a number of seconds equal to n
@@ -126,14 +126,14 @@ int(kbd_test_timed_scan)(uint8_t n) {
         switch (_ENDPOINT_P(msg.m_source)) {
             case HARDWARE: 			
 
-                if (msg.m_notify.interrupts & kbd_iqr_set) { 
+                if (msg.m_notify.interrupts & kbd_irq_set) { 
                     kbc_ih();      
                     process_scancode(scancode);
                     timer_counter = 0;
                     seconds = 0;
                 }
 
-                if (msg.m_notify.interrupts & timer_iqr_set) { 
+                if (msg.m_notify.interrupts & timer_irq_set) { 
                     timer_int_handler();
                     if (timer_counter%60 == 0) { //one more second passed
                       seconds++;
