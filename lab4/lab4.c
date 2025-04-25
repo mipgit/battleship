@@ -10,6 +10,8 @@
 
 #include "mouse.h"
 
+extern int timer_counter;
+
 
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
@@ -34,6 +36,7 @@ int main(int argc, char *argv[]) {
 
   return 0;
 }
+
 
 
 int (mouse_test_packet)(uint32_t cnt) {
@@ -86,11 +89,75 @@ int (mouse_test_packet)(uint32_t cnt) {
   return 0;
 }
 
+
+
+
 int (mouse_test_async)(uint8_t idle_time) {
-    /* To be completed */
-    printf("%s(%u): under construction\n", __func__, idle_time);
-    return 1;
+  
+  int ipc_status, r;
+  message msg;
+
+  uint8_t bit_no; //!!!!
+  if (mouse_subscribe_int(&bit_no) != 0) return 1;
+  uint32_t mouse_irq_set = BIT(bit_no); //!!!!
+
+  uint8_t timer_irq_set;
+  if (timer_subscribe_int(&timer_irq_set) != 0) return 1;
+
+  if (_mouse_enable_data_reporting() != 0) {
+      printf("Failed to enable data reporting.\n");
+      mouse_unsubscribe_int();
+      _mouse_disable_data_reporting(); 
+      return 1;
+  }
+
+  uint8_t seconds = 0;
+
+  while (seconds < idle_time) {
+    /* Get a request message. */
+    if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
+      printf("driver_receive failed: %d", r);
+      continue;
+    }
+
+    if (is_ipc_notify(ipc_status)) { /* received notification */
+      switch (_ENDPOINT_P(msg.m_source)) {
+        case HARDWARE: /* hardware interrupt notification */
+        
+          if (msg.m_notify.interrupts & mouse_irq_set) { /* subscribed interrupt */
+            mouse_ih(); 
+            if (ready) {
+              ready = false;
+              mouse_print_packet(&pp);
+              seconds = 0;
+              timer_counter = 0;
+            }
+          }
+
+          if (msg.m_notify.interrupts & timer_irq_set) { 
+            timer_int_handler();
+            if (timer_counter%60 == 0) {
+              seconds++;
+            } 
+        } 
+
+
+          break;
+
+        default:
+          break; /* no other notifications expected: do nothing */	
+      }
+    } else { /* received a standard message, not a notification */
+      /* no standard messages expected: do nothing */
+    }
+  }
+
+  if (mouse_unsubscribe_int() != 0) return 1;
+  if (_mouse_disable_data_reporting() != 0) return 1;
+  return 0;
 }
+
+
 
 int (mouse_test_gesture)(uint8_t x_len, uint8_t tolerance) { //???
     /* To be completed */
@@ -98,8 +165,3 @@ int (mouse_test_gesture)(uint8_t x_len, uint8_t tolerance) { //???
     return 1;
 }
 
-int (mouse_test_remote)(uint16_t period, uint8_t cnt) {
-    /* This year you need not implement this. */
-    printf("%s(%u, %u): under construction\n", __func__, period, cnt);
-    return 1;
-}
