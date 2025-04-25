@@ -7,6 +7,8 @@
 #include <stdio.h>
 
 // Any header files included below this line should have been created by you
+#include "graphics.h"
+
 
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
@@ -32,12 +34,14 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 
-int(video_test_init)(uint16_t mode, uint8_t delay) {
-  /* To be completed */
-  printf("%s(0x%03x, %u): under construction\n", __func__, mode, delay);
 
-  return 1;
+
+int(video_test_init)(uint16_t mode, uint8_t delay) {
+  if (set_vbe_mode(mode) != 0) return 1;
+  sleep(delay);
+  return vg_exit();
 }
+
 
 int(video_test_rectangle)(uint16_t mode, uint16_t x, uint16_t y,
                           uint16_t width, uint16_t height, uint32_t color) {
@@ -72,9 +76,3 @@ int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint1
   return 1;
 }
 
-int(video_test_controller)() {
-  /* This year you do not need to implement this */
-  printf("%s(): under construction\n", __func__);
-
-  return 1;
-}
