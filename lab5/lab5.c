@@ -9,6 +9,9 @@
 // Any header files included below this line should have been created by you
 #include "graphics.h"
 
+extern vbe_mode_info_t mode_info;
+
+
 
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
@@ -36,6 +39,8 @@ int main(int argc, char *argv[]) {
 
 
 
+
+
 int(video_test_init)(uint16_t mode, uint8_t delay) {
   if (set_vbe_mode(mode) != 0) return 1;
   sleep(delay);
@@ -43,14 +48,34 @@ int(video_test_init)(uint16_t mode, uint8_t delay) {
 }
 
 
-int(video_test_rectangle)(uint16_t mode, uint16_t x, uint16_t y,
-                          uint16_t width, uint16_t height, uint32_t color) {
-  /* To be completed */
-  printf("%s(0x%03X, %u, %u, %u, %u, 0x%08x): under construction\n",
-         __func__, mode, x, y, width, height, color);
+/*
+https://pages.up.pt/~up722898/aulas/lcom2425/lab5/lab5_5.html
+This function shall:
+1. map the video memory to the process' address space
+2. change the video mode to that in its argument
+3. draw a rectangle
+4. reset the video mode to Minix's default text mode and return, upon receiving the break code of the ESC key (0x81)
 
-  return 1;
+Note that actions 1 and 2 could have been swapped. 
+However, the LCF tests are not flexible, and require 1 to be performed before 2. 
+This applies also to the other test functions that access the VRAM.
+*/
+int(video_test_rectangle)(uint16_t mode, uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color) {
+  
+  if (set_frame_buffer(mode) != 0) {return 1;}
+  if (set_vbe_mode(mode) != 0) {return 1;}
+  
+  uint32_t new_color;
+  if (normalize_color(color, &new_color) != 0) {return 1;}
+  if (vg_draw_rectangle(x, y, width, height, new_color) != 0) {return 1;}
+
+  if (wait_for_ESC() != 0) {return 1;}
+  return vg_exit();
 }
+
+
+
+
 
 int(video_test_pattern)(uint16_t mode, uint8_t no_rectangles, uint32_t first, uint8_t step) {
   /* To be completed */
