@@ -8,9 +8,10 @@
 
 // Any header files included below this line should have been created by you
 #include <graphics.h>
+#include "../lab3/KBC.h"
 
 extern vbe_mode_info_t mode_info;
-
+extern uint8_t scancode;
 
 
 int main(int argc, char *argv[]) {
@@ -139,10 +140,78 @@ int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
 
 int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint16_t yf,
                      int16_t speed, uint8_t fr_rate) {
-  /* To be completed */
-  printf("%s(%8p, %u, %u, %u, %u, %d, %u): under construction\n",
-         __func__, xpm, xi, yi, xf, yf, speed, fr_rate);
+  
+  int ipc_status, r;
+  message msg;
+  uint8_t kbd_irq_set, timer_irq_set;
+  
+  uint16_t x = xi;
+  uint16_t y = yi;
 
-  return 1;
+  //we only need to consider movements along either the horizontal or the vertical directions
+  bool isVertical = (xi == xf);
+
+  //boolean to check when to stop the animation
+  bool stop = false;
+                      
+
+  if (kbd_subscribe_int(&kbd_irq_set) != 0) {return 1;}
+  if (timer_subscribe_int(&timer_irq_set) != 0) {return 1;}
+
+  if (timer_set_frequency(0, fr_rate) != 0) {return 1;}
+
+  if (set_frame_buffer(0x105) != 0) {return 1;}
+  if (set_vbe_mode(0x105) != 0) {return 1;}
+  
+  //we print the xpm at the initial position
+  if (print_xpm(xpm, x, y) != 0) {return 1;}
+
+
+
+  while (scancode != 0x81 && !stop) { //we stop when the ESC key is pressed or when the xpm reaches its final position
+    
+    /* Get a request message. */
+    if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
+      printf("driver_receive failed: %d", r);
+      continue;
+    }
+
+    if (is_ipc_notify(ipc_status)) { /* received notification */
+      switch (_ENDPOINT_P(msg.m_source)) {
+        case HARDWARE: /* hardware interrupt notification */
+          if (msg.m_notify.interrupts & kbd_irq_set) { /* subscribed interrupt */
+            kbc_ih(); 
+            process_scancode(scancode);
+          }
+
+          if (msg.m_notify.interrupts & timer_irq_set) { /* subscribed interrupt */
+            timer_int_handler();
+                        
+            if (isVertical) {
+              y += speed;
+              if (y > yf) y = yf;
+            } else {
+              x += speed;
+              if (x > xf) x = xf;
+            }
+
+            if (print_xpm(xpm, x, y) != 0) {return 1;} //draw the new xpm 
+            if (x == xf && y == yf) {stop = true;}          
+          }
+
+          break;
+
+        default:
+          break; /* no other notifications expected: do nothing */	
+      }
+    } else { /* received a standard message, not a notification */
+      /* no standard messages expected: do nothing */
+    }
+  }
+
+
+  if (timer_unsubscribe_int() != 0) {return 1;}
+  if (kbd_unsubscribe_int() != 0) {return 1;}
+  return vg_exit();
 }
 
