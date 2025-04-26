@@ -168,7 +168,7 @@ int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint1
 
 
 
-  while (scancode != 0x81 && !stop) { //we stop when the ESC key is pressed or when the xpm reaches its final position
+  while (scancode != 0x81) { //we only stop when the ESC key is pressed
     
     /* Get a request message. */
     if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
@@ -186,19 +186,31 @@ int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint1
 
           if (msg.m_notify.interrupts & timer_irq_set) { /* subscribed interrupt */
             timer_int_handler();
-                        
-            if (isVertical) {
-              y += speed;
-              if (y > yf) y = yf;
-            } else {
-              x += speed;
-              if (x > xf) x = xf;
+            
+            if (!stop) {
+              //clear the previous drawing !!!
+              xpm_image_t img;
+              xpm_load(xpm, XPM_INDEXED, &img);
+              for (int i = 0; i < img.width; i++) {
+                for (int j = 0; j < img.height; j++) {
+                  vg_draw_pixel(x + i, y + j, 0);
+                }
+              }
+              //calculate the new position
+              if (isVertical) {
+                y += speed;
+                if (y > yf) y = yf;
+              } else {
+                x += speed;
+                if (x > xf) x = xf;
+              }
+              //draw the new xpm
+              if (print_xpm(xpm, x, y) != 0) {return 1;}  
+
+              //check if we reached the final position
+              if (x == xf && y == yf) {stop = true;}          
             }
-
-            if (print_xpm(xpm, x, y) != 0) {return 1;} //draw the new xpm 
-            if (x == xf && y == yf) {stop = true;}          
-          }
-
+          }  
           break;
 
         default:
