@@ -76,14 +76,51 @@ int(video_test_rectangle)(uint16_t mode, uint16_t x, uint16_t y, uint16_t width,
 
 
 
-
+//see instructions here https://pages.up.pt/~up722898/aulas/lcom2425/lab5/lab5_5.html or slide 7C4 page 11
 int(video_test_pattern)(uint16_t mode, uint8_t no_rectangles, uint32_t first, uint8_t step) {
-  /* To be completed */
-  printf("%s(0x%03x, %u, 0x%08x, %d): under construction\n", __func__,
-         mode, no_rectangles, first, step);
+  
+  if (set_frame_buffer(mode) != 0) {return 1;}
+  if (set_vbe_mode(mode) != 0) {return 1;}
 
-  return 1;
+  int height = mode_info.YResolution / no_rectangles;
+  int width = mode_info.XResolution / no_rectangles;
+
+  for (int i = 0; i < no_rectangles; i++) {
+    for (int j = 0; j < no_rectangles; j++) {
+      
+      uint32_t color;
+
+      //If the color model is direct then the components of the rectangle with coordinates (row, col) are given by: 
+      if (mode_info.MemoryModel == 0x06) { //slide 7video1 page 9/23?
+        uint32_t R = ((first >> mode_info.RedFieldPosition) + j * step) % (1 << mode_info.RedMaskSize);
+        uint32_t G = ((first >> mode_info.GreenFieldPosition) + i * step) % (1 << mode_info.GreenMaskSize);
+        uint32_t B = ((first >> mode_info.BlueFieldPosition) + (i + j) * step) % (1 << mode_info.BlueMaskSize);
+        color = (R << mode_info.RedFieldPosition) | (G << mode_info.GreenFieldPosition) | (B << mode_info.BlueFieldPosition);
+      } 
+      //If the color model is indexed then the (index of the) color of the rectangle with coordinates (row, col) is given by: 
+      else {
+        color = (first + (i * no_rectangles + j) * step) % (1 << mode_info.BitsPerPixel);
+      }
+
+      if (vg_draw_rectangle(j*width, i*height, width, height, color) != 0) {
+        printf("Error drawing rectangle\n");
+        return 1;
+      }
+
+    }
+  }
+
+  if (wait_for_ESC() != 0) {return 1;}
+  return vg_exit();
 }
+
+
+
+
+
+
+
+
 
 int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
   /* To be completed */
