@@ -166,3 +166,34 @@ int (vg_draw_rectangle)(uint16_t x, uint16_t y, uint16_t width, uint16_t height,
   return 0;
 }
 
+
+
+
+
+
+
+//see ppt 8xpm-1 page 8/9 about xmp_load
+int(print_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
+  
+  xpm_image_t img; // pixmap and metadata
+  uint8_t *map; // pixmap itself
+
+  // get the pixmap from the XPM
+  map = xpm_load(xpm, XPM_INDEXED, &img);
+  if (map == NULL) {
+    printf("Error loading pixmap\n");
+    return 1;
+  }
+
+  // copy it to graphics memory
+  for (int i = 0; i < img.height; i++) {
+    for (int j = 0; j < img.width; j++) {
+      if (vg_draw_pixel(x + j, y + i, *map) != 0) return 1;
+      map++;
+    }
+  }
+  
+  return 0;
+}
+
+

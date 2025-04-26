@@ -127,20 +127,8 @@ int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
   if (set_frame_buffer(0x105) != 0) {return 1;}
   if (set_vbe_mode(0x105) != 0) {return 1;}
 
-  /*page 8/9 about xmp_load*/
-  xpm_image_t img; // pixmap and metadata
-  uint8_t *map; // pixmap itself
-  // get the pixmap from the XPM
-  map = xpm_load(xpm, XPM_INDEXED, &img);
-
-  // copy it to graphics memory
-  for (int i = 0; i < img.height; i++) {
-    for (int j = 0; j < img.width; j++) {
-      if (vg_draw_pixel(x + j, y + i, *map) != 0) return 1;
-      map++;
-    }
-  }
-
+  if (print_xpm(xpm, x, y) != 0) {return 1;}
+  
   if (wait_for_ESC() != 0) {return 1;}
   return vg_exit();
 }
