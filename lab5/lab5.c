@@ -7,7 +7,7 @@
 #include <stdio.h>
 
 // Any header files included below this line should have been created by you
-#include "graphics.h"
+#include <graphics.h>
 
 extern vbe_mode_info_t mode_info;
 
@@ -119,15 +119,35 @@ int(video_test_pattern)(uint16_t mode, uint8_t no_rectangles, uint32_t first, ui
 
 
 
-
-
-
+// see:
+// ppt 8xpm-1 till page 9
+// https://pages.up.pt/~up722898/aulas/lcom2425/lab5/src/doc/group__lab5.html#gaa6590a9732657b667e741d4f4ac22bf6
 int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
-  /* To be completed */
-  printf("%s(%8p, %u, %u): under construction\n", __func__, xpm, x, y);
+  
+  if (set_frame_buffer(0x105) != 0) {return 1;}
+  if (set_vbe_mode(0x105) != 0) {return 1;}
 
-  return 1;
+  /*page 8/9 about xmp_load*/
+  xpm_image_t img; // pixmap and metadata
+  uint8_t *map; // pixmap itself
+  // get the pixmap from the XPM
+  map = xpm_load(xpm, XPM_INDEXED, &img);
+
+  // copy it to graphics memory
+  for (int i = 0; i < img.height; i++) {
+    for (int j = 0; j < img.width; j++) {
+      if (vg_draw_pixel(x + j, y + i, *map) != 0) return 1;
+      map++;
+    }
+  }
+
+  if (wait_for_ESC() != 0) {return 1;}
+  return vg_exit();
 }
+
+
+
+
 
 int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint16_t yf,
                      int16_t speed, uint8_t fr_rate) {
