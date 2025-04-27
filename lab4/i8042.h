@@ -40,10 +40,9 @@
 
 // mouse
 #define KBC_CHECK_MOUSE 0xA9    //check mouse interface
-#define KBC_DISABLE_MOUSE 0xA8  //disable mouse interface
-#define KBC_ENABLE_MOUSE 0xA7   //enable mouse interface
+#define KBC_ENABLE_MOUSE 0xA8   //enable mouse interface
+#define KBC_DISABLE_MOUSE 0xA7  //disable mouse interface
 #define KBC_WRITE_MOUSE 0xD4    //write byte to mouse,  commands the KBC to forward its argument to the mouse without any interpretation 
-                                // -> must be written to KBC_CMD_REG (and ARGS to KBC_ARGS) before reading from OUT_BUF (see slide 8)
 
 
 
