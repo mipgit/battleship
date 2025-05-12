@@ -106,6 +106,13 @@ int (vg_draw_rectangle)(uint16_t x, uint16_t y, uint16_t width, uint16_t height,
 
 
 
+int(fill_screen)(uint32_t color) {
+  return vg_draw_rectangle(0, 0, mode_info.XResolution, mode_info.YResolution, color);
+}
+
+
+
+
 
 
 

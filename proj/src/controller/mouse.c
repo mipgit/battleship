@@ -1,7 +1,7 @@
 #include "mouse.h"
 
 
-int mouse_hook_id = 12; 
+int mouse_hook_id = 2; 
 
 struct packet mouse_packet;
 uint8_t byte_index = 0;
