@@ -54,7 +54,7 @@ void (process_scancode)(uint8_t scancode) {
 
 
 
-int(kbd_subscribe_int)(uint8_t *bit_no) {  //is uint8_t coorect?
+int(kbd_subscribe_int)(uint8_t *bit_no) {  //is uint8_t correct?
     if (bit_no == NULL) return 1;
     *bit_no = BIT(kbd_hook_id);
     //minix already has an interrupt handler installed
@@ -86,7 +86,7 @@ to prevent Minix's keyboard IH from stealing the scancodes from your program.
 bit 5 - disables mouse interface
 bit 4 - disables kbd interface
 bit 1 - enables interrupt on OUT_BUF, from mouse
-bit 0 - enables interrupt on OUT_BUF, from mouse
+bit 0 - enables interrupt on OUT_BUF, from kbd
  
 -> Portanto
 Esta função vai restaurar esse estado, voltando a ativar novamente tudo -> interrupçoes!
