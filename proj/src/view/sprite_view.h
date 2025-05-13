@@ -3,11 +3,14 @@
 
 
 #include <lcom/lcf.h>
+#include <lcom/xpm.h>
+#include <minix/sysutil.h>
+
 #include "controller/graphics.h"
 #include "model/sprite.h"
 
 
-#define TRANSPARENT 0xFFFFFE
+#define BLACK 0x000000
 #define RED 0xFF0000
 #define PINK 0xFF00FF
 #define BLUE 0x0000FF

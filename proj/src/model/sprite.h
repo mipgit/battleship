@@ -2,6 +2,7 @@
 #define SPRITE_H
 
 #include <lcom/lcf.h>
+#include <minix/sysutil.h>
 #include <stdint.h>
 #include "controller/graphics.h"
 
@@ -16,7 +17,7 @@ typedef struct {
   //int x, y; // current position
   int width, height; // dimensions
   //int xspeed, yspeed; // current speed
-  uint8_t *map; // the pixmap
+  uint32_t *map; // the pixmap (uint32_t !!!!!!!!!!!!)
 } Sprite;
 
 
@@ -24,7 +25,6 @@ Sprite *menu;
 Sprite *arena;
 Sprite *game_over;
 Sprite *info;
-
 
 
 
@@ -51,7 +51,7 @@ int move_sprite(Sprite *sp);
 //static int check_collision(Sprite *sp, char *base); ->might need this
 
 //loaders and unloaders
-void load_sprites();
+int load_sprites();
 void free_sprites();
 
 

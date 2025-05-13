@@ -11,7 +11,7 @@ Sprite *create_sprite(xpm_map_t sprite) {
   if (sp == NULL) return NULL;
   
   // read the sprite pixmap
-  sp->map = xpm_load(sprite, XPM_INDEXED, &img);
+  sp->map = (uint32_t *) xpm_load(sprite, XPM_8_8_8_8, &img); //!!!!!!!!!!!!!!
   if (sp->map == NULL) {
     free(sp);
     return NULL;
@@ -34,11 +34,17 @@ void destroy_sprite(Sprite *sp) {
 
 
 
-void load_sprites() {
-  menu = create_sprite((xpm_map_t) pic11);
-  arena = create_sprite((xpm_map_t) pic21);
-  game_over = create_sprite((xpm_map_t) pic31);
-  info = create_sprite((xpm_map_t) cross1);
+int load_sprites() {
+  menu = create_sprite((xpm_map_t) menu_xpm);
+  arena = create_sprite((xpm_map_t) arena_xpm);
+  game_over = create_sprite((xpm_map_t) game_over_xpm);
+  info = create_sprite((xpm_map_t) info_xpm);
+
+  if (!menu || !arena || !game_over || !info) {
+    printf("Error: Failed to load one or more sprites!\n");
+    return 1;
+  }
+  return 0;
 }
 
 

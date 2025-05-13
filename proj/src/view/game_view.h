@@ -1,7 +1,7 @@
 #ifndef GAME_VIEW_H
 #define GAME_VIEW_H
 
-
+#include <minix/sysutil.h>
 #include <lcom/lcf.h>
 
 #include "controller/timer.h"
@@ -13,12 +13,6 @@
 #include "model/sprite.h"
 #include "view/sprite_view.h"
 
-extern vbe_mode_info_t mode_info;
-
-extern Sprite *menu;
-extern Sprite *arena;
-extern Sprite *game_over;
-extern Sprite *info;
 
 
 void draw_screen();
