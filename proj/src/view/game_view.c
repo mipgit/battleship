@@ -4,6 +4,7 @@ extern Sprite *menu;
 extern Sprite *arena;
 extern Sprite *game_over;
 extern Sprite *info;
+extern Sprite *grid;
 
 extern vbe_mode_info_t mode_info;
 
@@ -43,7 +44,8 @@ void draw_info() {
 
 void draw_arena() {
   fill_screen(PINK);
-  draw_sprite(arena, mode_info.XResolution/2 - arena->width/2, mode_info.YResolution/2 - arena->height/2);
+  draw_sprite(grid, 0,0);
+  //draw_sprite(arena, mode_info.XResolution/2 - arena->width/2, mode_info.YResolution/2 - arena->height/2);
 }
 
 void draw_game_over() {
