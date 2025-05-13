@@ -1,9 +1,0 @@
-src/.gdbinit
-src/proj.o
-src/utils.o
-src/timer.o
-src/KBC.o
-src/keyboard.o
-src/mouse.o
-src/graphics.o
-src/proj

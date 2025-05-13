@@ -3,9 +3,11 @@ PROG=proj
 
 #folders of the files 
 .PATH: ${.CURDIR}/controller/
+.PATH: ${.CURDIR}/model/
+.PATH: ${.CURDIR}/view/
 
 # source code files to be compiled
-SRCS = proj.c utils.c timer.c KBC.c keyboard.c mouse.c graphics.c 
+SRCS = proj.c utils.c timer.c KBC.c keyboard.c mouse.c graphics.c game.c sprite.c game_view.c sprite_view.c 
 
 # additional compilation flags
 # "-Wall -Wextra -Werror -I . -std=c11 -Wno-unused-parameter" are already set
