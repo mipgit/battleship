@@ -1,9 +1,9 @@
-static char *pic11[] = {
-  "32 13 4",
-  "  0",
-  "x 2",
-  "o 14",
-  "+ 4",
+static char *menu_xpm[] = {
+  "32 13 4 1",
+  "  c None",
+  "x c #eba812",
+  "o c #abcdef",
+  "+ c #eb8542",
   "                                ",
   "              xxx               ",
   "            xxxxxxx             ",

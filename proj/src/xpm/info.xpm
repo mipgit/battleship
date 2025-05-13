@@ -1,7 +1,7 @@
-static char *cross1[] = {
-  "32 32 2",
-  "  0",
-  "+ 13",
+static char *info_xpm[] = {
+  "32 32 2 1",
+  "  c None",
+  "+ c #a985fe",
   "               +                ",
   "               +                ",
   "               +                ",
