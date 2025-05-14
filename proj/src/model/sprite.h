@@ -24,7 +24,6 @@ typedef struct {
 
 
 Sprite *menu;
-Sprite *arena;
 Sprite *game_over;
 Sprite *info;
 Sprite *grid;

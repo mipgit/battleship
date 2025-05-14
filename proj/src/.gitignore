@@ -3,10 +3,12 @@
 /*MODEL*/
 game.o
 sprite.o
+arena.o
 
 /*VIEW*/
 game_view.o
 sprite_view.o
+arena_view.o
 
 /*CONTROLLER*/
 proj.o

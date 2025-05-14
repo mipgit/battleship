@@ -27,6 +27,7 @@ int cursor_x;
 int cursor_y;
 
 extern vbe_mode_info_t mode_info;
+extern uint8_t *current_buffer;
 
 
 extern GameState state;
@@ -37,6 +38,11 @@ GameState get_state();
 void game_timer_handler();
 void game_keyboard_handler();
 void game_mouse_handler();
+
+
+void menu_main_loop();
+void info_main_loop();
+void game_over_main_loop();
 
 
 

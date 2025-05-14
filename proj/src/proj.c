@@ -10,6 +10,7 @@
 #include "controller/graphics.h"
 
 #include "model/game.h"
+#include "model/arena.h"
 #include "model/sprite.h"
 
 
@@ -73,7 +74,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
   if (start_devices() != 0) {return close_devices();}
   if (load_sprites() != 0) {return 1;} //maybe create a function that loads only the initial sprites (if user exits game imm we save time)
 
-  draw_screen();
+  //draw_screen();
 
   int ipc_status, r;
   message msg;
@@ -91,30 +92,29 @@ int (proj_main_loop)(int argc, char *argv[]) {
       switch (_ENDPOINT_P(msg.m_source)) {
         case HARDWARE: /* hardware interrupt notification */
           if (msg.m_notify.interrupts & kbd_irq_set) { 
+            (kbc_ih)();
             game_keyboard_handler();
+
+            //depois temos de dividir os handlers por ecrã
+            //if(state == ARENA) arena_keyboard_handler();
+            //...
           }
 
           if (msg.m_notify.interrupts & mouse_irq_set) { 
-            mouse_ih();
+            (mouse_ih)();
             if(mouse_sync_bytes()) create_packet();
             game_mouse_handler(); 
-            //para já temos um handler geral para o jogo
-            //mas depois temos de fazer algo do genero:
-            /*
-            if (state == ARENA) arena_mouse_handler();
-            .....
-            */
-           //o mesmo para o teclado e para os outros devices
-
+            
+            //depois temos de dividir os handlers por ecrã
+            //if (state == ARENA) arena_mouse_handler();
+            //...
           }
 
           if (msg.m_notify.interrupts & timer_irq_set) { 
-            timer_int_handler();
-            //no timer em especifico temos de ter algo tipo:
-            //if (state == ARENA) arena_main_loop();
-            //if (state == MENU) menu_main_loop();
-            //.....
-
+            if (state == MENU) menu_main_loop();
+            if (state == INFO) info_main_loop();
+            if (state == ARENA) arena_main_loop();
+            if (state == GAME_OVER) game_over_main_loop();
           }
           break;
 

@@ -17,7 +17,7 @@
 #define YELLOW 0xFFFF00
 
 
-int(draw_sprite)(Sprite *sprite, uint16_t x, uint16_t y);
+int(draw_sprite)(Sprite *sprite, uint16_t x, uint16_t y, uint8_t *buffer);
 
 //to write stuff
 int(draw_char)(char c, uint16_t x, uint16_t y, uint32_t color);

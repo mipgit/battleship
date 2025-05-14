@@ -4,8 +4,11 @@
 //struct that contains info about the graphics mode
 vbe_mode_info_t mode_info;
 
-//pointer to the beginning of the virtual mem
+//here we store the main frame
 uint8_t *frame_buffer;
+
+//and here we store the current one
+uint8_t *current_buffer;
 
 
 
@@ -23,6 +26,23 @@ int (set_graphics_mode)(uint16_t mode) {
   }
   return 0;
 }
+
+
+int (set_text_mode)() {
+  reg86_t reg86;
+  memset(&reg86, 0, sizeof(reg86));
+  reg86.intno = 0x10;
+  reg86.ah = 0x00;
+  reg86.al = 0x03; 
+  reg86.bx = 0x0000;
+  if(sys_int86(&reg86) != 0) {
+    printf("set_vbe_mode: sys_int86() failed \n");
+    return 1;
+  }
+  return 0;
+}
+
+
 
 
 
@@ -49,9 +69,9 @@ int (set_frame_buffer)(uint16_t mode) {
   //as seen in SO, a program should only deal if virtual mem addresses
   //so here we allocate mem (virtually) for the frame buff
   frame_buffer = vm_map_phys(SELF, (void *) phys_addresses.mr_base, frame_size);
-  if (frame_buffer == NULL) return 1;
-  
+  current_buffer = (uint8_t *) malloc(frame_size);
 
+  if (frame_buffer == NULL) return 1;
   return 0;
 }
 
@@ -70,7 +90,7 @@ int (normalize_color)(uint32_t color, uint32_t *new_color) {
 
 
 
-int (vg_draw_pixel)(uint16_t x, uint16_t y, uint32_t color) {
+int (draw_pixel)(uint16_t x, uint16_t y, uint32_t color, uint8_t *buffer) {
   
   //we check if the coordinates are valid
   if (x >= mode_info.XResolution || y >= mode_info.YResolution) return 1;
@@ -82,23 +102,23 @@ int (vg_draw_pixel)(uint16_t x, uint16_t y, uint32_t color) {
   unsigned int index = (x + mode_info.XResolution * y) * bytes_per_pixel;
 
   //using the frame buffer pointer, we copy n bytes of the color given on the right place (index)
-  if (memcpy(&frame_buffer[index], &color, bytes_per_pixel) == NULL) return 1;
+  if (memcpy(&buffer[index], &color, bytes_per_pixel) == NULL) return 1;
   
   return 0;
 }
 
 
-int (vg_draw_hline)(uint16_t x, uint16_t y, uint16_t len, uint32_t color) {
+int (draw_hline)(uint16_t x, uint16_t y, uint16_t len, uint32_t color, uint8_t *buffer) {
   for (uint16_t i = 0; i < len; i++) {
-    if (vg_draw_pixel(x + i, y, color) != 0) return 1;
+    if (draw_pixel(x + i, y, color, buffer) != 0) return 1;
   }
   return 0;
 }
 
 
-int (vg_draw_rectangle)(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color) {
+int (draw_rectangle)(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color, uint8_t *buffer) {
   for (uint16_t i = 0; i < height; i++) {
-    if (vg_draw_hline(x, y + i, width, color) != 0) return 1;
+    if (draw_hline(x, y + i, width, color, buffer) != 0) return 1;
   }
   return 0;
 }
@@ -106,11 +126,15 @@ int (vg_draw_rectangle)(uint16_t x, uint16_t y, uint16_t width, uint16_t height,
 
 
 
-int(fill_screen)(uint32_t color) {
-  return vg_draw_rectangle(0, 0, mode_info.XResolution, mode_info.YResolution, color);
+int(fill_screen)(uint32_t color, uint8_t *buffer) {
+  return draw_rectangle(0, 0, mode_info.XResolution, mode_info.YResolution, color, buffer);
 }
 
 
 
+int (swap_buffers)() {
+  if (memcpy(frame_buffer, current_buffer, mode_info.XResolution * mode_info.YResolution * ((mode_info.BitsPerPixel + 7) / 8)) == NULL) return 1;
+  return 0;
+}
 
 

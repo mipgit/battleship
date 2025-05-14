@@ -21,7 +21,6 @@ GameState get_state() {
 
 
 void game_keyboard_handler() {
-  kbc_ih();
   switch (scancode) {
     case ESC_KEY:
       set_state(EXIT);
@@ -41,7 +40,6 @@ void game_keyboard_handler() {
     default:
       break;
   }
-  draw_screen();
 }
 
 
@@ -55,7 +53,27 @@ void game_mouse_handler() {
   if (cursor_x > mode_info.XResolution - cursor->width) cursor_x = mode_info.XResolution - cursor->width;
   if (cursor_y < 0) cursor_y = 0;
   if (cursor_y > mode_info.YResolution - cursor->height) cursor_y = mode_info.YResolution - cursor->height;  
-  draw_screen();
+}
+
+
+
+
+void menu_main_loop() {
+  draw_menu();
+  draw_cursor(current_buffer);
+  swap_buffers();
+}
+
+void info_main_loop() {
+  draw_info();
+  draw_cursor(current_buffer);
+  swap_buffers();
+}
+
+void game_over_main_loop() {
+  draw_game_over();
+  draw_cursor(current_buffer);
+  swap_buffers();
 }
 
 
