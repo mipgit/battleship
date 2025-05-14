@@ -50,7 +50,7 @@ int (mouse_write_cmd)(uint8_t command) {
             printf("Error writing to KBC_ARGS.\n");
             return 1;}
         
-        tickdelay(micros_to_ticks(DELAY_US));
+        tickdelay(micros_to_ticks(10000));
         
 
         if (util_sys_inb(OUT_BUF, &mouse_response) != 0) {
@@ -101,7 +101,7 @@ void (mouse_ih)() {
         printf("Error reading status.\n");
         return;
     }
-    tickdelay(micros_to_ticks(DELAY_US));
+    //tickdelay(micros_to_ticks(DELAY_US));
 
     //if the data is from mouse (and there's no errors), we read a byte from the OUT_BUF 
     if ((st & OBF) && (st & AUX) && !(st & (PARITY | TIMEOUT))) {
