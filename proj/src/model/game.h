@@ -20,10 +20,16 @@ typedef enum {
 
 
 extern uint8_t scancode;
+
 extern uint8_t byte_index;
+extern struct packet mouse_packet;
+int cursor_x;
+int cursor_y;
+
+extern vbe_mode_info_t mode_info;
+
 
 extern GameState state;
-
 
 void set_state(GameState new_state);
 GameState get_state();

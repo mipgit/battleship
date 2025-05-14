@@ -40,6 +40,7 @@ int load_sprites() {
   game_over = create_sprite((xpm_map_t) game_over_xpm);
   info = create_sprite((xpm_map_t) info_xpm);
   grid = create_sprite((xpm_map_t) grid_xpm);
+  cursor = create_sprite((xpm_map_t) cursor_xpm);
 
   if (!menu || !arena || !game_over || !info) {
     printf("Error: Failed to load one or more sprites!\n");
@@ -56,5 +57,6 @@ void free_sprites() {
   destroy_sprite(game_over);
   destroy_sprite(info);
   destroy_sprite(grid);
+  destroy_sprite(cursor);
 }
 

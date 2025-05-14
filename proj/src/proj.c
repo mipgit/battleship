@@ -21,6 +21,7 @@
 
 uint8_t kbd_irq_set;
 uint8_t timer_irq_set;
+uint32_t mouse_irq_set;
 
 
 
@@ -41,6 +42,10 @@ int start_devices() {
 
   if (timer_subscribe_int(&timer_irq_set) != 0) {return 1;}
   if (kbd_subscribe_int(&kbd_irq_set) != 0) {return 1;}
+  if (mouse_subscribe_int(&mouse_irq_set) != 0) {return 1;}
+
+  if (mouse_set_stream_mode() != 0) {return 1;}
+  if (_mouse_enable_data_reporting() != 0) {return 1;}
 
   if (set_frame_buffer(VIDEO_MODE) != 0) {return 1;}
   if (set_graphics_mode(VIDEO_MODE) != 0) {return 1;}
@@ -52,6 +57,9 @@ int start_devices() {
 int close_devices() {
   if (kbd_unsubscribe_int() != 0) {return 1;}
   if (timer_unsubscribe_int() != 0) {return 1;}
+  if (mouse_unsubscribe_int() != 0) {return 1;}
+
+  if (_mouse_disable_data_reporting() != 0) {return 1;}
   
   if (vg_exit() != 0) {return 1;}
 
@@ -62,7 +70,7 @@ int close_devices() {
 
 int (proj_main_loop)(int argc, char *argv[]) {
   
-  if (start_devices() != 0) {return 1;}
+  if (start_devices() != 0) {return close_devices();}
   if (load_sprites() != 0) {return 1;} //maybe create a function that loads only the initial sprites (if user exits game imm we save time)
 
   draw_screen();
@@ -86,8 +94,27 @@ int (proj_main_loop)(int argc, char *argv[]) {
             game_keyboard_handler();
           }
 
+          if (msg.m_notify.interrupts & mouse_irq_set) { 
+            mouse_ih();
+            if(mouse_sync_bytes()) create_packet();
+            game_mouse_handler(); 
+            //para já temos um handler geral para o jogo
+            //mas depois temos de fazer algo do genero:
+            /*
+            if (state == ARENA) arena_mouse_handler();
+            .....
+            */
+           //o mesmo para o teclado e para os outros devices
+
+          }
+
           if (msg.m_notify.interrupts & timer_irq_set) { 
             timer_int_handler();
+            //no timer em especifico temos de ter algo tipo:
+            //if (state == ARENA) arena_main_loop();
+            //if (state == MENU) menu_main_loop();
+            //.....
+
           }
           break;
 

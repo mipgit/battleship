@@ -22,7 +22,7 @@ void draw_info();
 void draw_arena(); //isto vai ter de passar para outro ficheiro penso eu (vai ser muita coisa)
 void draw_game_over();
 
-
+void draw_cursor();
 
 
 #endif

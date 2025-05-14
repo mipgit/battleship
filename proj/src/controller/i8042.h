@@ -5,6 +5,7 @@
 
 
 #define DELAY_US 20000
+#define MOUSE_SPEED 1.5
 
 #define KBD_IRQ 1               // Keyboard IRQ line 
 #define MOUSE_IRQ 12            // Mouse IRQ line

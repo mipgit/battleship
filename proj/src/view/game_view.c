@@ -5,8 +5,11 @@ extern Sprite *arena;
 extern Sprite *game_over;
 extern Sprite *info;
 extern Sprite *grid;
+extern Sprite *cursor;
 
 extern vbe_mode_info_t mode_info;
+extern int cursor_x;
+extern int cursor_y;
 
 
 
@@ -29,6 +32,7 @@ void draw_screen() {
       fill_screen(BLACK);
       break;
   }
+  draw_cursor();
 }
 
 
@@ -51,5 +55,14 @@ void draw_arena() {
 void draw_game_over() {
   fill_screen(YELLOW);
   draw_sprite(game_over, mode_info.XResolution/2 - game_over->width/2, mode_info.YResolution/2 - game_over->height/2);
+}
+
+
+
+
+
+void draw_cursor() {
+  printf("X: %d Y: %d\n", cursor_x, cursor_y);
+  draw_sprite(cursor, cursor_x, cursor_y);
 }
 

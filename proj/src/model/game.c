@@ -43,3 +43,19 @@ void game_keyboard_handler() {
   }
   draw_screen();
 }
+
+
+
+
+void game_mouse_handler() {
+  cursor_x += mouse_packet.delta_x * MOUSE_SPEED;
+  cursor_y -= mouse_packet.delta_y * MOUSE_SPEED;
+
+  if (cursor_x < 0) cursor_x = 0;
+  if (cursor_x > mode_info.XResolution - cursor->width) cursor_x = mode_info.XResolution - cursor->width;
+  if (cursor_y < 0) cursor_y = 0;
+  if (cursor_y > mode_info.YResolution - cursor->height) cursor_y = mode_info.YResolution - cursor->height;  
+  draw_screen();
+}
+
+

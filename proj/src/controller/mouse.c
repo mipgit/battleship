@@ -65,6 +65,14 @@ int (mouse_write_cmd)(uint8_t command) {
 }
 
 
+int (mouse_set_stream_mode)() {
+    if (mouse_write_cmd(MOUSE_SET_STREAM) != 0) {
+        printf("Error enabling data reporting.\n");
+        return 1;
+    }
+    return 0;
+}
+
 
 
 int (_mouse_enable_data_reporting)() {
@@ -139,19 +147,19 @@ bool (mouse_sync_bytes)() {
 
 
 
-void (create_packet)(struct packet* mouse_packet) {
+void (create_packet)() {
 
     for (int i = 0; i < 3; i++) {
-        mouse_packet->bytes[i] = mouse_bytes[i];
+        mouse_packet.bytes[i] = mouse_bytes[i];
     }
 
-    mouse_packet->lb = mouse_bytes[0] & MOUSE_LB;
-    mouse_packet->rb = mouse_bytes[0] & MOUSE_RB;
-    mouse_packet->mb = mouse_bytes[0] & MOUSE_MB;
-    mouse_packet->delta_x = (mouse_bytes[0] & MOUSE_MSB_X_DELTA) ? (0xFF00 | mouse_bytes[1]) : mouse_bytes[1];
-    mouse_packet->delta_y = (mouse_bytes[0] & MOUSE_MSB_Y_DELTA) ? (0xFF00 | mouse_bytes[2]) : mouse_bytes[2];
-    mouse_packet->x_ov = mouse_bytes[0] & MOUSE_X_OVERFLOW;
-    mouse_packet->y_ov = mouse_bytes[0] & MOUSE_Y_OVERFLOW;
+    mouse_packet.lb = mouse_bytes[0] & MOUSE_LB;
+    mouse_packet.rb = mouse_bytes[0] & MOUSE_RB;
+    mouse_packet.mb = mouse_bytes[0] & MOUSE_MB;
+    mouse_packet.delta_x = (mouse_bytes[0] & MOUSE_MSB_X_DELTA) ? (0xFF00 | mouse_bytes[1]) : mouse_bytes[1];
+    mouse_packet.delta_y = (mouse_bytes[0] & MOUSE_MSB_Y_DELTA) ? (0xFF00 | mouse_bytes[2]) : mouse_bytes[2];
+    mouse_packet.x_ov = mouse_bytes[0] & MOUSE_X_OVERFLOW;
+    mouse_packet.y_ov = mouse_bytes[0] & MOUSE_Y_OVERFLOW;
 }
 
 

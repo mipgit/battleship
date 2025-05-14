@@ -16,11 +16,12 @@ void (mouse_ih)();
 
 int (mouse_write_cmd)(uint8_t command);
 
+int (mouse_set_stream_mode)();
 int (_mouse_enable_data_reporting)();
 int (_mouse_disable_data_reporting)();
 
 bool (mouse_sync_bytes)();
-void (create_packet)(struct packet *mouse_packet);
+void (create_packet)();
 
 
 #endif 

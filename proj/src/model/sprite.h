@@ -11,6 +11,7 @@
 #include "xpm/game_over.xpm"
 #include "xpm/info.xpm"
 #include "xpm/batalha_naval_layout.xpm"
+#include "xpm/cursor.xpm"
 
 
 
@@ -27,6 +28,7 @@ Sprite *arena;
 Sprite *game_over;
 Sprite *info;
 Sprite *grid;
+Sprite *cursor;
 
 
 
