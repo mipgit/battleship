@@ -40,6 +40,12 @@ int load_sprites() {
   info = create_sprite((xpm_map_t) info_xpm);
   grid = create_sprite((xpm_map_t) grid_xpm);
   cursor = create_sprite((xpm_map_t) cursor_xpm);
+  ship1 = create_sprite((xpm_map_t) ship1_xpm);
+  ship2h = create_sprite((xpm_map_t) ship2h_xpm);
+  ship2v = create_sprite((xpm_map_t) ship2v_xpm);
+  ship3h = create_sprite((xpm_map_t) ship3h_xpm);
+  ship3v = create_sprite((xpm_map_t) ship3v_xpm);
+  ship4v = create_sprite((xpm_map_t) ship4v_xpm);
 
   if (!menu || !game_over || !info) {
     printf("Error: Failed to load one or more sprites!\n");
@@ -56,5 +62,11 @@ void free_sprites() {
   destroy_sprite(info);
   destroy_sprite(grid);
   destroy_sprite(cursor);
+  destroy_sprite(ship1);
+  destroy_sprite(ship2h);
+  destroy_sprite(ship2v);
+  destroy_sprite(ship3h);
+  destroy_sprite(ship3v);
+  destroy_sprite(ship4v);
 }
 

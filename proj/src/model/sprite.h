@@ -12,6 +12,12 @@
 #include "xpm/info.xpm"
 #include "xpm/batalha_naval_layout.xpm"
 #include "xpm/cursor.xpm"
+#include "xpm/ship1.xpm"
+#include "xpm/ship2h.xpm"
+#include "xpm/ship2v.xpm"
+#include "xpm/ship3h.xpm"
+#include "xpm/ship3v.xpm"
+#include "xpm/ship4v.xpm"
 
 
 
@@ -28,6 +34,12 @@ Sprite *game_over;
 Sprite *info;
 Sprite *grid;
 Sprite *cursor;
+Sprite *ship1;
+Sprite *ship2h;
+Sprite *ship2v;
+Sprite *ship3h;
+Sprite *ship3v;
+Sprite *ship4v;
 
 
 
