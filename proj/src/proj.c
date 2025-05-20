@@ -74,7 +74,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
   if (start_devices() != 0) {return close_devices();}
   if (load_sprites() != 0) {return 1;} //maybe create a function that loads only the initial sprites (if user exits game imm we save time)
 
-  //draw_screen();
+  reset_arena_state();
 
   int ipc_status, r;
   message msg;

@@ -8,13 +8,18 @@
 
 #include "controller/graphics.h"
 
+#include "model/game_macro.h"
 #include "model/game.h"
 #include "model/sprite.h"
+#include "model/arena.h"
 #include "view/sprite_view.h"
 
 
 void draw_arena();
 
-
+void draw_cell(int x, int y, int cell_row, int cell_col, Cell *cell);
+void draw_ship_sprite(int x, int y,  ShipType type, int orientation);
+void draw_hit_marker(int x, int y);
+void draw_miss_marker(int x, int y);
 
 #endif

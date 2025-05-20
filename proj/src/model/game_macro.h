@@ -1,0 +1,65 @@
+#ifndef GAME_MACRO_H
+#define GAME_MACRO_H
+
+#define GRID_ROWS 10
+#define GRID_COLS 10
+
+#define GRID_ORIGIN_X 31 //start x of grid 1
+#define GRID_ORIGIN_Y 31 //start y of grid 1
+
+#define CELL_WIDTH 33
+#define CELL_HEIGHT 33
+
+#define NUM_SHIPS 5
+
+#define SHIP_TYPE_TO_SIZE(type) ((type == NO_SHIP) ? 0 : (int)type)
+
+
+typedef enum {
+    NO_SHIP,
+    SHIP_1,
+    SHIP_2,
+    SHIP_3,
+    SHIP_4,
+} ShipType;
+
+
+typedef struct {
+    ShipType type;
+    int size;
+    int orientation; // 0->horizontal and 1->vertical ?
+    int start_row, start_col;
+    //what else?
+} Ship;
+
+
+typedef enum {
+    EMPTY,
+    SHIP,
+    HIT,
+    MISS,
+} CellState;
+
+
+typedef struct {
+    CellState state;
+    int ship_id; //-1 if no ship
+} Cell;
+
+
+typedef struct {
+    Cell cells[GRID_ROWS][GRID_COLS];
+    Ship ships[NUM_SHIPS];
+} Grid;
+
+
+typedef struct {
+    Grid player1_grid;
+    //Grid player2_grid;
+} Arena;
+
+
+
+
+
+#endif
