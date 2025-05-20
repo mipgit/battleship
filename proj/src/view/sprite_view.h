@@ -15,6 +15,7 @@
 #define PINK 0xFF00FF
 #define BLUE 0x0000FF
 #define YELLOW 0xFFFF00
+#define HOVER_COLOR 0xAAAAFF
 
 
 int(draw_sprite)(Sprite *sprite, uint16_t x, uint16_t y, uint8_t *buffer);

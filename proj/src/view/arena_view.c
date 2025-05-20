@@ -13,6 +13,9 @@ extern Sprite *single_grid;
 
 extern Arena arena;
 
+extern int cursor_x;
+extern int cursor_y;
+
 
 /*
 void draw_arena() {
@@ -54,6 +57,11 @@ void draw_grid(Grid *grid) {
 void draw_cell(Grid *grid, int x, int y, int cell_row, int cell_col) {
 
   Cell *cell = &grid->cells[cell_row][cell_col];
+
+  if (cursor_x >= x && cursor_x < x + CELL_WIDTH &&
+      cursor_y >= y && cursor_y < y + CELL_HEIGHT) {
+    draw_rectangle(x, y, CELL_WIDTH, CELL_HEIGHT, HOVER_COLOR, current_buffer);
+  }
 
   // Only draw ships at their starting position to avoid duplicates
   if (cell->state == SHIP && cell->ship_id >= 0) {
@@ -101,11 +109,11 @@ void draw_ship_sprite(int x, int y, ShipType type, int orientation) {
 
 
 void draw_hit_marker(int x, int y) {
-  vg_draw_rectangle(x, y, CELL_WIDTH, CELL_HEIGHT, RED);
+  draw_rectangle(x, y, CELL_WIDTH, CELL_HEIGHT, RED, current_buffer);
 }
 
 void draw_miss_marker(int x, int y) {
-  vg_draw_rectangle(x, y, CELL_WIDTH, CELL_HEIGHT, YELLOW);
+  draw_rectangle(x, y, CELL_WIDTH, CELL_HEIGHT, YELLOW, current_buffer);
 }
 
 
