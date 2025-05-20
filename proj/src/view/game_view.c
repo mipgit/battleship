@@ -55,7 +55,7 @@ void draw_info() {
 }
 
 void draw_game_over() {
-  fill_screen(YELLOW, current_buffer);
+  fill_screen(PINK, current_buffer);
   draw_sprite(game_over, mode_info.XResolution/2 - game_over->width/2, mode_info.YResolution/2 - game_over->height/2, current_buffer);
 }
 

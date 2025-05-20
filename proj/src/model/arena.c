@@ -11,8 +11,27 @@ void arena_main_loop() {
 
 
 void reset_arena_state() {
+  //set grid origins (fix this!!!)
+  arena.player1_grid.sprite_x = 10;
+  arena.player1_grid.sprite_y = 10;
+  arena.player1_grid.x = arena.player1_grid.sprite_x + 31;
+  arena.player1_grid.y = arena.player1_grid.sprite_y + 31;
+  
+
+  arena.player2_grid.sprite_x = 410;
+  arena.player2_grid.sprite_y = 10;
+  arena.player2_grid.x = arena.player2_grid.sprite_x + 31;
+  arena.player2_grid.y = arena.player2_grid.sprite_y + 31;
+
+  //initialize grids and ships
+
+  //player 1
   init_grid(&arena.player1_grid);
   setup_ships(&arena.player1_grid);
+
+  //player 2
+  init_grid(&arena.player2_grid);
+  setup_ships(&arena.player2_grid);
 }
 
 
@@ -34,25 +53,11 @@ void init_grid(Grid *grid) {
 
 
 
-void cell_to_pixel(int row, int col, int* x, int* y) {
-  *x = GRID_ORIGIN_X + (col * CELL_WIDTH) + col;
-  *y = GRID_ORIGIN_Y + (row * CELL_HEIGHT) + row;
+void cell_to_pixel(Grid *grid, int row, int col, int* x, int* y) {
+  *x = grid->x + (col * CELL_WIDTH) + col;
+  *y = grid->y + (row * CELL_HEIGHT) + row;
 }
 
-
-int pixel_to_cell(int x, int y, int* row, int* col) {
-    x -= GRID_ORIGIN_X;
-    y -= GRID_ORIGIN_Y;
-
-    *col = x / (CELL_WIDTH + 1);
-    *row = y / (CELL_HEIGHT + 1);
-
-    if (*row < 0 || *row >= GRID_ROWS || *col < 0 || *col >= GRID_COLS) {
-        return 1; // error: outside grid
-    }
-
-    return 0;
-}
 
 
 int coord_to_cell(const char* coord, int* row, int* col) {
@@ -141,7 +146,7 @@ bool add_ship(Grid *grid, int ship_id, ShipType type, int orientation, const cha
 
 void setup_ships(Grid *grid) {
   add_ship(grid, 0, SHIP_3, 0, "A1"); 
-  add_ship(grid, 1, SHIP_2, 0, "D5"); 
+  add_ship(grid, 1, SHIP_2, 1, "D5"); 
   add_ship(grid, 2, SHIP_1, 0, "J8"); 
 }
 

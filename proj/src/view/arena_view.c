@@ -8,7 +8,8 @@ extern Sprite *ship2v;
 extern Sprite *ship3h;
 extern Sprite *ship3v;
 extern Sprite *ship4v;
-extern Sprite *grid;
+extern Sprite *double_grid;
+extern Sprite *single_grid;
 
 extern Arena arena;
 
@@ -30,22 +31,33 @@ void draw_arena() {
 
 
 void draw_arena() {
-  fill_screen(PINK, current_buffer);
-  draw_sprite(grid, 0,0, current_buffer);
+  fill_screen(YELLOW, current_buffer);
+  draw_grid(&arena.player1_grid);
+  draw_grid(&arena.player2_grid);
+}
+
+
+void draw_grid(Grid *grid) {
+  draw_sprite(single_grid, grid->sprite_x, grid->sprite_y, current_buffer);
+
   for (int i = 0; i < GRID_ROWS; i++) {
     for (int j = 0; j < GRID_COLS; j++) {
       int x, y;
-      cell_to_pixel(i, j, &x, &y);
-      draw_cell(x, y, i, j, &arena.player1_grid.cells[i][j]); 
+      cell_to_pixel(grid, i, j, &x, &y);
+      draw_cell(grid, x, y, i, j);
     }
   }
 }
 
 
-void draw_cell(int x, int y, int cell_row, int cell_col, Cell *cell) {
+
+void draw_cell(Grid *grid, int x, int y, int cell_row, int cell_col) {
+
+  Cell *cell = &grid->cells[cell_row][cell_col];
+
   // Only draw ships at their starting position to avoid duplicates
   if (cell->state == SHIP && cell->ship_id >= 0) {
-    Ship *ship = &arena.player1_grid.ships[cell->ship_id];
+    Ship *ship = &grid->ships[cell->ship_id];
     if (ship->start_row == cell_row && ship->start_col == cell_col) {
         draw_ship_sprite(x, y, ship->type, ship->orientation);
     }

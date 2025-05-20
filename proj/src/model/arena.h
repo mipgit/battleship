@@ -31,8 +31,7 @@ void reset_arena_state(); //de cada vez que o jogo acabar, se o utilizador quise
 
 
 void init_grid(Grid *grid);
-void cell_to_pixel(int row, int col, int* x, int* y);
-int pixel_to_cell(int x, int y, int* row, int* col);
+void cell_to_pixel(Grid *grid, int row, int col, int* x, int* y);
 int coord_to_cell(const char* coord, int* row, int* col);
 bool can_place_ship(Grid *grid, int start_row, int start_col, int size, int orientation);
 bool add_ship(Grid *grid, int ship_id, ShipType type, int orientation, const char* coord);

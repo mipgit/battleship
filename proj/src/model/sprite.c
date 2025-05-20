@@ -38,7 +38,8 @@ int load_sprites() {
   menu = create_sprite((xpm_map_t) menu_xpm);
   game_over = create_sprite((xpm_map_t) game_over_xpm);
   info = create_sprite((xpm_map_t) info_xpm);
-  grid = create_sprite((xpm_map_t) grid_xpm);
+  double_grid = create_sprite((xpm_map_t) grid_xpm);
+  single_grid = create_sprite((xpm_map_t) single_grid_xpm);
   cursor = create_sprite((xpm_map_t) cursor_xpm);
   ship1 = create_sprite((xpm_map_t) ship1_xpm);
   ship2h = create_sprite((xpm_map_t) ship2h_xpm);
@@ -60,7 +61,8 @@ void free_sprites() {
   destroy_sprite(menu);
   destroy_sprite(game_over);
   destroy_sprite(info);
-  destroy_sprite(grid);
+  destroy_sprite(double_grid);
+  destroy_sprite(single_grid);
   destroy_sprite(cursor);
   destroy_sprite(ship1);
   destroy_sprite(ship2h);

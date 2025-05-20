@@ -4,8 +4,6 @@
 #define GRID_ROWS 10
 #define GRID_COLS 10
 
-#define GRID_ORIGIN_X 31 //start x of grid 1
-#define GRID_ORIGIN_Y 31 //start y of grid 1
 
 #define CELL_WIDTH 33
 #define CELL_HEIGHT 33
@@ -50,12 +48,14 @@ typedef struct {
 typedef struct {
     Cell cells[GRID_ROWS][GRID_COLS];
     Ship ships[NUM_SHIPS];
+    int sprite_x, sprite_y; //position of grid sprite (it has coordinates etc)
+    int x, y; //position of the actual first cell
 } Grid;
 
 
 typedef struct {
     Grid player1_grid;
-    //Grid player2_grid;
+    Grid player2_grid;
 } Arena;
 
 

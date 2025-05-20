@@ -16,8 +16,9 @@
 
 
 void draw_arena();
+void draw_grid(Grid *grid);
 
-void draw_cell(int x, int y, int cell_row, int cell_col, Cell *cell);
+void draw_cell(Grid *grid, int x, int y, int cell_row, int cell_col);
 void draw_ship_sprite(int x, int y,  ShipType type, int orientation);
 void draw_hit_marker(int x, int y);
 void draw_miss_marker(int x, int y);
