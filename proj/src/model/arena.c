@@ -1,11 +1,53 @@
 #include "arena.h"
 
 
+extern struct packet mouse_packet; 
+extern int cursor_x, cursor_y;
+
+
 void arena_main_loop() { 
   draw_arena();
   draw_cursor(current_buffer);
   swap_buffers();
 }
+
+
+void arena_mouse_handler() {
+  static bool prev_lb = false;
+  bool curr_lb = mouse_packet.lb;
+
+  //i just want to handle once per click. if the button is held down continuously this 
+  //will lead to unecesasaring processement of code 
+  if (curr_lb && !prev_lb) {
+    handle_mouse_click(&arena.player1_grid, cursor_x, cursor_y); 
+    handle_mouse_click(&arena.player2_grid, cursor_x, cursor_y); 
+  }
+
+  prev_lb = curr_lb;
+}
+
+
+
+void handle_mouse_click(Grid *grid, int mouse_x, int mouse_y) {
+  for (int i = 0; i < GRID_ROWS; i++) {
+    for (int j = 0; j < GRID_COLS; j++) {
+      int x, y;
+      cell_to_pixel(grid, i, j, &x, &y);
+      if (mouse_x >= x && mouse_x < x + CELL_WIDTH &&
+          mouse_y >= y && mouse_y < y + CELL_HEIGHT) {
+        Cell *cell = &grid->cells[i][j];
+        if (cell->state == SHIP) {
+          cell->state = HIT;
+        } else if (cell->state == EMPTY) {
+          cell->state = MISS;
+        }
+        return;
+      }
+    }
+  }
+}
+
+
 
 
 void reset_arena_state() {

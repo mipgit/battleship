@@ -15,6 +15,7 @@
 #define PINK 0xFF00FF
 #define BLUE 0x0000FF
 #define YELLOW 0xFFFF00
+#define PURPLE 0x800080
 #define HOVER_COLOR 0xAAAAFF
 
 

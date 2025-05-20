@@ -44,22 +44,24 @@ void draw_cell(Grid *grid, int x, int y, int cell_row, int cell_col) {
   Cell *cell = &grid->cells[cell_row][cell_col];
 
   // Only draw ships at their starting position to avoid duplicates
-  if (cell->state == SHIP && cell->ship_id >= 0) {
+  if (cell->state == SHIP || cell->ship_id >= 0) {
     Ship *ship = &grid->ships[cell->ship_id];
     if (ship->start_row == cell_row && ship->start_col == cell_col) {
         draw_ship_sprite(x, y, ship->type, ship->orientation);
     }
   }
-  else if (cell->state == HIT) {
-    draw_hit_marker(x, y);
-  }
-  else if (cell->state == MISS) {
-    draw_miss_marker(x, y);
-  }
 
   if (cursor_x >= x && cursor_x < x + CELL_WIDTH &&
       cursor_y >= y && cursor_y < y + CELL_HEIGHT) {
     draw_rectangle(x, y, CELL_WIDTH, CELL_HEIGHT, HOVER_COLOR, current_buffer);
+  }
+
+
+  if (cell->state == HIT) {
+    draw_hit_marker(x, y);
+  }
+  if (cell->state == MISS) {
+    draw_miss_marker(x, y);
   }
 }
 
@@ -98,7 +100,7 @@ void draw_hit_marker(int x, int y) {
 }
 
 void draw_miss_marker(int x, int y) {
-  draw_rectangle(x, y, CELL_WIDTH, CELL_HEIGHT, YELLOW, current_buffer);
+  draw_rectangle(x, y, CELL_WIDTH, CELL_HEIGHT, PURPLE, current_buffer);
 }
 
 

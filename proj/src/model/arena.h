@@ -25,7 +25,9 @@ Arena arena;
 void arena_main_loop();
 
 void arena_keyboard_handler();
+
 void arena_mouse_handler();
+void handle_mouse_click(Grid *grid, int mouse_x, int mouse_y);
 
 void reset_arena_state(); //de cada vez que o jogo acabar, se o utilizador quiser outro jogo chamamos esta func
 
