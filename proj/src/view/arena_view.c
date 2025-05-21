@@ -1,6 +1,10 @@
 #include "arena_view.h"
 
 extern uint8_t *current_buffer;
+extern uint8_t *arena_buffer;
+extern unsigned int frame_size;
+extern vbe_mode_info_t mode_info;
+
 extern Sprite *grid;
 extern Sprite *ship1;
 extern Sprite *ship2h;
@@ -18,16 +22,25 @@ extern int cursor_y;
 
 
 
+void draw_arena_background(uint8_t *buffer) {
+  fill_screen(YELLOW, buffer);
+  draw_sprite(single_grid, arena.player1_grid.sprite_x, arena.player1_grid.sprite_y, buffer);
+  draw_sprite(single_grid, arena.player2_grid.sprite_x, arena.player2_grid.sprite_y, buffer);
+}
+
+
+
 void draw_arena() {
-  fill_screen(YELLOW, current_buffer);
+  memcpy(current_buffer, arena_buffer, frame_size);
+
+  //fill_screen(YELLOW, current_buffer);
   draw_grid(&arena.player1_grid);
   draw_grid(&arena.player2_grid);
 }
 
 
 void draw_grid(Grid *grid) {
-  draw_sprite(single_grid, grid->sprite_x, grid->sprite_y, current_buffer);
-
+  //draw_sprite(single_grid, grid->sprite_x, grid->sprite_y, current_buffer);
   for (int i = 0; i < GRID_ROWS; i++) {
     for (int j = 0; j < GRID_COLS; j++) {
       int x, y;

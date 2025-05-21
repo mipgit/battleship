@@ -15,6 +15,7 @@
 #include "view/sprite_view.h"
 
 
+void draw_arena_background(uint8_t *buffer);
 void draw_arena();
 void draw_grid(Grid *grid);
 

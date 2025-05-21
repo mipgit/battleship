@@ -77,7 +77,6 @@ int (proj_main_loop)(int argc, char *argv[]) {
   if (start_devices() != 0) {return close_devices();}
   if (load_sprites() != 0) {return 1;} //maybe create a function that loads only the initial sprites (if user exits game imm we save time)
 
-  //reset_arena_state();
   cursor_x = 410;
   cursor_y = 310;
 
@@ -94,6 +93,8 @@ int (proj_main_loop)(int argc, char *argv[]) {
       reset_arena_state();
     }
     prev_state = cur_state;
+    
+
     
     /* Get a request message. */
     if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
@@ -138,7 +139,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
   }
 
 
-
+  free_buffers();
   free_sprites();
   if (close_devices() != 0) {return 1;}
 

@@ -10,13 +10,14 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+#include "controller/graphics.h"
 #include "model/game_macro.h"
 #include "model/game.h"
 #include "view/game_view.h"
 #include "view/arena_view.h"
 
 
-extern uint8_t *current_buffer;
+extern uint8_t *arena_buffer;
 
 Arena arena;
 
@@ -29,6 +30,7 @@ void arena_keyboard_handler();
 void arena_mouse_handler();
 void handle_mouse_click(Grid *grid, int mouse_x, int mouse_y);
 
+void set_arena_buffer();
 void reset_arena_state(); //de cada vez que o jogo acabar, se o utilizador quiser outro jogo chamamos esta func
 
 

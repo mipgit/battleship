@@ -77,3 +77,9 @@ void game_over_main_loop() {
 }
 
 
+
+void free_buffers() {
+  free_buffer(current_buffer);
+  free_buffer(arena_buffer);
+}
+

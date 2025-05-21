@@ -12,6 +12,12 @@ uint8_t *current_buffer;
 
 
 
+//frame size
+unsigned int frame_size = 0;
+
+
+
+
 int (set_graphics_mode)(uint16_t mode) {
   reg86_t reg86;
   memset(&reg86, 0, sizeof(reg86));
@@ -55,7 +61,7 @@ int (set_frame_buffer)(uint16_t mode) {
 
   //we calculate the buffer size, in bytes
   unsigned int bytes_per_pixel = (mode_info.BitsPerPixel + 7) / 8;
-  unsigned int frame_size = mode_info.XResolution * mode_info.YResolution * bytes_per_pixel;
+  frame_size = mode_info.XResolution * mode_info.YResolution * bytes_per_pixel;
 
   //we define physical ranges
   struct minix_mem_range phys_addresses;
@@ -134,6 +140,15 @@ int(fill_screen)(uint32_t color, uint8_t *buffer) {
 
 int (swap_buffers)() {
   if (memcpy(frame_buffer, current_buffer, mode_info.XResolution * mode_info.YResolution * ((mode_info.BitsPerPixel + 7) / 8)) == NULL) return 1;
+  return 0;
+}
+
+
+int (free_buffer)(uint8_t *buffer) {
+  if (buffer != NULL) {
+    free(buffer);
+    buffer = NULL;
+  }
   return 0;
 }
 

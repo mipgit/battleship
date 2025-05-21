@@ -1,8 +1,11 @@
 #include "arena.h"
 
-
+extern vbe_mode_info_t mode_info;
 extern struct packet mouse_packet; 
 extern int cursor_x, cursor_y;
+extern uint8_t *current_buffer;
+uint8_t *arena_buffer;
+extern unsigned int frame_size;
 
 
 void arena_main_loop() { 
@@ -49,6 +52,13 @@ void handle_mouse_click(Grid *grid, int mouse_x, int mouse_y) {
 
 
 
+void set_arena_buffer() {
+  if (arena_buffer == NULL) {
+    arena_buffer = (uint8_t *) malloc(frame_size);
+  }
+}
+
+
 
 void reset_arena_state() {
   //set grid origins (fix this!!!)
@@ -62,6 +72,12 @@ void reset_arena_state() {
   arena.player2_grid.sprite_y = 10;
   arena.player2_grid.x = arena.player2_grid.sprite_x + 31;
   arena.player2_grid.y = arena.player2_grid.sprite_y + 31;
+
+  //draw background
+  set_arena_buffer();
+  draw_arena_background(arena_buffer);
+
+
 
   //initialize grids and ships
 
