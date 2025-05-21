@@ -1,4 +1,6 @@
 .gdbinit
+debug/output.txt
+debug/trace.txt
 
 /*MODEL*/
 game.o
