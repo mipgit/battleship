@@ -30,6 +30,7 @@
 #define YELLOW 0xFFFF00
 #define PURPLE 0x800080
 #define HOVER_COLOR 0xAAAAFF
+#define SHIP_HOVER_COLOR 0xdb67b8
 
 
 

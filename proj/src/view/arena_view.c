@@ -17,6 +17,7 @@ extern Sprite *double_grid;
 extern Sprite *single_grid;
 
 extern Arena arena;
+extern ArenaPhase arena_phase;
 
 extern int cursor_x;
 extern int cursor_y;
@@ -41,23 +42,25 @@ void draw_arena() {
 
 
 void draw_grid(Grid *grid) {
-  //draw_sprite(single_grid, grid->sprite_x, grid->sprite_y, current_buffer);
+    int hovered_row, hovered_col, hovered_ship_id;
+    bool hovering = mouse_over_ship(grid, cursor_x, cursor_y, &hovered_row, &hovered_col, &hovered_ship_id);
+  
   for (int i = 0; i < GRID_ROWS; i++) {
     for (int j = 0; j < GRID_COLS; j++) {
       int x, y;
       cell_to_pixel(grid, i, j, &x, &y);
-      draw_cell(grid, x, y, i, j);
+      draw_cell(grid, x, y, i, j, hovering ? hovered_ship_id : -1);
     }
   }
 }
 
 
 
-void draw_cell(Grid *grid, int x, int y, int cell_row, int cell_col) {
+void draw_cell(Grid *grid, int x, int y, int cell_row, int cell_col, int hovered_ship_id) {
 
   Cell *cell = &grid->cells[cell_row][cell_col];
 
-  // Only draw ships at their starting position to avoid duplicates
+  //only draw ships at their starting position to avoid duplicates
   if (cell->state == SHIP || cell->ship_id >= 0) {
     Ship *ship = &grid->ships[cell->ship_id];
     if (ship->start_row == cell_row && ship->start_col == cell_col) {
@@ -71,6 +74,18 @@ void draw_cell(Grid *grid, int x, int y, int cell_row, int cell_col) {
   }
 
 
+  //only show ship hover in SETUP_PHASE
+  if (arena_phase == SETUP_PHASE && cell->ship_id == hovered_ship_id && hovered_ship_id >= 0) {
+      draw_rectangle(x, y, CELL_WIDTH, CELL_HEIGHT, SHIP_HOVER_COLOR, current_buffer);
+  }
+
+  //always show cell hover
+  else if (cursor_x >= x && cursor_x < x + CELL_WIDTH &&
+           cursor_y >= y && cursor_y < y + CELL_HEIGHT) {
+      draw_rectangle(x, y, CELL_WIDTH, CELL_HEIGHT, HOVER_COLOR, current_buffer);
+  }
+
+  
   if (cell->state == HIT) {
     draw_hit_marker(x, y);
   }
