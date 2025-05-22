@@ -8,7 +8,7 @@
 #define CELL_WIDTH 33
 #define CELL_HEIGHT 33
 
-#define NUM_SHIPS 5
+#define NUM_SHIPS 9
 
 #define SHIP_TYPE_TO_SIZE(type) ((type == NO_SHIP) ? 0 : (int)type)
 
@@ -21,6 +21,15 @@
 #define R_KEY 0x13
 #define S_KEY 0x1F
 
+
+#define BLACK 0x000000
+#define RED 0xFF0000
+#define PINK 0xFF00FF
+#define BLUE 0x0000FF
+#define BETTER_BLUE 0x4f80a8
+#define YELLOW 0xFFFF00
+#define PURPLE 0x800080
+#define HOVER_COLOR 0xAAAAFF
 
 
 

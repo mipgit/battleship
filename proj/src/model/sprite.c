@@ -46,6 +46,7 @@ int load_sprites() {
   ship2v = create_sprite((xpm_map_t) ship2v_xpm);
   ship3h = create_sprite((xpm_map_t) ship3h_xpm);
   ship3v = create_sprite((xpm_map_t) ship3v_xpm);
+  ship4h = create_sprite((xpm_map_t) ship4h_xpm);
   ship4v = create_sprite((xpm_map_t) ship4v_xpm);
 
   if (!menu || !game_over || !info) {
@@ -69,6 +70,7 @@ void free_sprites() {
   destroy_sprite(ship2v);
   destroy_sprite(ship3h);
   destroy_sprite(ship3v);
+  destroy_sprite(ship4h);
   destroy_sprite(ship4v);
 }
 

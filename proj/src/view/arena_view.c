@@ -11,6 +11,7 @@ extern Sprite *ship2h;
 extern Sprite *ship2v;
 extern Sprite *ship3h;
 extern Sprite *ship3v;
+extern Sprite *ship4h;
 extern Sprite *ship4v;
 extern Sprite *double_grid;
 extern Sprite *single_grid;
@@ -23,7 +24,7 @@ extern int cursor_y;
 
 
 void draw_arena_background(uint8_t *buffer) {
-  fill_screen(YELLOW, buffer);
+  fill_screen(BETTER_BLUE, buffer);
   draw_sprite(single_grid, arena.player1_grid.sprite_x, arena.player1_grid.sprite_y, buffer);
   draw_sprite(single_grid, arena.player2_grid.sprite_x, arena.player2_grid.sprite_y, buffer);
 }
@@ -99,7 +100,10 @@ void draw_ship_sprite(int x, int y, ShipType type, int orientation) {
         draw_sprite(ship3v, x, y, current_buffer);
       break;
     case SHIP_4:
-      draw_sprite(ship4v, x, y, current_buffer);
+      if (orientation == 0)
+        draw_sprite(ship4h, x, y, current_buffer);
+      else
+        draw_sprite(ship4v, x, y, current_buffer);
       break;
     default:
       break;

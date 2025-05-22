@@ -356,9 +356,14 @@ bool add_ship(Grid *grid, int ship_id, ShipType type, int orientation, const cha
 
 
 void setup_ships(Grid *grid) {
-  add_ship(grid, 0, SHIP_3, 0, "A1"); 
-  add_ship(grid, 1, SHIP_2, 1, "D5"); 
-  add_ship(grid, 2, SHIP_1, 0, "J8"); 
+  add_ship(grid, 0, SHIP_1, 0, "A1"); 
+  add_ship(grid, 1, SHIP_1, 0, "E2");
+  add_ship(grid, 2, SHIP_3, 0, "G3");
+  add_ship(grid, 3, SHIP_2, 1, "D4"); 
+  add_ship(grid, 4, SHIP_1, 0, "K6");
+  add_ship(grid, 5, SHIP_4, 1, "B7");
+  add_ship(grid, 6, SHIP_3, 1, "F7");
+  add_ship(grid, 7, SHIP_2, 0, "H9"); 
 }
 
 

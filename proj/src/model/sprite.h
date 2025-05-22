@@ -18,6 +18,7 @@
 #include "xpm/ship2v.xpm"
 #include "xpm/ship3h.xpm"
 #include "xpm/ship3v.xpm"
+#include "xpm/ship4h.xpm"
 #include "xpm/ship4v.xpm"
 
 
@@ -41,6 +42,7 @@ Sprite *ship2h;
 Sprite *ship2v;
 Sprite *ship3h;
 Sprite *ship3v;
+Sprite *ship4h;
 Sprite *ship4v;
 
 
