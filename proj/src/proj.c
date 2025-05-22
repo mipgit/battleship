@@ -110,7 +110,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
             game_keyboard_handler();
 
             //depois temos de dividir os handlers por ecrã
-            //if(state == ARENA) arena_keyboard_handler();
+            if(state == ARENA) arena_keyboard_handler();
             //...
           }
 

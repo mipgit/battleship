@@ -19,22 +19,52 @@
 
 extern uint8_t *arena_buffer;
 
+
+typedef enum {
+    SETUP_PHASE,
+    READY_PHASE
+} ArenaPhase;
+
+extern ArenaPhase arena_phase;
 Arena arena;
+
+
+
+// Drag structure to handle ship dragging
+typedef struct {
+    bool dragging;
+    int ship_id;                //id of the ship being dragged
+    int origin_row, origin_col; //where the drag started
+    int orientation;            //orientation of the ship being dragged
+    Grid *active_grid;          //grid where the ship is being dragged
+} DragState;
+
+extern DragState drag_state;
+
 
 
 
 void arena_main_loop();
 
-void arena_keyboard_handler();
-
-void arena_mouse_handler();
-void handle_mouse_click(Grid *grid, int mouse_x, int mouse_y);
-
 void set_arena_buffer();
 void reset_arena_state(); //de cada vez que o jogo acabar, se o utilizador quiser outro jogo chamamos esta func
 
-
 void init_grid(Grid *grid);
+
+
+void arena_keyboard_handler();
+
+
+void arena_mouse_handler();
+
+void handle_mouse_click(Grid *grid, int mouse_x, int mouse_y);
+
+bool mouse_over_ship(Grid *grid, int mouse_x, int mouse_y, int *row, int *col, int *ship_id);
+bool mouse_over_cell(Grid *grid, int mouse_x, int mouse_y, int *row, int *col);
+void move_ship(Grid *grid, int ship_id, int new_row, int new_col, int orientation);
+
+
+
 void cell_to_pixel(Grid *grid, int row, int col, int* x, int* y);
 int coord_to_cell(const char* coord, int* row, int* col);
 bool can_place_ship(Grid *grid, int start_row, int start_col, int size, int orientation);

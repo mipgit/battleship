@@ -13,6 +13,17 @@
 #define SHIP_TYPE_TO_SIZE(type) ((type == NO_SHIP) ? 0 : (int)type)
 
 
+#define ESC_KEY 0x81
+#define Q_KEY 0x10
+#define SPACE_KEY 0x39
+#define M_KEY 0x32
+#define ENTER_KEY 0x1C
+#define R_KEY 0x13
+#define S_KEY 0x1F
+
+
+
+
 typedef enum {
     NO_SHIP,
     SHIP_1,

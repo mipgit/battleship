@@ -1,10 +1,5 @@
 #include "game.h"
 
-#define ESC_KEY 0x81
-#define Q_KEY 0x10
-#define SPACE_KEY 0x39
-#define M_KEY 0x32
-#define ENTER_KEY 0x1C
 
 
 GameState state = MENU;

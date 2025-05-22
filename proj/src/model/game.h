@@ -9,6 +9,8 @@
 
 #include "view/game_view.h"
 
+#include "model/game_macro.h"
+
 
 typedef enum {
   MENU,
