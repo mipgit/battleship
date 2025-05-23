@@ -82,74 +82,74 @@ void init_grid(Grid *grid) {
 
 
 void arena_keyboard_handler() {
-    switch (scancode) {
-        case R_KEY:
-            if (arena_phase == SETUP_PHASE) {
-                arena_phase = READY_PHASE;
-            }
-            break;
-        default:
-            break;
-    }
+  switch (scancode) {
+    case R_KEY:
+      if (arena_phase == SETUP_PHASE) arena_phase = READY_PHASE;
+      break;
+    default:
+      break;
+  }
 }
 
 
 
 void arena_mouse_handler() {
-    static bool prev_lb = false;
-    bool curr_lb = mouse_packet.lb;
+  static bool prev_lb = false;
+  bool curr_lb = mouse_packet.lb;
 
-    /* SETUP PHASE: Drag and drop ships */
-    if (arena_phase == SETUP_PHASE) {
-        if (curr_lb && !prev_lb) {
-            int row, col, ship_id;
-            if (mouse_over_ship(&arena.player1_grid, cursor_x, cursor_y, &row, &col, &ship_id)) {
-                drag_state.dragging = true;
-                drag_state.origin_row = row;
-                drag_state.origin_col = col;
-                drag_state.ship_id = ship_id;
-                drag_state.orientation = arena.player1_grid.ships[ship_id].orientation;
-                drag_state.active_grid = &arena.player1_grid;
-            } else if (mouse_over_ship(&arena.player2_grid, cursor_x, cursor_y, &row, &col, &ship_id)) {
-                drag_state.dragging = true;
-                drag_state.origin_row = row;
-                drag_state.origin_col = col;
-                drag_state.ship_id = ship_id;
-                drag_state.orientation = arena.player2_grid.ships[ship_id].orientation;
-                drag_state.active_grid = &arena.player2_grid;
-            }
-        }
+  /* SETUP PHASE: Drag and drop ships */
 
-        //on mouse release, drop ship if dragging
-        if (!curr_lb && prev_lb && drag_state.dragging) {
-            int drop_row, drop_col;
-
-            //we check if the mouse is over a cell
-            if (mouse_over_cell(drag_state.active_grid, cursor_x, cursor_y, &drop_row, &drop_col) &&
-                can_place_ship(drag_state.active_grid, drop_row, drop_col,
-                               drag_state.active_grid->ships[drag_state.ship_id].size,
-                               drag_state.orientation)) {
-                move_ship(drag_state.active_grid, drag_state.ship_id, drop_row, drop_col, drag_state.orientation);
-            
-            //if the ship cannot be placed, revert to original position    
-            } else {
-              move_ship(drag_state.active_grid, drag_state.ship_id, drag_state.origin_row, drag_state.origin_col, drag_state.orientation);
-            }
-            
-            drag_state.dragging = false;
-            drag_state.active_grid = NULL;
-        }
+  if (arena_phase == SETUP_PHASE) {
+    if (curr_lb && !prev_lb) {
+      int row, col, ship_id;
+      if (mouse_over_ship(&arena.player1_grid, cursor_x, cursor_y, &row, &col, &ship_id)) {
+        drag_state.dragging = true;
+        drag_state.origin_row = row;
+        drag_state.origin_col = col;
+        drag_state.ship_id = ship_id;
+        drag_state.orientation = arena.player1_grid.ships[ship_id].orientation;
+        drag_state.active_grid = &arena.player1_grid;
+      } else if (mouse_over_ship(&arena.player2_grid, cursor_x, cursor_y, &row, &col, &ship_id)) {
+        drag_state.dragging = true;
+        drag_state.origin_row = row;
+        drag_state.origin_col = col;
+        drag_state.ship_id = ship_id;
+        drag_state.orientation = arena.player2_grid.ships[ship_id].orientation;
+        drag_state.active_grid = &arena.player2_grid;
+      }
     }
 
-    /* READY PHASE: Bombing */
-    else if (arena_phase == READY_PHASE) {
-        if (curr_lb && !prev_lb) {
-          handle_mouse_click(&arena.player1_grid, cursor_x, cursor_y);
-          handle_mouse_click(&arena.player2_grid, cursor_x, cursor_y);
+    //on mouse release, drop ship if dragging
+    if (!curr_lb && prev_lb && drag_state.dragging) {
+        int drop_row, drop_col;
+        //we check if the mouse is over a cell
+        if (mouse_over_cell(drag_state.active_grid, cursor_x, cursor_y, &drop_row, &drop_col) &&
+            can_place_ship(drag_state.active_grid, drop_row, drop_col,
+                           drag_state.active_grid->ships[drag_state.ship_id].size,
+                           drag_state.orientation)) {
+          move_ship(drag_state.active_grid, drag_state.ship_id, drop_row, drop_col, drag_state.orientation);
+        
+        //if the ship cannot be placed, revert to original position    
+        } else {
+          move_ship(drag_state.active_grid, drag_state.ship_id, drag_state.origin_row, drag_state.origin_col, drag_state.orientation);
         }
+        
+        drag_state.dragging = false;
+        drag_state.active_grid = NULL;
     }
+  }
 
-    prev_lb = curr_lb;
+
+  /* READY PHASE: Bombing */
+
+  else if (arena_phase == READY_PHASE) {
+    if (curr_lb && !prev_lb) {
+      handle_mouse_click(&arena.player1_grid, cursor_x, cursor_y);
+      handle_mouse_click(&arena.player2_grid, cursor_x, cursor_y);
+    }
+  }
+
+  prev_lb = curr_lb;
 }
 
 
@@ -178,38 +178,38 @@ void handle_mouse_click(Grid *grid, int mouse_x, int mouse_y) {
 
 //we check if the mouse is over a ship
 bool mouse_over_ship(Grid *grid, int mouse_x, int mouse_y, int *row, int *col, int *ship_id) {
-    for (int i = 0; i < GRID_ROWS; i++) {
-        for (int j = 0; j < GRID_COLS; j++) {
-            int x, y;
-            cell_to_pixel(grid, i, j, &x, &y);
-            if (mouse_x >= x && mouse_x < x + CELL_WIDTH &&
-                mouse_y >= y && mouse_y < y + CELL_HEIGHT &&
-                grid->cells[i][j].state == SHIP) {
-                *row = i;
-                *col = j;
-                *ship_id = grid->cells[i][j].ship_id;
-                return true;
-            }
-        }
+  for (int i = 0; i < GRID_ROWS; i++) {
+    for (int j = 0; j < GRID_COLS; j++) {
+      int x, y;
+      cell_to_pixel(grid, i, j, &x, &y);
+      if (mouse_x >= x && mouse_x < x + CELL_WIDTH &&
+        mouse_y >= y && mouse_y < y + CELL_HEIGHT &&
+        grid->cells[i][j].state == SHIP) {
+        *row = i;
+        *col = j;
+        *ship_id = grid->cells[i][j].ship_id;
+        return true;
+      }
     }
-    return false;
+  }
+  return false;
 }
 
 //we check if the mouse is over a grid cell
 bool mouse_over_cell(Grid *grid, int mouse_x, int mouse_y, int *row, int *col) {
-    for (int i = 0; i < GRID_ROWS; i++) {
-        for (int j = 0; j < GRID_COLS; j++) {
-            int x, y;
-            cell_to_pixel(grid, i, j, &x, &y);
-            if (mouse_x >= x && mouse_x < x + CELL_WIDTH &&
-                mouse_y >= y && mouse_y < y + CELL_HEIGHT) {
-                *row = i;
-                *col = j;
-                return true;
-            }
-        }
+  for (int i = 0; i < GRID_ROWS; i++) {
+    for (int j = 0; j < GRID_COLS; j++) {
+      int x, y;
+      cell_to_pixel(grid, i, j, &x, &y);
+      if (mouse_x >= x && mouse_x < x + CELL_WIDTH &&
+        mouse_y >= y && mouse_y < y + CELL_HEIGHT) {
+        *row = i;
+        *col = j;
+        return true;
+      }
     }
-    return false;
+  }
+  return false;
 }
 
 
