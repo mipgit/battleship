@@ -126,7 +126,8 @@ void arena_mouse_handler() {
         if (mouse_over_cell(drag_state.active_grid, cursor_x, cursor_y, &drop_row, &drop_col) &&
             can_place_ship(drag_state.active_grid, drop_row, drop_col,
                            drag_state.active_grid->ships[drag_state.ship_id].size,
-                           drag_state.orientation)) {
+                           drag_state.orientation,
+                           drag_state.ship_id)) {
           move_ship(drag_state.active_grid, drag_state.ship_id, drop_row, drop_col, drag_state.orientation);
         
         //if the ship cannot be placed, revert to original position    
@@ -233,7 +234,7 @@ void move_ship(Grid *grid, int ship_id, int new_row, int new_col, int orientatio
     }
 
     //we try to place at new position
-    if (can_place_ship(grid, new_row, new_col, size, orientation)) {
+    if (can_place_ship(grid, new_row, new_col, size, orientation, ship_id)) {
         //place ship at new position
         ship->start_row = new_row;
         ship->start_col = new_col;
@@ -301,7 +302,7 @@ int coord_to_cell(const char* coord, int* row, int* col) {
 
 
 
-bool can_place_ship(Grid *grid, int start_row, int start_col, int size, int orientation) {
+bool can_place_ship(Grid *grid, int start_row, int start_col, int size, int orientation, int ship_id) {
   if (start_row < 0 || start_col < 0) return false;
 
   if (orientation == 0) { // horizontal
@@ -320,7 +321,7 @@ bool can_place_ship(Grid *grid, int start_row, int start_col, int size, int orie
         if (check_row < 0 || check_row >= GRID_ROWS ||
             check_col < 0 || check_col >= GRID_COLS)
           continue;
-        if (grid->cells[check_row][check_col].state == SHIP)
+        if (grid->cells[check_row][check_col].state == SHIP && grid->cells[check_row][check_col].ship_id != ship_id)
           return false;
       }
     }
@@ -336,7 +337,7 @@ bool add_ship(Grid *grid, int ship_id, ShipType type, int orientation, const cha
   int size = SHIP_TYPE_TO_SIZE(type);
   if (size == 0) return false;
   if (coord_to_cell(coord, &row, &col) != 0) return false;
-  if (!can_place_ship(grid, row, col, size, orientation)) return false;
+  if (!can_place_ship(grid, row, col, size, orientation, ship_id)) return false;
 
   grid->ships[ship_id].type = type;
   grid->ships[ship_id].size = size;
