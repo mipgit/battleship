@@ -39,13 +39,13 @@ void set_arena_buffer() {
 void reset_arena_state() {
   //set grid origins (fix this!!!)
   arena.player1_grid.sprite_x = 10;
-  arena.player1_grid.sprite_y = 10;
+  arena.player1_grid.sprite_y = 50;
   arena.player1_grid.x = arena.player1_grid.sprite_x + 31;
   arena.player1_grid.y = arena.player1_grid.sprite_y + 31;
   
 
   arena.player2_grid.sprite_x = 410;
-  arena.player2_grid.sprite_y = 10;
+  arena.player2_grid.sprite_y = 50;
   arena.player2_grid.x = arena.player2_grid.sprite_x + 31;
   arena.player2_grid.y = arena.player2_grid.sprite_y + 31;
 
@@ -158,14 +158,12 @@ void battle_phase(bool curr_lb, bool prev_lb) {
       }
     }
   } else {
-    if (curr_lb && !prev_lb) {
-      if (current_player == PLAYER_1) {
-        current_player = PLAYER_2;
-      } else if (current_player == PLAYER_2) {
-        current_player = PLAYER_1;
-      }
-      bombs_remaining = MAX_BOMBS_PER_TURN; //reset bombs for the new turn
+    if (current_player == PLAYER_1) {
+      current_player = PLAYER_2;
+    } else if (current_player == PLAYER_2) {
+      current_player = PLAYER_1;
     }
+    bombs_remaining = MAX_BOMBS_PER_TURN; //reset bombs for the new turn
   }
 }
 

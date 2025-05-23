@@ -149,7 +149,7 @@ void draw_hit_marker(int x, int y) {
 }
 
 void draw_miss_marker(int x, int y) {
-  draw_rectangle(x, y, CELL_WIDTH, CELL_HEIGHT, PURPLE, current_buffer);
+  draw_rectangle(x, y, CELL_WIDTH, CELL_HEIGHT, YELLOW, current_buffer);
 }
 
 
@@ -157,7 +157,7 @@ void draw_player(PlayerTurn player) {
 
   int player1_x = arena.player1_grid.sprite_x + GRID_WIDTH/2 - player1->width/2;
   int player2_x = arena.player2_grid.sprite_x + GRID_WIDTH/2 - player2->width/2;
-  int player_y = GRID_HEIGHT + 60;
+  int player_y = arena.player1_grid.sprite_x + GRID_HEIGHT + 50;
 
   if (player == PLAYER_1) {
     draw_sprite(player1s, player1_x, player_y, current_buffer);
