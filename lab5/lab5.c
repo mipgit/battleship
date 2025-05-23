@@ -172,6 +172,9 @@ int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint1
 
 
 
+  int frame_counter = 0;
+
+
   while (scancode != 0x81) { //we only stop when the ESC key is pressed
     
     /* Get a request message. */
@@ -202,14 +205,38 @@ int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint1
                   vg_draw_pixel(x + i, y + j, 0);
                 }
               }
+
+
               //calculate the new position
-              if (isVertical) {
-                y += speed;
-                if (y > yf) y = yf;
-              } else {
-                x += speed;
-                if (x > xf) x = xf;
+
+              if (speed > 0) { //we move by speed pixels per frame
+
+                if (isVertical) {
+                  if ((y > yf && y - speed <= yf) || (y < yf && y + speed >= yf))  y = yf;
+                  else y += (yf > y) ? speed : -speed;
+                  
+                } else {
+                  if ((x > xf && x - speed <= xf) || (x < xf && x + speed >= xf)) x = xf;
+                  else x += (xf > x) ? speed : -speed;
+                }
+
+              } else if (speed < 0) { //we move by 1 pixel every -speed frames
+                frame_counter++;
+                
+                if (frame_counter >= -speed) {
+                  frame_counter = 0;
+
+                  if (isVertical) {
+                    if (y < yf) y++;
+                    else if (y > yf) y--;
+
+                  } else {
+                    if (x < xf) x++;
+                    else if (x > xf) x--;
+                  }
+                }
               }
+
               //draw the new xpm
               if (print_xpm(xpm, x, y) != 0) {return 1;}  
 
