@@ -8,10 +8,10 @@ uint8_t *arena_buffer;
 extern unsigned int frame_size;
 extern uint8_t scancode;
 
-
-DragState drag_state = {0, -1, 0, 0, 0, 0};
-PlayerTurn current_player = PLAYER_1;
+Arena arena;
 ArenaPhase arena_phase = SETUP_PLAYER1;
+PlayerTurn current_player = PLAYER_1;
+DragState drag_state = {0, -1, 0, 0, 0, 0};
 
 
 

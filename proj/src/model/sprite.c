@@ -48,6 +48,11 @@ int load_sprites() {
   ship3v = create_sprite((xpm_map_t) ship3v_xpm);
   ship4h = create_sprite((xpm_map_t) ship4h_xpm);
   ship4v = create_sprite((xpm_map_t) ship4v_xpm);
+  player1 = create_sprite((xpm_map_t) player1_xpm);
+  player1s = create_sprite((xpm_map_t) player1s_xpm);
+  player2 = create_sprite((xpm_map_t) player2_xpm);
+  player2s = create_sprite((xpm_map_t) player2s_xpm);
+
 
   if (!menu || !game_over || !info) {
     printf("Error: Failed to load one or more sprites!\n");
@@ -72,5 +77,9 @@ void free_sprites() {
   destroy_sprite(ship3v);
   destroy_sprite(ship4h);
   destroy_sprite(ship4v);
+  destroy_sprite(player1);
+  destroy_sprite(player1s);
+  destroy_sprite(player2);
+  destroy_sprite(player2s);
 }
 

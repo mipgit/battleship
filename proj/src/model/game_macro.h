@@ -3,7 +3,8 @@
 
 #define GRID_ROWS 10
 #define GRID_COLS 10
-
+#define GRID_HEIGHT 378
+#define GRID_WIDTH 396
 
 #define CELL_WIDTH 33
 #define CELL_HEIGHT 33
@@ -78,6 +79,20 @@ typedef struct {
     Grid player1_grid;
     Grid player2_grid;
 } Arena;
+
+
+typedef enum {
+  SETUP_PLAYER1,
+  SETUP_PLAYER2,
+  READY_PHASE
+} ArenaPhase;
+
+
+typedef enum {
+  PLAYER_1,
+  PLAYER_2
+} PlayerTurn;
+
 
 
 

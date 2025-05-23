@@ -19,21 +19,9 @@
 
 extern uint8_t *arena_buffer;
 
-
-typedef enum {
-  SETUP_PLAYER1,
-  SETUP_PLAYER2,
-  READY_PHASE
-} ArenaPhase;
-
 extern ArenaPhase arena_phase;
-Arena arena;
+extern Arena arena;
 
-
-typedef enum {
-  PLAYER_1,
-  PLAYER_2
-} PlayerTurn;
 
 extern PlayerTurn current_player;
 

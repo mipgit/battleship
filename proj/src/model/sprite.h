@@ -20,6 +20,10 @@
 #include "xpm/ship3v.xpm"
 #include "xpm/ship4h.xpm"
 #include "xpm/ship4v.xpm"
+#include "xpm/player1.xpm"
+#include "xpm/player1s.xpm"
+#include "xpm/player2.xpm"
+#include "xpm/player2s.xpm"
 
 
 
@@ -44,7 +48,10 @@ Sprite *ship3h;
 Sprite *ship3v;
 Sprite *ship4h;
 Sprite *ship4v;
-
+Sprite *player1;
+Sprite *player1s;
+Sprite *player2;
+Sprite *player2s;
 
 
 /**

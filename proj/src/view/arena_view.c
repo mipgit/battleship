@@ -5,7 +5,6 @@ extern uint8_t *arena_buffer;
 extern unsigned int frame_size;
 extern vbe_mode_info_t mode_info;
 
-extern Sprite *grid;
 extern Sprite *ship1;
 extern Sprite *ship2h;
 extern Sprite *ship2v;
@@ -15,6 +14,10 @@ extern Sprite *ship4h;
 extern Sprite *ship4v;
 extern Sprite *double_grid;
 extern Sprite *single_grid;
+extern Sprite *player1;
+extern Sprite *player1s;
+extern Sprite *player2;
+extern Sprite *player2s;
 
 extern Arena arena;
 extern ArenaPhase arena_phase;
@@ -43,13 +46,15 @@ void draw_arena() {
   
   } else if (arena_phase == READY_PHASE) {
     if (current_player == PLAYER_1) {
-      draw_grid(&arena.player1_grid, 0);
+      draw_grid(&arena.player1_grid, 1);
       draw_grid(&arena.player2_grid, 1);
     } else if (current_player == PLAYER_2) {
-      draw_grid(&arena.player2_grid, 0);
+      draw_grid(&arena.player2_grid, 1);
       draw_grid(&arena.player1_grid, 1);
     }  
   }
+
+  draw_player(current_player);
 }
 
 
@@ -147,4 +152,19 @@ void draw_miss_marker(int x, int y) {
   draw_rectangle(x, y, CELL_WIDTH, CELL_HEIGHT, PURPLE, current_buffer);
 }
 
+
+void draw_player(PlayerTurn player) {
+
+  int player1_x = arena.player1_grid.sprite_x + GRID_WIDTH/2 - player1->width/2;
+  int player2_x = arena.player2_grid.sprite_x + GRID_WIDTH/2 - player2->width/2;
+  int player_y = GRID_HEIGHT + 60;
+
+  if (player == PLAYER_1) {
+    draw_sprite(player1s, player1_x, player_y, current_buffer);
+    draw_sprite(player2, player2_x, player_y, current_buffer);
+  } else if (player == PLAYER_2) {
+    draw_sprite(player2s, player2_x, player_y, current_buffer);
+    draw_sprite(player1, player1_x, player_y, current_buffer);
+  }
+}
 

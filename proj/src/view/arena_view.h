@@ -24,4 +24,6 @@ void draw_ship_sprite(int x, int y,  ShipType type, int orientation);
 void draw_hit_marker(int x, int y);
 void draw_miss_marker(int x, int y);
 
+void draw_player(PlayerTurn player);
+
 #endif
