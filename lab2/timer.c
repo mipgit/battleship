@@ -183,7 +183,7 @@ int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
   new_conf |= TIMER_LSB_MSB;
 
   //-> slide 18 : we do not change 4 LSB (mode and BCD/binary)
-  new_conf = old_conf & 0x0F;
+  new_conf |= old_conf & 0x0F;
 
 
   /*parte 2*/
