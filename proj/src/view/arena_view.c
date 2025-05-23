@@ -18,6 +18,7 @@ extern Sprite *single_grid;
 
 extern Arena arena;
 extern ArenaPhase arena_phase;
+extern PlayerTurn current_player;
 
 extern int cursor_x;
 extern int cursor_y;
@@ -35,9 +36,15 @@ void draw_arena_background(uint8_t *buffer) {
 void draw_arena() {
   memcpy(current_buffer, arena_buffer, frame_size);
 
-  //fill_screen(YELLOW, current_buffer);
-  draw_grid(&arena.player1_grid);
-  draw_grid(&arena.player2_grid);
+  if (arena_phase == SETUP_PLAYER1 && current_player == PLAYER_1) {
+    draw_grid(&arena.player1_grid);
+  } else if (arena_phase == SETUP_PLAYER2 && current_player == PLAYER_2) {
+    draw_grid(&arena.player2_grid);
+  
+  } else if (arena_phase == READY_PHASE) {
+    draw_grid(&arena.player1_grid);
+    draw_grid(&arena.player2_grid);
+  }
 }
 
 
@@ -75,7 +82,7 @@ void draw_cell(Grid *grid, int x, int y, int cell_row, int cell_col, int hovered
 
 
   //only show ship hover in SETUP_PHASE
-  if (arena_phase == SETUP_PHASE && cell->ship_id == hovered_ship_id && hovered_ship_id >= 0) {
+  if ((arena_phase == SETUP_PLAYER1 || arena_phase == SETUP_PLAYER2) && cell->ship_id == hovered_ship_id && hovered_ship_id >= 0) {
       draw_rectangle(x, y, CELL_WIDTH, CELL_HEIGHT, SHIP_HOVER_COLOR, current_buffer);
   }
 

@@ -10,7 +10,13 @@ extern uint8_t scancode;
 
 
 DragState drag_state = {0, -1, 0, 0, 0, 0};
-ArenaPhase arena_phase = SETUP_PHASE;
+PlayerTurn current_player = PLAYER_1;
+ArenaPhase arena_phase = SETUP_PLAYER1;
+
+
+
+#define MAX_BOMBS_PER_TURN 5
+int bombs_remaining = MAX_BOMBS_PER_TURN;
 
 
 
@@ -84,7 +90,13 @@ void init_grid(Grid *grid) {
 void arena_keyboard_handler() {
   switch (scancode) {
     case R_KEY:
-      if (arena_phase == SETUP_PHASE) arena_phase = READY_PHASE;
+      if (arena_phase == SETUP_PLAYER1 && current_player == PLAYER_1) {
+        current_player = PLAYER_2;
+        arena_phase = SETUP_PLAYER2;
+      } else if (arena_phase == SETUP_PLAYER2 && current_player == PLAYER_2) {
+        current_player = PLAYER_1;
+        arena_phase = READY_PHASE;
+      }
       break;
     default:
       break;
@@ -97,57 +109,12 @@ void arena_mouse_handler() {
   static bool prev_lb = false;
   bool curr_lb = mouse_packet.lb;
 
-  /* SETUP PHASE: Drag and drop ships */
-
-  if (arena_phase == SETUP_PHASE) {
-    if (curr_lb && !prev_lb) {
-      int row, col, ship_id;
-      if (mouse_over_ship(&arena.player1_grid, cursor_x, cursor_y, &row, &col, &ship_id)) {
-        drag_state.dragging = true;
-        drag_state.origin_row = row;
-        drag_state.origin_col = col;
-        drag_state.ship_id = ship_id;
-        drag_state.orientation = arena.player1_grid.ships[ship_id].orientation;
-        drag_state.active_grid = &arena.player1_grid;
-      } else if (mouse_over_ship(&arena.player2_grid, cursor_x, cursor_y, &row, &col, &ship_id)) {
-        drag_state.dragging = true;
-        drag_state.origin_row = row;
-        drag_state.origin_col = col;
-        drag_state.ship_id = ship_id;
-        drag_state.orientation = arena.player2_grid.ships[ship_id].orientation;
-        drag_state.active_grid = &arena.player2_grid;
-      }
-    }
-
-    //on mouse release, drop ship if dragging
-    if (!curr_lb && prev_lb && drag_state.dragging) {
-        int drop_row, drop_col;
-        //we check if the mouse is over a cell
-        if (mouse_over_cell(drag_state.active_grid, cursor_x, cursor_y, &drop_row, &drop_col) &&
-            can_place_ship(drag_state.active_grid, drop_row, drop_col,
-                           drag_state.active_grid->ships[drag_state.ship_id].size,
-                           drag_state.orientation,
-                           drag_state.ship_id)) {
-          move_ship(drag_state.active_grid, drag_state.ship_id, drop_row, drop_col, drag_state.orientation);
-        
-        //if the ship cannot be placed, revert to original position    
-        } else {
-          move_ship(drag_state.active_grid, drag_state.ship_id, drag_state.origin_row, drag_state.origin_col, drag_state.orientation);
-        }
-        
-        drag_state.dragging = false;
-        drag_state.active_grid = NULL;
-    }
-  }
-
-
-  /* READY PHASE: Bombing */
-
-  else if (arena_phase == READY_PHASE) {
-    if (curr_lb && !prev_lb) {
-      handle_mouse_click(&arena.player1_grid, cursor_x, cursor_y);
-      handle_mouse_click(&arena.player2_grid, cursor_x, cursor_y);
-    }
+  if (arena_phase == SETUP_PLAYER1 && current_player == PLAYER_1) {
+    setup_phase(curr_lb, prev_lb, &arena.player1_grid);
+  } else if (arena_phase == SETUP_PLAYER2 && current_player == PLAYER_2) {
+    setup_phase(curr_lb, prev_lb, &arena.player2_grid);
+  } else if (arena_phase == READY_PHASE) {
+    battle_phase(curr_lb, prev_lb);
   }
 
   prev_lb = curr_lb;
@@ -155,7 +122,7 @@ void arena_mouse_handler() {
 
 
 
-
+//used in ready/battle phase
 void handle_mouse_click(Grid *grid, int mouse_x, int mouse_y) {
   for (int i = 0; i < GRID_ROWS; i++) {
     for (int j = 0; j < GRID_COLS; j++) {
@@ -166,14 +133,80 @@ void handle_mouse_click(Grid *grid, int mouse_x, int mouse_y) {
         Cell *cell = &grid->cells[i][j];
         if (cell->state == SHIP) {
           cell->state = HIT;
+          printf("Hit!\n");
         } else if (cell->state == EMPTY) {
           cell->state = MISS;
+          printf("Miss!\n");
         }
+        bombs_remaining--;
         return;
       }
     }
   }
 }
+
+
+
+/* READY PHASE: Bombing */
+void battle_phase(bool curr_lb, bool prev_lb) {
+  if (bombs_remaining > 0) { //check player still has bombsg
+    if (curr_lb && !prev_lb) {
+      if (current_player == PLAYER_1) {
+        handle_mouse_click(&arena.player2_grid, cursor_x, cursor_y);
+      } else if (current_player == PLAYER_2) {
+        handle_mouse_click(&arena.player1_grid, cursor_x, cursor_y);
+      }
+    }
+  } else {
+    if (curr_lb && !prev_lb) {
+      if (current_player == PLAYER_1) {
+        current_player = PLAYER_2;
+      } else if (current_player == PLAYER_2) {
+        current_player = PLAYER_1;
+      }
+      bombs_remaining = MAX_BOMBS_PER_TURN; //reset bombs for the new turn
+    }
+  }
+}
+
+
+
+
+/* SETUP PHASE: Drag and drop ships */
+void setup_phase(bool curr_lb, bool prev_lb, Grid *grid) {
+  if (curr_lb && !prev_lb) {
+    int row, col, ship_id;
+    if (mouse_over_ship(grid, cursor_x, cursor_y, &row, &col, &ship_id)) {
+      drag_state.dragging = true;
+      drag_state.origin_row = row;
+      drag_state.origin_col = col;
+      drag_state.ship_id = ship_id;
+      drag_state.orientation = grid->ships[ship_id].orientation;
+      drag_state.active_grid = grid;
+    }
+  }
+
+  //on mouse release, drop ship if dragging
+  if (!curr_lb && prev_lb && drag_state.dragging) {
+    int drop_row, drop_col;
+    //we check if the mouse is over a cell
+    if (mouse_over_cell(grid, cursor_x, cursor_y, &drop_row, &drop_col) &&
+        can_place_ship(grid, drop_row, drop_col,
+                       grid->ships[drag_state.ship_id].size,
+                       drag_state.orientation,
+                       drag_state.ship_id)) {
+      move_ship(grid, drag_state.ship_id, drop_row, drop_col, drag_state.orientation);
+    
+    //if the ship cannot be placed, revert to original position    
+    } else {
+      move_ship(grid, drag_state.ship_id, drag_state.origin_row, drag_state.origin_col, drag_state.orientation);
+    }
+    
+    drag_state.dragging = false;
+    drag_state.active_grid = NULL;
+  }
+}
+
 
 
 

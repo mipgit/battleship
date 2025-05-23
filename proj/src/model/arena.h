@@ -21,13 +21,21 @@ extern uint8_t *arena_buffer;
 
 
 typedef enum {
-    SETUP_PHASE,
-    READY_PHASE
+  SETUP_PLAYER1,
+  SETUP_PLAYER2,
+  READY_PHASE
 } ArenaPhase;
 
 extern ArenaPhase arena_phase;
 Arena arena;
 
+
+typedef enum {
+  PLAYER_1,
+  PLAYER_2
+} PlayerTurn;
+
+extern PlayerTurn current_player;
 
 
 // Drag structure to handle ship dragging
@@ -58,6 +66,11 @@ void arena_keyboard_handler();
 void arena_mouse_handler();
 
 void handle_mouse_click(Grid *grid, int mouse_x, int mouse_y);
+
+
+void battle_phase(bool curr_lb, bool prev_lb);
+void setup_phase(bool curr_lb, bool prev_lb, Grid *grid);
+
 
 bool mouse_over_ship(Grid *grid, int mouse_x, int mouse_y, int *row, int *col, int *ship_id);
 bool mouse_over_cell(Grid *grid, int mouse_x, int mouse_y, int *row, int *col);
