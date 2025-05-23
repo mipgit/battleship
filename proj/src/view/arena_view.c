@@ -37,18 +37,23 @@ void draw_arena() {
   memcpy(current_buffer, arena_buffer, frame_size);
 
   if (arena_phase == SETUP_PLAYER1 && current_player == PLAYER_1) {
-    draw_grid(&arena.player1_grid);
+    draw_grid(&arena.player1_grid, 0);
   } else if (arena_phase == SETUP_PLAYER2 && current_player == PLAYER_2) {
-    draw_grid(&arena.player2_grid);
+    draw_grid(&arena.player2_grid, 0);
   
   } else if (arena_phase == READY_PHASE) {
-    draw_grid(&arena.player1_grid);
-    draw_grid(&arena.player2_grid);
+    if (current_player == PLAYER_1) {
+      draw_grid(&arena.player1_grid, 0);
+      draw_grid(&arena.player2_grid, 1);
+    } else if (current_player == PLAYER_2) {
+      draw_grid(&arena.player2_grid, 0);
+      draw_grid(&arena.player1_grid, 1);
+    }  
   }
 }
 
 
-void draw_grid(Grid *grid) {
+void draw_grid(Grid *grid, bool hide_ships) {
     int hovered_row, hovered_col, hovered_ship_id;
     bool hovering = mouse_over_ship(grid, cursor_x, cursor_y, &hovered_row, &hovered_col, &hovered_ship_id);
   
@@ -56,19 +61,19 @@ void draw_grid(Grid *grid) {
     for (int j = 0; j < GRID_COLS; j++) {
       int x, y;
       cell_to_pixel(grid, i, j, &x, &y);
-      draw_cell(grid, x, y, i, j, hovering ? hovered_ship_id : -1);
+      draw_cell(grid, x, y, i, j, hovering ? hovered_ship_id : -1, hide_ships);
     }
   }
 }
 
 
 
-void draw_cell(Grid *grid, int x, int y, int cell_row, int cell_col, int hovered_ship_id) {
+void draw_cell(Grid *grid, int x, int y, int cell_row, int cell_col, int hovered_ship_id, bool hide_ships) {
 
   Cell *cell = &grid->cells[cell_row][cell_col];
 
   //only draw ships at their starting position to avoid duplicates
-  if (cell->state == SHIP || cell->ship_id >= 0) {
+  if ((cell->state == SHIP || cell->ship_id >= 0) && !hide_ships) {
     Ship *ship = &grid->ships[cell->ship_id];
     if (ship->start_row == cell_row && ship->start_col == cell_col) {
         draw_ship_sprite(x, y, ship->type, ship->orientation);
