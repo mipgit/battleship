@@ -37,6 +37,10 @@ void set_arena_buffer() {
 
 
 void reset_arena_state() {
+
+  arena_phase = SETUP_PLAYER1;
+  current_player = PLAYER_1;
+
   //set grid origins (fix this!!!)
   arena.player1_grid.sprite_x = 10;
   arena.player1_grid.sprite_y = 50;
