@@ -154,12 +154,16 @@ int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint1
   //boolean to check when to stop the animation
   bool stop = false;
                       
-
+  //we subscribe interrupts
   if (kbd_subscribe_int(&kbd_irq_set) != 0) {return 1;}
   if (timer_subscribe_int(&timer_irq_set) != 0) {return 1;}
+  
+  //new variables to handle frame rate
+  int ticks = 0;
+  if (timer_set_frequency(0, 60) != 0) {return 1;}
+  int ticks_per_frame = 60 / fr_rate;
 
-  if (timer_set_frequency(0, fr_rate) != 0) {return 1;}
-
+  //we set the frame buffer to the mode we want
   if (set_frame_buffer(0x105) != 0) {return 1;}
   if (set_vbe_mode(0x105) != 0) {return 1;}
   
@@ -186,8 +190,10 @@ int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint1
 
           if (msg.m_notify.interrupts & timer_irq_set) { /* subscribed interrupt */
             timer_int_handler();
+            ticks++;
             
-            if (!stop) {
+            if (!stop && (ticks % ticks_per_frame == 0)) {
+              
               //clear the previous drawing !!!
               xpm_image_t img;
               xpm_load(xpm, XPM_INDEXED, &img);
