@@ -27,6 +27,8 @@ extern int cursor_x;
 extern int cursor_y;
 
 
+//MAKE arena.player1_grid A GLOBAL VARIABLE !!!!!!!!
+
 
 void draw_arena_background(uint8_t *buffer) {
   fill_screen(BETTER_BLUE, buffer);
@@ -55,6 +57,7 @@ void draw_arena() {
   }
 
   draw_player(current_player);
+  draw_guide_ships();
 }
 
 
@@ -113,6 +116,37 @@ void draw_cell(Grid *grid, int x, int y, int cell_row, int cell_col, int hovered
 
 
 
+//the next 2 functions could be together but i wanted to keep the code clean
+//they draw the ship status of each player in the bottom of the screen
+
+void draw_ship_status(Grid *grid, int start_x, int start_y) {
+  int x_offset = 0;
+  int y_offset = 0;
+
+  for (int i = 0; i < NUM_SHIPS; i++) {
+    Ship *ship = &grid->ships[i];
+    int size = SHIP_TYPE_TO_SIZE(ship->type);
+    int ship_width = 10*size;  
+    int ship_height = 10; 
+    uint32_t color = (ship->status == ALIVE) ? NAVY_BLUE : ORANGE; 
+
+    draw_rectangle(start_x + x_offset, start_y + y_offset, ship_width, ship_height, color, current_buffer);
+
+    x_offset += ship_width + 10; 
+  }
+}
+
+void draw_guide_ships() {
+  int player1_x = arena.player1_grid.sprite_x + 85;
+  int player2_x = arena.player2_grid.sprite_x + 85;
+  int player_y = arena.player1_grid.sprite_y + GRID_HEIGHT + 90;
+
+  draw_ship_status(&arena.player1_grid, player1_x, player_y);
+  draw_ship_status(&arena.player2_grid, player2_x, player_y);
+}
+
+
+
 
 void draw_ship_sprite(int x, int y, ShipType type, int orientation) {
   switch (type) {
@@ -149,7 +183,7 @@ void draw_hit_marker(int x, int y) {
 }
 
 void draw_miss_marker(int x, int y) {
-  draw_rectangle(x, y, CELL_WIDTH, CELL_HEIGHT, YELLOW, current_buffer);
+  draw_rectangle(x, y, CELL_WIDTH, CELL_HEIGHT, TEAL, current_buffer);
 }
 
 

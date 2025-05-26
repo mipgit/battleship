@@ -43,13 +43,13 @@ void reset_arena_state() {
 
   //set grid origins (fix this!!!)
   arena.player1_grid.sprite_x = 10;
-  arena.player1_grid.sprite_y = 50;
+  arena.player1_grid.sprite_y = 40;
   arena.player1_grid.x = arena.player1_grid.sprite_x + 31;
   arena.player1_grid.y = arena.player1_grid.sprite_y + 31;
   
 
   arena.player2_grid.sprite_x = 410;
-  arena.player2_grid.sprite_y = 50;
+  arena.player2_grid.sprite_y = 40;
   arena.player2_grid.x = arena.player2_grid.sprite_x + 31;
   arena.player2_grid.y = arena.player2_grid.sprite_y + 31;
 
@@ -84,6 +84,7 @@ void init_grid(Grid *grid) {
     grid->ships[i].orientation = 0;
     grid->ships[i].start_row = -1;
     grid->ships[i].start_col = -1;
+    grid->ships[i].status = ALIVE;
   }
 }
 
@@ -134,14 +135,22 @@ void handle_mouse_click(Grid *grid, int mouse_x, int mouse_y) {
       cell_to_pixel(grid, i, j, &x, &y);
       if (mouse_x >= x && mouse_x < x + CELL_WIDTH &&
           mouse_y >= y && mouse_y < y + CELL_HEIGHT) {
+        
         Cell *cell = &grid->cells[i][j];
+        
         if (cell->state == SHIP) {
           cell->state = HIT;
           printf("Hit!\n");
+
+          if (is_ship_sunk(grid, cell->ship_id)) {
+            grid->ships[cell->ship_id].status = SUNK;
+          }
+
         } else if (cell->state == EMPTY) {
           cell->state = MISS;
           printf("Miss!\n");
         }
+        
         bombs_remaining--;
         return;
       }
@@ -294,6 +303,21 @@ void move_ship(Grid *grid, int ship_id, int new_row, int new_col, int orientatio
     }
 }
 
+
+
+bool is_ship_sunk(Grid *grid, int ship_id) {
+  Ship *ship = &grid->ships[ship_id];
+  if (ship->type == NO_SHIP) return false;
+
+  for (int i = 0; i < ship->size; i++) {
+    int row = (ship->orientation == 0) ? ship->start_row : ship->start_row + i;
+    int col = (ship->orientation == 0) ? ship->start_col + i : ship->start_col;
+    if (grid->cells[row][col].state != HIT) {
+      return false; //at least one part of the ship is not hit
+    }
+  }
+  return true; //all parts of the ship are hit
+}
 
 
 

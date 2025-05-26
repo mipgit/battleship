@@ -32,6 +32,9 @@
 #define PURPLE 0x800080
 #define HOVER_COLOR 0xAAAAFF
 #define SHIP_HOVER_COLOR 0xdb67b8
+#define ORANGE 0xFFA500
+#define NAVY_BLUE 0x293f87
+#define TEAL 0x297487
 
 
 
@@ -44,12 +47,18 @@ typedef enum {
 } ShipType;
 
 
+typedef enum {
+    ALIVE,
+    SUNK
+} ShipStatus;
+
+
 typedef struct {
     ShipType type;
     int size;
     int orientation; // 0->horizontal and 1->vertical ?
     int start_row, start_col;
-    //what else?
+    ShipStatus status; 
 } Ship;
 
 

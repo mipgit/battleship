@@ -64,6 +64,7 @@ bool mouse_over_ship(Grid *grid, int mouse_x, int mouse_y, int *row, int *col, i
 bool mouse_over_cell(Grid *grid, int mouse_x, int mouse_y, int *row, int *col);
 void move_ship(Grid *grid, int ship_id, int new_row, int new_col, int orientation);
 
+bool is_ship_sunk(Grid *grid, int ship_id);
 
 
 void cell_to_pixel(Grid *grid, int row, int col, int* x, int* y);
