@@ -52,6 +52,9 @@ int load_sprites() {
   player1s = create_sprite((xpm_map_t) player1s_xpm);
   player2 = create_sprite((xpm_map_t) player2_xpm);
   player2s = create_sprite((xpm_map_t) player2s_xpm);
+  menu_shipR = create_sprite((xpm_map_t) menu_shipR_xpm);
+  menu_shipL = create_sprite((xpm_map_t) menu_shipL_xpm);
+  logo = create_sprite((xpm_map_t) logo_xpm);
 
 
   if (!menu || !game_over || !info) {
@@ -81,5 +84,8 @@ void free_sprites() {
   destroy_sprite(player1s);
   destroy_sprite(player2);
   destroy_sprite(player2s);
+  destroy_sprite(menu_shipR);
+  destroy_sprite(menu_shipL);
+  destroy_sprite(logo);
 }
 

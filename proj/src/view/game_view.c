@@ -5,6 +5,9 @@ extern Sprite *arena;
 extern Sprite *game_over;
 extern Sprite *info;
 extern Sprite *cursor;
+extern Sprite *menu_shipR;
+extern Sprite *menu_shipL;
+extern Sprite *logo;
 
 extern vbe_mode_info_t mode_info;
 extern uint8_t *current_buffer;
@@ -44,10 +47,7 @@ void draw_screen() {
 */
 
 
-void draw_menu() {
-  fill_screen(RED, current_buffer);
-  draw_sprite(menu, mode_info.XResolution/2 - menu->width/2, mode_info.YResolution/2 - menu->height/2, current_buffer);
-}
+
 
 void draw_info() {
   fill_screen(BLUE, current_buffer);

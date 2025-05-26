@@ -36,7 +36,7 @@ void set_arena_buffer() {
 
 
 
-void reset_arena_state() {
+void init_arena() {
 
   arena_phase = SETUP_PLAYER1;
   current_player = PLAYER_1;

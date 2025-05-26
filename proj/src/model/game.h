@@ -31,6 +31,7 @@ int cursor_y;
 extern vbe_mode_info_t mode_info;
 extern uint8_t *current_buffer;
 extern uint8_t *arena_buffer;
+extern uint8_t *menu_buffer;
 
 
 extern GameState state;

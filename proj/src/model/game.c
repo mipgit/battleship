@@ -53,11 +53,6 @@ void game_mouse_handler() {
 
 
 
-void menu_main_loop() {
-  draw_menu();
-  draw_cursor(current_buffer);
-  swap_buffers();
-}
 
 void info_main_loop() {
   draw_info();
@@ -76,5 +71,6 @@ void game_over_main_loop() {
 void free_buffers() {
   free_buffer(current_buffer);
   free_buffer(arena_buffer);
+  free_buffer(menu_buffer);
 }
 

@@ -11,6 +11,7 @@
 
 #include "model/game.h"
 #include "model/arena.h"
+#include "model/menu.h"
 #include "model/sprite.h"
 
 
@@ -90,7 +91,10 @@ int (proj_main_loop)(int argc, char *argv[]) {
 
     GameState cur_state = get_state();
     if (cur_state == ARENA && prev_state != ARENA) {
-      reset_arena_state();
+      init_arena();
+    }
+    else if (cur_state == MENU && prev_state != MENU) {
+      init_menu();
     }
     prev_state = cur_state;
     
