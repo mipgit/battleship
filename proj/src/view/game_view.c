@@ -15,6 +15,10 @@ extern uint8_t *current_buffer;
 extern int cursor_x;
 extern int cursor_y;
 
+extern PlayerTurn current_player;
+extern Sprite *player1s;
+extern Sprite *player2s;
+
 
 
 void draw_cursor(uint8_t *buffer) {
@@ -50,13 +54,18 @@ void draw_screen() {
 
 
 void draw_info() {
-  fill_screen(BLUE, current_buffer);
+  fill_screen(PINK, current_buffer);
   draw_sprite(info, mode_info.XResolution/2 - info->width/2, mode_info.YResolution/2 - info->height/2, current_buffer);
 }
 
 void draw_game_over() {
-  fill_screen(PINK, current_buffer);
-  draw_sprite(game_over, mode_info.XResolution/2 - game_over->width/2, mode_info.YResolution/2 - game_over->height/2, current_buffer);
+  fill_screen(BLUE, current_buffer);
+
+  if (current_player == PLAYER_1) {
+    draw_sprite(player1s, mode_info.XResolution/2 - player1s->width/2, mode_info.YResolution/2 - player1s->height/2, current_buffer);
+  } else if (current_player == PLAYER_2) {
+    draw_sprite(player2s, mode_info.XResolution/2 - player2s->width/2, mode_info.YResolution/2 - player2s->height/2, current_buffer);
+  }  
 }
 
 

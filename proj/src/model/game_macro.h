@@ -9,7 +9,7 @@
 #define CELL_WIDTH 33
 #define CELL_HEIGHT 33
 
-#define NUM_SHIPS 9
+#define NUM_SHIPS 8
 
 #define SHIP_TYPE_TO_SIZE(type) ((type == NO_SHIP) ? 0 : (int)type)
 
@@ -79,6 +79,7 @@ typedef struct {
 typedef struct {
     Cell cells[GRID_ROWS][GRID_COLS];
     Ship ships[NUM_SHIPS];
+    int ships_remaining; //to check if player has ships left (if 0 then player lost)
     int sprite_x, sprite_y; //position of grid sprite (it has coordinates etc)
     int x, y; //position of the actual first cell
 } Grid;

@@ -41,43 +41,37 @@ void init_arena() {
   arena_phase = SETUP_PLAYER1;
   current_player = PLAYER_1;
 
-  //set grid origins (fix this!!!)
-  arena.player1_grid.sprite_x = 10;
-  arena.player1_grid.sprite_y = 40;
-  arena.player1_grid.x = arena.player1_grid.sprite_x + 31;
-  arena.player1_grid.y = arena.player1_grid.sprite_y + 31;
-  
-
-  arena.player2_grid.sprite_x = 410;
-  arena.player2_grid.sprite_y = 40;
-  arena.player2_grid.x = arena.player2_grid.sprite_x + 31;
-  arena.player2_grid.y = arena.player2_grid.sprite_y + 31;
+  //initialize grids
+  init_grid(&arena.player1_grid, 10, 40);
+  init_grid(&arena.player2_grid, 410, 40);
 
   //draw background
   set_arena_buffer();
   draw_arena_background(arena_buffer);
 
-
-
-  //initialize grids and ships
-
-  //player 1
-  init_grid(&arena.player1_grid);
+  //setup ships
   setup_ships(&arena.player1_grid);
-
-  //player 2
-  init_grid(&arena.player2_grid);
   setup_ships(&arena.player2_grid);
 }
 
 
-void init_grid(Grid *grid) {
+void init_grid(Grid *grid, int sprite_x, int sprite_y) {
+
+  grid->sprite_x = sprite_x;
+  grid->sprite_y = sprite_y;
+  grid->x = sprite_x + 31; 
+  grid->y = sprite_y + 31; 
+
+  grid->ships_remaining = NUM_SHIPS;
+
+
   for (int i = 0; i < GRID_ROWS; i++) {
     for (int j = 0; j < GRID_COLS; j++) {
       grid->cells[i][j].state = EMPTY;
       grid->cells[i][j].ship_id = -1;
     }
   }
+
   for (int i = 0; i < NUM_SHIPS; i++) {
     grid->ships[i].type = NO_SHIP;
     grid->ships[i].size = 0;
@@ -144,6 +138,14 @@ void handle_mouse_click(Grid *grid, int mouse_x, int mouse_y) {
 
           if (is_ship_sunk(grid, cell->ship_id)) {
             grid->ships[cell->ship_id].status = SUNK;
+            grid->ships_remaining--;
+            printf("Ship sunk!\n");
+            printf("Ships remaining: %d\n", grid->ships_remaining);
+
+            //check if any player has won
+            if (grid->ships_remaining == 0) {
+              set_state(GAME_OVER);
+            }
           }
 
         } else if (cell->state == EMPTY) {
@@ -420,7 +422,7 @@ void setup_ships(Grid *grid) {
   add_ship(grid, 1, SHIP_1, 0, "E2");
   add_ship(grid, 2, SHIP_3, 0, "G3");
   add_ship(grid, 3, SHIP_2, 1, "D4"); 
-  add_ship(grid, 4, SHIP_1, 0, "K6");
+  add_ship(grid, 4, SHIP_1, 0, "H6");
   add_ship(grid, 5, SHIP_4, 1, "B7");
   add_ship(grid, 6, SHIP_3, 1, "F7");
   add_ship(grid, 7, SHIP_2, 0, "H9"); 

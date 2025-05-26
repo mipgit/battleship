@@ -29,9 +29,9 @@ void game_keyboard_handler() {
     case SPACE_KEY:
       set_state(INFO);
       break;
-    case Q_KEY:
-      set_state(GAME_OVER);
-      break;    
+    //case Q_KEY:
+    //  set_state(GAME_OVER); //pode ser preciso para testar os desenhos
+    //  break;    
     default:
       break;
   }
