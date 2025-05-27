@@ -6,6 +6,7 @@
 #include <lcom/lcf.h>
 
 #include "controller/graphics.h"
+#include "controller/rtc.h"
 
 #include "model/game_macro.h"
 #include "model/game.h"

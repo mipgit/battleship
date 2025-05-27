@@ -27,6 +27,8 @@
 #include "xpm/menu_shipR.xpm"
 #include "xpm/menu_shipL.xpm"
 #include "xpm/logo.xpm"
+#include "xpm/sun.xpm"
+#include "xpm/moon.xpm"
 
 
 
@@ -58,6 +60,8 @@ Sprite *player2s;
 Sprite *menu_shipR;
 Sprite *menu_shipL;
 Sprite *logo;
+Sprite *sun;
+Sprite *moon;
 
 
 /**

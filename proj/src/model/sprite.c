@@ -55,6 +55,8 @@ int load_sprites() {
   menu_shipR = create_sprite((xpm_map_t) menu_shipR_xpm);
   menu_shipL = create_sprite((xpm_map_t) menu_shipL_xpm);
   logo = create_sprite((xpm_map_t) logo_xpm);
+  sun = create_sprite((xpm_map_t) sun_xpm);
+  moon = create_sprite((xpm_map_t) moon_xpm);
 
 
   if (!menu || !game_over || !info) {
@@ -87,5 +89,6 @@ void free_sprites() {
   destroy_sprite(menu_shipR);
   destroy_sprite(menu_shipL);
   destroy_sprite(logo);
+  destroy_sprite(sun);
+  destroy_sprite(moon);
 }
-
