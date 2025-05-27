@@ -72,7 +72,7 @@ int close_devices() {
 
 
 void init_states(GameState cur_state, GameState prev_state) {
-  if (cur_state == ARENA && prev_state != ARENA && prev_state != INFO) { //o ecrã de info dá pausa
+  if (cur_state == ARENA && prev_state != ARENA && prev_state != HELP) { //em vez de HELP tem de se mudar dps para START!!!!
     init_arena();
   }
   else if (cur_state == MENU && prev_state != MENU) {
@@ -134,7 +134,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
 
           if (msg.m_notify.interrupts & timer_irq_set) { 
             if (state == MENU) menu_main_loop();
-            if (state == INFO) info_main_loop();
+            if (state == HELP) help_main_loop();
             if (state == ARENA) arena_main_loop();
             if (state == GAME_OVER) game_over_main_loop();
           }

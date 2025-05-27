@@ -13,11 +13,14 @@
 
 
 typedef enum {
-  MENU,
-  INFO,
-  ARENA,
-  GAME_OVER,
-  EXIT
+  MENU, // Menu initial (barquinho, farol e as cores mudam consoante a hora do dia)
+  RULES, // Regras do jogo (o que é o battleship)
+  HELP, // Help state (para o jogadro ver como se joga e atalhos do teclado)
+  MODE, // Mode selection state (when the player selects the game mode)
+  START, // Ecrã para mudar de jogador
+  ARENA, // Arena do jogo (onde o jogo acontece)
+  GAME_OVER, // Fim do jogo (quando o jogador perde)
+  EXIT, // Exit state (when the game is over and the player exits)
 } GameState;
 
 
@@ -45,7 +48,7 @@ void game_mouse_handler();
 
 
 void menu_main_loop();
-void info_main_loop();
+void help_main_loop();
 void game_over_main_loop();
 
 void free_buffers();

@@ -27,7 +27,7 @@ void game_keyboard_handler() {
       set_state(ARENA);
       break;
     case SPACE_KEY:
-      set_state(INFO);
+      set_state(HELP);
       break;
     //case Q_KEY:
     //  set_state(GAME_OVER); //pode ser preciso para testar os desenhos
@@ -54,7 +54,7 @@ void game_mouse_handler() {
 
 
 
-void info_main_loop() {
+void help_main_loop() {
   draw_info();
   draw_cursor(current_buffer);
   swap_buffers();
