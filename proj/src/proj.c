@@ -71,9 +71,19 @@ int close_devices() {
 }
 
 
+void init_states(GameState cur_state, GameState prev_state) {
+  if (cur_state == ARENA && prev_state != ARENA && prev_state != INFO) { //o ecrã de info dá pausa
+    init_arena();
+  }
+  else if (cur_state == MENU && prev_state != MENU) {
+    init_menu();
+  }
+}
+
+
+
 
 int (proj_main_loop)(int argc, char *argv[]) {
-  printf("Started\n");
 
   if (start_devices() != 0) {return close_devices();}
   if (load_sprites() != 0) {return 1;} //maybe create a function that loads only the initial sprites (if user exits game imm we save time)
@@ -90,15 +100,9 @@ int (proj_main_loop)(int argc, char *argv[]) {
   while (get_state() != EXIT) { 
 
     GameState cur_state = get_state();
-    if (cur_state == ARENA && prev_state != ARENA) {
-      init_arena();
-    }
-    else if (cur_state == MENU && prev_state != MENU) {
-      init_menu();
-    }
+    init_states(cur_state, prev_state);
     prev_state = cur_state;
     
-
     
     /* Get a request message. */
     if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
