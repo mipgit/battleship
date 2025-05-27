@@ -2,6 +2,7 @@
 
 
 extern uint8_t *current_buffer;
+uint8_t *mode_buffer; 
 extern unsigned int frame_size;
 
 extern uint8_t scancode;
@@ -9,11 +10,20 @@ extern uint8_t scancode;
 GameMode mode;
 
 
+void set_mode_buffer() {
+  if (mode_buffer == NULL) {
+    mode_buffer = (uint8_t *) malloc(frame_size);
+  }
+}
 
+void init_mode() {
+  set_mode_buffer();
+  draw_mode(mode_buffer); 
+}
 
 void mode_main_loop() {
-  draw_mode();
-  draw_cursor(current_buffer);
+  memcpy(current_buffer, mode_buffer, frame_size);
+  draw_cursor(current_buffer);                        
   swap_buffers();
 }
 

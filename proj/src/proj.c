@@ -79,6 +79,9 @@ void init_states(GameState cur_state, GameState prev_state) {
   else if (cur_state == MENU && prev_state != MENU) {
     init_menu();
   }
+  else if (cur_state == MODE && prev_state != MODE) {
+    init_mode();
+  }
 }
 
 

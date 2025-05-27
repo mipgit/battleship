@@ -18,7 +18,7 @@
 
 extern GameMode mode;
 
-
+void set_mode_buffer();
 void init_mode();
 void mode_main_loop();
 void mode_keyboard_handler();
