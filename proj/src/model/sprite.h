@@ -5,9 +5,6 @@
 #include <minix/sysutil.h>
 #include <stdint.h>
 #include "controller/graphics.h"
-
-#include "xpm/arena.xpm"
-#include "xpm/menu.xpm"
 #include "xpm/game_over.xpm"
 #include "xpm/info.xpm"
 #include "xpm/batalha_naval_layout.xpm"
@@ -38,7 +35,6 @@ typedef struct {
 } Sprite;
 
 
-Sprite *menu;
 Sprite *game_over;
 Sprite *info;
 Sprite *double_grid;
