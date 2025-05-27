@@ -14,7 +14,7 @@ GameState get_state() {
 }
 
 
-
+//feito para testar os ecrãs
 void game_keyboard_handler() {
   switch (scancode) {
     case ESC_KEY:
@@ -27,7 +27,7 @@ void game_keyboard_handler() {
       set_state(ARENA);
       break;
     case SPACE_KEY:
-      set_state(HELP);
+      set_state(HELP); //não esquecer de que os xpm precisam de ter uma linha a dizer "press enter fot the next screen"
       break;
     //case Q_KEY:
     //  set_state(GAME_OVER); //pode ser preciso para testar os desenhos
