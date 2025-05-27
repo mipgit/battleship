@@ -20,7 +20,7 @@ void init_menu() {
 
 void menu_main_loop() {
   draw_menu();
-  draw_cursor(current_buffer);
+  draw_cursor(current_buffer); //mas nos ecrãs posso desenhar para o current, não é preciso fazer dco  dois
   swap_buffers();
 }
 

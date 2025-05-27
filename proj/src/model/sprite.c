@@ -35,7 +35,6 @@ void destroy_sprite(Sprite *sp) {
 
 
 int load_sprites() {
-  menu = create_sprite((xpm_map_t) menu_xpm);
   game_over = create_sprite((xpm_map_t) game_over_xpm);
   info = create_sprite((xpm_map_t) info_xpm);
   double_grid = create_sprite((xpm_map_t) grid_xpm);
@@ -56,18 +55,12 @@ int load_sprites() {
   menu_shipL = create_sprite((xpm_map_t) menu_shipL_xpm);
   logo = create_sprite((xpm_map_t) logo_xpm);
 
-
-  if (!menu || !game_over || !info) {
-    printf("Error: Failed to load one or more sprites!\n");
-    return 1;
-  }
   return 0;
 }
 
 
 
 void free_sprites() {
-  destroy_sprite(menu);
   destroy_sprite(game_over);
   destroy_sprite(info);
   destroy_sprite(double_grid);

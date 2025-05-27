@@ -1,7 +1,5 @@
 #include "game_view.h"
 
-extern Sprite *menu;
-extern Sprite *arena;
 extern Sprite *game_over;
 extern Sprite *info;
 extern Sprite *cursor;
@@ -19,13 +17,9 @@ extern PlayerTurn current_player;
 extern Sprite *player1s;
 extern Sprite *player2s;
 
-
-
 void draw_cursor(uint8_t *buffer) {
   draw_sprite(cursor, cursor_x, cursor_y, buffer);
 }
-
-
 
 /*
 void draw_screen() {
