@@ -23,9 +23,9 @@ void game_keyboard_handler() {
     case M_KEY:
       set_state(MENU);
       break;
-    case ENTER_KEY:
-      set_state(ARENA);
-      break;
+    //case ENTER_KEY:
+    //  set_state(ARENA);
+    //  break;
     case SPACE_KEY:
       set_state(HELP); //não esquecer de que os xpm precisam de ter uma linha a dizer "press enter fot the next screen"
       break;

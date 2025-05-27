@@ -21,6 +21,8 @@
 #define ENTER_KEY 0x1C
 #define R_KEY 0x13
 #define S_KEY 0x1F
+#define ONE_KEY 0x82
+#define TWO_KEY 0x83
 
 
 #define BLACK 0x000000
@@ -35,6 +37,7 @@
 #define ORANGE 0xFFA500
 #define NAVY_BLUE 0x293f87
 #define TEAL 0x297487
+#define CREAM 0xeec8ce
 
 
 
@@ -105,6 +108,10 @@ typedef enum {
 
 
 
+typedef enum {
+  SINGLE_PLAYER,
+  MULTI_PLAYER,
+} GameMode;
 
 
 

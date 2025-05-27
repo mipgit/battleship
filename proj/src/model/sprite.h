@@ -24,6 +24,9 @@
 #include "xpm/menu_shipR.xpm"
 #include "xpm/menu_shipL.xpm"
 #include "xpm/logo.xpm"
+#include "xpm/mode.xpm"
+#include "xpm/single_player.xpm"
+#include "xpm/multi_player.xpm"
 
 
 
@@ -54,6 +57,9 @@ Sprite *player2s;
 Sprite *menu_shipR;
 Sprite *menu_shipL;
 Sprite *logo;
+Sprite *choose_mode;
+Sprite *single_player;
+Sprite *multi_player;
 
 
 /**

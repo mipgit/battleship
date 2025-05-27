@@ -1,5 +1,6 @@
-#ifndef MENU_H
-#define MENU_H
+#ifndef MODE_H
+#define MODE_H
+
 
 #include <lcom/lcf.h>
 #include <minix/sysutil.h>
@@ -12,17 +13,20 @@
 #include "controller/graphics.h"
 #include "model/game_macro.h"
 #include "model/game.h"
-#include "view/game_view.h"
-#include "view/menu_view.h"
+
+#include "view/mode_view.h"
+
+extern GameMode mode;
 
 
-extern uint8_t *menu_buffer;
+void init_mode();
+void mode_main_loop();
+void mode_keyboard_handler();
 
 
-void set_menu_buffer();
-void init_menu();
-void menu_main_loop();
-void menu_keyboard_handler();
+
+
+
 
 
 

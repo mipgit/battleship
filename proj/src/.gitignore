@@ -7,12 +7,14 @@ game.o
 sprite.o
 arena.o
 menu.o
+mode.o
 
 /*VIEW*/
 game_view.o
 sprite_view.o
 arena_view.o
 menu_view.o
+mode_view.o
 
 /*CONTROLLER*/
 proj.o
