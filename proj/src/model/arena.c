@@ -8,6 +8,9 @@ uint8_t *arena_buffer;
 extern unsigned int frame_size;
 extern uint8_t scancode;
 
+static int pc_bomb_timer = 0;
+static int pc_bombs_to_play = 0;
+
 Arena arena;
 ArenaPhase arena_phase = SETUP_PLAYER1;
 PlayerTurn current_player = PLAYER_1;
@@ -94,8 +97,12 @@ void arena_keyboard_handler() {
   switch (scancode) {
     case R_KEY:
       if (arena_phase == SETUP_PLAYER1 && current_player == PLAYER_1) {
-        current_player = PLAYER_2;
-        arena_phase = SETUP_PLAYER2;
+        if (game_mode == SINGLE_PLAYER) {
+          arena_phase = READY_PHASE;
+        } else {
+          current_player = PLAYER_2;
+          arena_phase = SETUP_PLAYER2;
+        }  
       } else if (arena_phase == SETUP_PLAYER2 && current_player == PLAYER_2) {
         current_player = PLAYER_1;
         arena_phase = READY_PHASE;
@@ -168,6 +175,40 @@ void handle_mouse_click(Grid *grid, int mouse_x, int mouse_y) {
 
 /* READY PHASE: Bombing */
 void battle_phase(bool curr_lb, bool prev_lb) {
+
+  //SINGLE PLAYER
+  //we need a separate bomb tracker for the pc because it plays automatically, 
+  //and we want to simulate a delay between its moves
+  if (game_mode == SINGLE_PLAYER && current_player == PLAYER_2) {
+    if (pc_bombs_to_play == 0) pc_bombs_to_play = MAX_BOMBS_PER_TURN;
+    pc_bomb_timer++;
+
+    if (pc_bomb_timer >= FREQUENCY && pc_bombs_to_play > 0) { 
+      //we need to pick a random cell that hasn't been bombed yet
+      int row, col;
+      do {
+        row = rand() % GRID_ROWS;
+        col = rand() % GRID_COLS;
+      } while (arena.player1_grid.cells[row][col].state == HIT ||
+               arena.player1_grid.cells[row][col].state == MISS);
+
+      //and then we simulate a mouse click on that cell
+      handle_mouse_click(&arena.player1_grid, arena.player1_grid.x + col * CELL_WIDTH, arena.player1_grid.y + row * CELL_HEIGHT);
+
+      pc_bombs_to_play--;
+      pc_bomb_timer = 0;
+    }
+
+    
+    if (pc_bombs_to_play == 0) {
+      current_player = PLAYER_1;
+      bombs_remaining = MAX_BOMBS_PER_TURN; //we need to set the bombs for the human player!
+    }
+    return;
+  }
+
+
+  //MULTI PLAYER 
   if (bombs_remaining > 0) { //check player still has bombsg
     if (curr_lb && !prev_lb) {
       if (current_player == PLAYER_1) {
