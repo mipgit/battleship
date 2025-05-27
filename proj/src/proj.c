@@ -9,6 +9,7 @@
 #include "controller/mouse.h"
 #include "controller/graphics.h"
 
+#include "model/game_macro.h"
 #include "model/game.h"
 #include "model/arena.h"
 #include "model/menu.h"
@@ -16,10 +17,6 @@
 #include "model/sprite.h"
 
 
-
-#define FREQUENCY 60
-#define TIMER 0
-#define VIDEO_MODE 0x115
 
 
 uint8_t kbd_irq_set;

@@ -7,7 +7,7 @@ extern unsigned int frame_size;
 
 extern uint8_t scancode;
 
-GameMode mode;
+GameMode game_mode;
 
 
 void set_mode_buffer() {
@@ -33,11 +33,11 @@ void mode_keyboard_handler() {
   switch (scancode) {
     case ONE_KEY:
       set_state(ARENA);
-      mode = SINGLE_PLAYER;
+      game_mode = SINGLE_PLAYER;
       break;
     case TWO_KEY:
       set_state(ARENA);  
-      mode = MULTI_PLAYER;
+      game_mode = MULTI_PLAYER;
       break;
     default:
       break;

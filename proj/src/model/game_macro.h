@@ -1,6 +1,13 @@
 #ifndef GAME_MACRO_H
 #define GAME_MACRO_H
 
+
+#define FREQUENCY 60
+#define TIMER 0
+#define VIDEO_MODE 0x115
+
+
+
 #define GRID_ROWS 10
 #define GRID_COLS 10
 #define GRID_HEIGHT 378

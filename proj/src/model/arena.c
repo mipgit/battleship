@@ -12,7 +12,7 @@ Arena arena;
 ArenaPhase arena_phase = SETUP_PLAYER1;
 PlayerTurn current_player = PLAYER_1;
 DragState drag_state = {0, -1, 0, 0, 0, 0};
-
+extern GameMode game_mode;
 
 
 #define MAX_BOMBS_PER_TURN 5
@@ -51,7 +51,11 @@ void init_arena() {
 
   //setup ships
   setup_ships(&arena.player1_grid);
-  setup_ships(&arena.player2_grid);
+  if (game_mode == MULTI_PLAYER) setup_ships(&arena.player2_grid);
+  else if (game_mode == SINGLE_PLAYER) {
+    setup_pc_ships(&arena.player2_grid);
+  }
+
 }
 
 
@@ -428,4 +432,43 @@ void setup_ships(Grid *grid) {
   add_ship(grid, 7, SHIP_2, 0, "H9"); 
 }
 
+
+void setup_pc_ships(Grid *grid) {
+  ShipType ships_type[NUM_SHIPS] = {SHIP_1, SHIP_1, SHIP_3, SHIP_2, SHIP_1, SHIP_4, SHIP_3, SHIP_2};
+
+  //from what i read we should move this to the main function !!!!!!!!!!!
+  static int seeded = 0;
+  if (!seeded) { srand(time(NULL)); seeded = 1; }
+
+  //we randomly place ships on the grid
+  for (int ship_id = 0; ship_id < NUM_SHIPS; ship_id++) {
+    int placed = 0;
+    int orientation, row, col, size = SHIP_TYPE_TO_SIZE(ships_type[ship_id]);
+    while (!placed) {
+      orientation = rand() % 2; 
+      if (orientation == 0) {  //horizontal
+        row = rand() % GRID_ROWS;
+        col = rand() % (GRID_COLS - size + 1);
+      } else { //vertical
+        row = rand() % (GRID_ROWS - size + 1);
+        col = rand() % GRID_COLS;
+      }
+      if (can_place_ship(grid, row, col, size, orientation, ship_id)) {
+        grid->ships[ship_id].type = ships_type[ship_id];
+        grid->ships[ship_id].size = size;
+        grid->ships[ship_id].orientation = orientation;
+        grid->ships[ship_id].start_row = row;
+        grid->ships[ship_id].start_col = col;
+        grid->ships[ship_id].status = ALIVE;
+        for (int i = 0; i < size; i++) {
+          int r = (orientation == 0) ? row : row + i;
+          int c = (orientation == 0) ? col + i : col;
+          grid->cells[r][c].state = SHIP;
+          grid->cells[r][c].ship_id = ship_id;
+        }
+        placed = 1;
+      }
+    }
+  }
+}
 

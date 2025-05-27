@@ -72,7 +72,7 @@ int coord_to_cell(const char* coord, int* row, int* col);
 bool can_place_ship(Grid *grid, int start_row, int start_col, int size, int orientation, int ship_id);
 bool add_ship(Grid *grid, int ship_id, ShipType type, int orientation, const char* coord);
 void setup_ships(Grid *grid);
-
+void setup_pc_ships(Grid *grid);
 
 
 #endif
