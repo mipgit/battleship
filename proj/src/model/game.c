@@ -47,15 +47,15 @@ void game_keyboard_handler() {
     case ENTER_KEY:
       set_state(ARENA); //para o jogador escolher o modo de jogo
       break;
-    case SPACE_KEY:
-      set_state(HELP); //não esquecer de que os xpm precisam de ter uma linha a dizer "press enter fot the next screen"
-      break;
+    // case SPACE_KEY:
+    //   set_state(HELP); //não esquecer de que os xpm precisam de ter uma linha a dizer "press enter fot the next screen"
+    //   break;
     case Q_KEY:
       set_state(GAME_OVER); //pode ser preciso para testar os desenhos
       break;
-    case ESC_KEY:
-      set_state(EXIT);
-      break;    
+    // case ESC_KEY:
+    //   set_state(EXIT);
+    //   break;    
     default:
       break;
   }
@@ -88,6 +88,13 @@ void game_over_main_loop() {
   draw_cursor(current_buffer);
   swap_buffers();
 }
+
+void rules_main_loop() {
+  draw_rules_background();
+  draw_cursor(current_buffer);
+  swap_buffers();
+}
+
 
 
 void free_buffers() {
