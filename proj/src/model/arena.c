@@ -8,7 +8,10 @@ uint8_t *arena_buffer;
 extern unsigned int frame_size;
 extern uint8_t scancode;
 
-static int pc_bomb_timer = 0;
+#define MAX_CELLS (GRID_ROWS * GRID_COLS)
+static int pc_available_rows[MAX_CELLS];
+static int pc_available_cols[MAX_CELLS];
+static int pc_available_count = 0;
 static int pc_bombs_to_play = 0;
 
 Arena arena;
@@ -57,6 +60,7 @@ void init_arena() {
   if (game_mode == MULTI_PLAYER) setup_ships(&arena.player2_grid);
   else if (game_mode == SINGLE_PLAYER) {
     setup_pc_ships(&arena.player2_grid);
+    pc_init_available_cells(&arena.player1_grid);
   }
 
 }
@@ -134,6 +138,7 @@ void arena_mouse_handler() {
 
 //used in ready/battle phase
 void handle_mouse_click(Grid *grid, int mouse_x, int mouse_y) {
+  printf("CLICK\n");
   for (int i = 0; i < GRID_ROWS; i++) {
     for (int j = 0; j < GRID_COLS; j++) {
       int x, y;
@@ -180,32 +185,26 @@ void battle_phase(bool curr_lb, bool prev_lb) {
   //we need a separate bomb tracker for the pc because it plays automatically, 
   //and we want to simulate a delay between its moves
   if (game_mode == SINGLE_PLAYER && current_player == PLAYER_2) {
-    if (pc_bombs_to_play == 0) pc_bombs_to_play = MAX_BOMBS_PER_TURN;
-    pc_bomb_timer++;
+  if (pc_bombs_to_play == 0) pc_bombs_to_play = MAX_BOMBS_PER_TURN;
 
-    if (pc_bomb_timer >= FREQUENCY && pc_bombs_to_play > 0) { 
-      //we need to pick a random cell that hasn't been bombed yet
-      int row, col;
-      do {
-        row = rand() % GRID_ROWS;
-        col = rand() % GRID_COLS;
-      } while (arena.player1_grid.cells[row][col].state == HIT ||
-               arena.player1_grid.cells[row][col].state == MISS);
+  while (pc_bombs_to_play > 0 && pc_available_count > 0) {
+    int idx = rand() % pc_available_count;
+    int row = pc_available_rows[idx];
+    int col = pc_available_cols[idx];
 
-      //and then we simulate a mouse click on that cell
-      handle_mouse_click(&arena.player1_grid, arena.player1_grid.x + col * CELL_WIDTH, arena.player1_grid.y + row * CELL_HEIGHT);
+    handle_mouse_click(&arena.player1_grid, arena.player1_grid.x + col * CELL_WIDTH, arena.player1_grid.y + row * CELL_HEIGHT);
 
-      pc_bombs_to_play--;
-      pc_bomb_timer = 0;
-    }
+    pc_available_rows[idx] = pc_available_rows[pc_available_count - 1];
+    pc_available_cols[idx] = pc_available_cols[pc_available_count - 1];
+    pc_available_count--;
 
-    
-    if (pc_bombs_to_play == 0) {
-      current_player = PLAYER_1;
-      bombs_remaining = MAX_BOMBS_PER_TURN; //we need to set the bombs for the human player!
-    }
-    return;
+    pc_bombs_to_play--;
   }
+
+  current_player = PLAYER_1;
+  bombs_remaining = MAX_BOMBS_PER_TURN;
+  return;
+}
 
 
   //MULTI PLAYER 
@@ -512,4 +511,27 @@ void setup_pc_ships(Grid *grid) {
     }
   }
 }
+
+
+//we trace the available cells for the pc to bomb (avaliable cells: EMPTY or SHIP)
+void pc_init_available_cells(Grid *grid) {
+  pc_available_count = 0;
+  for (int i = 0; i < GRID_ROWS; i++) {
+    for (int j = 0; j < GRID_COLS; j++) {
+      if (grid->cells[i][j].state != HIT && grid->cells[i][j].state != MISS) {
+
+        pc_available_rows[pc_available_count] = i; //we store the index of the cells'row
+        pc_available_cols[pc_available_count] = j; //we store the index of the cells'col
+
+        /*whenever we call these lists on iindex 'pc_available_count' we will be given 
+        the coordinates (row and col respectively) of a available cell*/
+        pc_available_count++; 
+      }
+    }
+  }
+}
+
+
+
+
 

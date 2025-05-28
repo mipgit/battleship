@@ -73,6 +73,7 @@ bool can_place_ship(Grid *grid, int start_row, int start_col, int size, int orie
 bool add_ship(Grid *grid, int ship_id, ShipType type, int orientation, const char* coord);
 void setup_ships(Grid *grid);
 void setup_pc_ships(Grid *grid);
+void pc_init_available_cells(Grid *grid);
 
 
 #endif
