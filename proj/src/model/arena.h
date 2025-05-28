@@ -53,10 +53,11 @@ void arena_keyboard_handler();
 
 void arena_mouse_handler();
 
-void handle_mouse_click(Grid *grid, int mouse_x, int mouse_y);
+bool handle_mouse_click(Grid *grid, int mouse_x, int mouse_y);
 
 
-void battle_phase(bool curr_lb, bool prev_lb);
+void battle_phase_mouse(bool curr_lb, bool prev_lb);
+void battle_phase_pc();
 void setup_phase(bool curr_lb, bool prev_lb, Grid *grid);
 
 

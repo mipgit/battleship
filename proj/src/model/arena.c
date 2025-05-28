@@ -9,10 +9,12 @@ extern unsigned int frame_size;
 extern uint8_t scancode;
 
 #define MAX_CELLS (GRID_ROWS * GRID_COLS)
+#define BOMB_DELAY_FRAMES 20
 static int pc_available_rows[MAX_CELLS];
 static int pc_available_cols[MAX_CELLS];
 static int pc_available_count = 0;
 static int pc_bombs_to_play = 0;
+static int pc_bomb_timer = 0;
 
 Arena arena;
 ArenaPhase arena_phase = SETUP_PLAYER1;
@@ -30,6 +32,10 @@ void arena_main_loop() {
   draw_arena();
   draw_cursor(current_buffer);
   swap_buffers();
+
+  if (arena_phase == READY_PHASE && game_mode == SINGLE_PLAYER && current_player == PLAYER_2) {
+    battle_phase_pc(); 
+  } 
 }
 
 
@@ -128,7 +134,7 @@ void arena_mouse_handler() {
   } else if (arena_phase == SETUP_PLAYER2 && current_player == PLAYER_2) {
     setup_phase(curr_lb, prev_lb, &arena.player2_grid);
   } else if (arena_phase == READY_PHASE) {
-    battle_phase(curr_lb, prev_lb);
+    battle_phase_mouse(curr_lb, prev_lb);
   }
 
   prev_lb = curr_lb;
@@ -137,7 +143,7 @@ void arena_mouse_handler() {
 
 
 //used in ready/battle phase
-void handle_mouse_click(Grid *grid, int mouse_x, int mouse_y) {
+bool handle_mouse_click(Grid *grid, int mouse_x, int mouse_y) {
   printf("CLICK\n");
   for (int i = 0; i < GRID_ROWS; i++) {
     for (int j = 0; j < GRID_COLS; j++) {
@@ -169,45 +175,22 @@ void handle_mouse_click(Grid *grid, int mouse_x, int mouse_y) {
           printf("Miss!\n");
         }
         
-        bombs_remaining--;
-        return;
+        if (game_mode == MULTI_PLAYER || current_player == PLAYER_1) {
+          bombs_remaining--;
+        }
+        return true;
       }
     }
   }
+  return false;
 }
 
 
 
 /* READY PHASE: Bombing */
-void battle_phase(bool curr_lb, bool prev_lb) {
 
-  //SINGLE PLAYER
-  //we need a separate bomb tracker for the pc because it plays automatically, 
-  //and we want to simulate a delay between its moves
-  if (game_mode == SINGLE_PLAYER && current_player == PLAYER_2) {
-  if (pc_bombs_to_play == 0) pc_bombs_to_play = MAX_BOMBS_PER_TURN;
-
-  while (pc_bombs_to_play > 0 && pc_available_count > 0) {
-    int idx = rand() % pc_available_count;
-    int row = pc_available_rows[idx];
-    int col = pc_available_cols[idx];
-
-    handle_mouse_click(&arena.player1_grid, arena.player1_grid.x + col * CELL_WIDTH, arena.player1_grid.y + row * CELL_HEIGHT);
-
-    pc_available_rows[idx] = pc_available_rows[pc_available_count - 1];
-    pc_available_cols[idx] = pc_available_cols[pc_available_count - 1];
-    pc_available_count--;
-
-    pc_bombs_to_play--;
-  }
-
-  current_player = PLAYER_1;
-  bombs_remaining = MAX_BOMBS_PER_TURN;
-  return;
-}
-
-
-  //MULTI PLAYER 
+//if it is a human playing, he will use the mouse to click on the grid
+void battle_phase_mouse(bool curr_lb, bool prev_lb) {
   if (bombs_remaining > 0) { //check player still has bombsg
     if (curr_lb && !prev_lb) {
       if (current_player == PLAYER_1) {
@@ -223,6 +206,40 @@ void battle_phase(bool curr_lb, bool prev_lb) {
       current_player = PLAYER_1;
     }
     bombs_remaining = MAX_BOMBS_PER_TURN; //reset bombs for the new turn
+  }
+}
+
+
+//if it is the pc playing, it will bomb automatically
+void battle_phase_pc() {
+  if (game_mode == SINGLE_PLAYER && current_player == PLAYER_2) {
+    if (pc_bombs_to_play == 0 && pc_available_count > 0) {
+      pc_bombs_to_play = MAX_BOMBS_PER_TURN;
+      pc_bomb_timer = 0;
+    }
+
+    if (pc_bombs_to_play > 0 && pc_available_count > 0) {
+      pc_bomb_timer++;
+      if (pc_bomb_timer >= BOMB_DELAY_FRAMES) {
+        pc_bomb_timer = 0;
+
+        int idx = rand() % pc_available_count;
+        int row = pc_available_rows[idx];
+        int col = pc_available_cols[idx];
+
+        if (handle_mouse_click(&arena.player1_grid, arena.player1_grid.x + col * CELL_WIDTH, arena.player1_grid.y + row * CELL_HEIGHT)) {
+          pc_available_rows[idx] = pc_available_rows[pc_available_count - 1];
+          pc_available_cols[idx] = pc_available_cols[pc_available_count - 1];
+          pc_available_count--;
+          pc_bombs_to_play--;
+        }
+      }
+    }
+
+    if (pc_bombs_to_play == 0 || pc_available_count == 0) {
+      current_player = PLAYER_1;
+      bombs_remaining = MAX_BOMBS_PER_TURN;
+    }
   }
 }
 
