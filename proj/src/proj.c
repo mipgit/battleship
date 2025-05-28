@@ -16,6 +16,7 @@
 
 
 
+
 #define FREQUENCY 60
 #define TIMER 0
 #define VIDEO_MODE 0x115
@@ -137,6 +138,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
             if (state == HELP) help_main_loop();
             if (state == ARENA) arena_main_loop();
             if (state == GAME_OVER) game_over_main_loop();
+            if (state == RULES) rules_main_loop();
           }
           break;
 
