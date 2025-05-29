@@ -17,6 +17,9 @@
 
 void draw_arena_background(uint8_t *buffer);
 void draw_arena();
+
+void draw_layout();
+
 void draw_grid(Grid *grid, bool hide_ships);
 
 void draw_cell(Grid *grid, int x, int y, int cell_row, int cell_col, int hovered_ship_id, bool hide_ships);

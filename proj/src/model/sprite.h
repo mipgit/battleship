@@ -9,6 +9,7 @@
 #include "xpm/info.xpm"
 #include "xpm/batalha_naval_layout.xpm"
 #include "xpm/one_grid_layout.xpm"
+#include "xpm/selected_grid.xpm"
 #include "xpm/cursor.xpm"
 #include "xpm/ship1.xpm"
 #include "xpm/ship2h.xpm"
@@ -42,6 +43,7 @@ Sprite *game_over;
 Sprite *info;
 Sprite *double_grid;
 Sprite *single_grid;
+Sprite *selected_grid;
 Sprite *cursor;
 Sprite *ship1;
 Sprite *ship2h;

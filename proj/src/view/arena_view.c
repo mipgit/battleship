@@ -14,6 +14,7 @@ extern Sprite *ship4h;
 extern Sprite *ship4v;
 extern Sprite *double_grid;
 extern Sprite *single_grid;
+extern Sprite *selected_grid;
 extern Sprite *player1;
 extern Sprite *player1s;
 extern Sprite *player2;
@@ -32,14 +33,16 @@ extern int cursor_y;
 
 void draw_arena_background(uint8_t *buffer) {
   fill_screen(BETTER_BLUE, buffer);
-  draw_sprite(single_grid, arena.player1_grid.sprite_x, arena.player1_grid.sprite_y, buffer);
-  draw_sprite(single_grid, arena.player2_grid.sprite_x, arena.player2_grid.sprite_y, buffer);
+  //draw_sprite(single_grid, arena.player1_grid.sprite_x, arena.player1_grid.sprite_y, buffer);
+  //draw_sprite(single_grid, arena.player2_grid.sprite_x, arena.player2_grid.sprite_y, buffer);
 }
 
 
 
 void draw_arena() {
   memcpy(current_buffer, arena_buffer, frame_size);
+
+  draw_layout();
 
   if (arena_phase == SETUP_PLAYER1 && current_player == PLAYER_1) {
     draw_grid(&arena.player1_grid, 0);
@@ -57,7 +60,7 @@ void draw_arena() {
   }
 
   draw_player(current_player);
-  draw_guide_ships();
+  if (arena_phase == READY_PHASE) draw_guide_ships();
 }
 
 
@@ -74,6 +77,25 @@ void draw_grid(Grid *grid, bool hide_ships) {
   }
 }
 
+
+void draw_layout() {
+  
+  if (arena_phase == SETUP_PLAYER1) {
+    draw_sprite(selected_grid, arena.player1_grid.sprite_x, arena.player1_grid.sprite_y, current_buffer);
+  } else if (arena_phase == SETUP_PLAYER2) {
+    draw_sprite(selected_grid, arena.player2_grid.sprite_x, arena.player2_grid.sprite_y, current_buffer);
+  }
+
+  if (arena_phase == READY_PHASE) {
+    if (current_player == PLAYER_1) {
+      draw_sprite(single_grid, arena.player1_grid.sprite_x, arena.player1_grid.sprite_y, current_buffer);
+      draw_sprite(selected_grid, arena.player2_grid.sprite_x, arena.player2_grid.sprite_y, current_buffer);
+    } else if (current_player == PLAYER_2) {
+      draw_sprite(selected_grid, arena.player1_grid.sprite_x, arena.player1_grid.sprite_y, current_buffer);
+      draw_sprite(single_grid, arena.player2_grid.sprite_x, arena.player2_grid.sprite_y, current_buffer);
+    }
+  }
+}
 
 
 void draw_cell(Grid *grid, int x, int y, int cell_row, int cell_col, int hovered_ship_id, bool hide_ships) {
@@ -193,12 +215,18 @@ void draw_player(PlayerTurn player) {
   int player2_x = arena.player2_grid.sprite_x + GRID_WIDTH/2 - player2->width/2;
   int player_y = arena.player1_grid.sprite_x + GRID_HEIGHT + 50;
 
-  if (player == PLAYER_1) {
+  if (arena_phase == SETUP_PLAYER1) {
     draw_sprite(player1s, player1_x, player_y, current_buffer);
-    draw_sprite(player2, player2_x, player_y, current_buffer);
-  } else if (player == PLAYER_2) {
+  } else if (arena_phase == SETUP_PLAYER2) {
     draw_sprite(player2s, player2_x, player_y, current_buffer);
-    draw_sprite(player1, player1_x, player_y, current_buffer);
+  } else if (READY_PHASE) {
+    if (player == PLAYER_1) {
+      draw_sprite(player1s, player1_x, player_y, current_buffer);
+      draw_sprite(player2, player2_x, player_y, current_buffer);
+    } else if (player == PLAYER_2) {
+      draw_sprite(player2s, player2_x, player_y, current_buffer);
+      draw_sprite(player1, player1_x, player_y, current_buffer);
+    }
   }
 }
 
