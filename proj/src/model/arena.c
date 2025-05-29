@@ -144,7 +144,6 @@ void arena_mouse_handler() {
 
 //used in ready/battle phase
 bool handle_mouse_click(Grid *grid, int mouse_x, int mouse_y) {
-  printf("CLICK\n");
   for (int i = 0; i < GRID_ROWS; i++) {
     for (int j = 0; j < GRID_COLS; j++) {
       int x, y;
@@ -156,13 +155,10 @@ bool handle_mouse_click(Grid *grid, int mouse_x, int mouse_y) {
         
         if (cell->state == SHIP) {
           cell->state = HIT;
-          printf("Hit!\n");
 
           if (is_ship_sunk(grid, cell->ship_id)) {
             grid->ships[cell->ship_id].status = SUNK;
             grid->ships_remaining--;
-            printf("Ship sunk!\n");
-            printf("Ships remaining: %d\n", grid->ships_remaining);
 
             //check if any player has won
             if (grid->ships_remaining == 0) {
@@ -172,7 +168,6 @@ bool handle_mouse_click(Grid *grid, int mouse_x, int mouse_y) {
 
         } else if (cell->state == EMPTY) {
           cell->state = MISS;
-          printf("Miss!\n");
         }
         
         if (game_mode == MULTI_PLAYER || current_player == PLAYER_1) {
