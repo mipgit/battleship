@@ -32,7 +32,7 @@ extern int cursor_y;
 int main(int argc, char *argv[]) {
   lcf_set_language("EN-US");
   lcf_trace_calls("/home/lcom/labs/grupo_2leic03_5/proj/src/debug/trace.txt");
-  lcf_log_output("/home/lcom/labs/grupo_2leic03_5/proj/src/debug/output.txt");
+  lcf_log_output("/home/lcom/labs/proj/src/debug/output.txt");
   if (lcf_start(argc, argv)) return 1;
   lcf_cleanup();
   return 0;
