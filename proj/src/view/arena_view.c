@@ -108,7 +108,8 @@ void draw_cell(Grid *grid, int x, int y, int cell_row, int cell_col, int hovered
   //always show cell hover
   if (cursor_x >= x && cursor_x < x + CELL_WIDTH &&
       cursor_y >= y && cursor_y < y + CELL_HEIGHT) {
-    draw_rectangle(x, y, CELL_WIDTH, CELL_HEIGHT, HOVER_COLOR, current_buffer);
+    if (!(arena_phase != READY_PHASE && cell->ship_id > 0)) //dont want to draw hoover on ships in SETUP_PHASE's
+      draw_rectangle(x, y, CELL_WIDTH, CELL_HEIGHT, HOVER_COLOR, current_buffer);
   }
 
 
