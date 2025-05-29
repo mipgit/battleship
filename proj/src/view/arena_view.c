@@ -65,8 +65,8 @@ void draw_arena() {
 
 
 void draw_grid(Grid *grid, bool hide_ships) {
-    int hovered_row, hovered_col, hovered_ship_id;
-    bool hovering = mouse_over_ship(grid, cursor_x, cursor_y, &hovered_row, &hovered_col, &hovered_ship_id);
+  int hovered_row, hovered_col, hovered_ship_id;
+  bool hovering = mouse_over_ship(grid, cursor_x, cursor_y, &hovered_row, &hovered_col, &hovered_ship_id);
   
   for (int i = 0; i < GRID_ROWS; i++) {
     for (int j = 0; j < GRID_COLS; j++) {
@@ -81,17 +81,21 @@ void draw_grid(Grid *grid, bool hide_ships) {
 void draw_layout() {
   
   if (arena_phase == SETUP_PLAYER1) {
-    draw_sprite(selected_grid, arena.player1_grid.sprite_x, arena.player1_grid.sprite_y, current_buffer);
+    //draw_sprite(selected_grid, arena.player1_grid.sprite_x, arena.player1_grid.sprite_y, current_buffer);
+    draw_sprite_recolor(single_grid, arena.player1_grid.sprite_x, arena.player1_grid.sprite_y, BRIGHT_ORANGE, current_buffer);
   } else if (arena_phase == SETUP_PLAYER2) {
-    draw_sprite(selected_grid, arena.player2_grid.sprite_x, arena.player2_grid.sprite_y, current_buffer);
+    //draw_sprite(selected_grid, arena.player2_grid.sprite_x, arena.player2_grid.sprite_y, current_buffer);
+    draw_sprite_recolor(single_grid, arena.player2_grid.sprite_x, arena.player2_grid.sprite_y, BRIGHT_ORANGE, current_buffer);
   }
 
   if (arena_phase == READY_PHASE) {
     if (current_player == PLAYER_1) {
       draw_sprite(single_grid, arena.player1_grid.sprite_x, arena.player1_grid.sprite_y, current_buffer);
-      draw_sprite(selected_grid, arena.player2_grid.sprite_x, arena.player2_grid.sprite_y, current_buffer);
+      //draw_sprite(selected_grid, arena.player2_grid.sprite_x, arena.player2_grid.sprite_y, current_buffer);
+      draw_sprite_recolor(single_grid, arena.player2_grid.sprite_x, arena.player2_grid.sprite_y, BRIGHT_ORANGE, current_buffer);
     } else if (current_player == PLAYER_2) {
-      draw_sprite(selected_grid, arena.player1_grid.sprite_x, arena.player1_grid.sprite_y, current_buffer);
+      //draw_sprite(selected_grid, arena.player1_grid.sprite_x, arena.player1_grid.sprite_y, current_buffer);
+      draw_sprite_recolor(single_grid, arena.player1_grid.sprite_x, arena.player1_grid.sprite_y, BRIGHT_ORANGE, current_buffer);
       draw_sprite(single_grid, arena.player2_grid.sprite_x, arena.player2_grid.sprite_y, current_buffer);
     }
   }
@@ -216,15 +220,19 @@ void draw_player(PlayerTurn player) {
   int player_y = arena.player1_grid.sprite_x + GRID_HEIGHT + 50;
 
   if (arena_phase == SETUP_PLAYER1) {
-    draw_sprite(player1s, player1_x, player_y, current_buffer);
+    //draw_sprite(player1s, player1_x, player_y, current_buffer);
+    draw_sprite_recolor(player1, player1_x, player_y, BRIGHT_ORANGE, current_buffer);
   } else if (arena_phase == SETUP_PLAYER2) {
-    draw_sprite(player2s, player2_x, player_y, current_buffer);
+    //draw_sprite(player2s, player2_x, player_y, current_buffer);
+    draw_sprite_recolor(player2, player2_x, player_y, BRIGHT_ORANGE, current_buffer);
   } else if (READY_PHASE) {
     if (player == PLAYER_1) {
-      draw_sprite(player1s, player1_x, player_y, current_buffer);
+      //draw_sprite(player1s, player1_x, player_y, current_buffer);
+      draw_sprite_recolor(player1, player1_x, player_y, BRIGHT_ORANGE, current_buffer);
       draw_sprite(player2, player2_x, player_y, current_buffer);
     } else if (player == PLAYER_2) {
-      draw_sprite(player2s, player2_x, player_y, current_buffer);
+      //draw_sprite(player2s, player2_x, player_y, current_buffer);
+      draw_sprite_recolor(player2, player2_x, player_y, BRIGHT_ORANGE, current_buffer);
       draw_sprite(player1, player1_x, player_y, current_buffer);
     }
   }
