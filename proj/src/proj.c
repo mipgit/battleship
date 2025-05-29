@@ -13,6 +13,7 @@
 #include "model/arena.h"
 #include "model/menu.h"
 #include "model/sprite.h"
+#include "model/game_over.h"
 
 
 
@@ -78,6 +79,9 @@ void init_states(GameState cur_state, GameState prev_state) {
   else if (cur_state == MENU && prev_state != MENU) {
     init_menu();
   }
+  else if (cur_state == GAME_OVER && prev_state != GAME_OVER) {
+    init_game_over();
+  }
 }
 
 
@@ -119,16 +123,23 @@ int (proj_main_loop)(int argc, char *argv[]) {
 
             //depois temos de dividir os handlers por ecrã
             if(state == ARENA) arena_keyboard_handler();
+            if(state == GAME_OVER) game_over_keyboard_handler();
             //...
           }
 
+          
           if (msg.m_notify.interrupts & mouse_irq_set) { 
             (mouse_ih)();
             if(mouse_sync_bytes()) create_packet();
             game_mouse_handler(); 
             
             //depois temos de dividir os handlers por ecrã
-            if (state == ARENA) arena_mouse_handler();
+            if (state == GAME_OVER) {
+              game_over_mouse_handler();
+            }
+            else if (state == ARENA) {
+                arena_mouse_handler();
+            }
             //...
           }
 
@@ -136,7 +147,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
             if (state == MENU) menu_main_loop();
             if (state == HELP) help_main_loop();
             if (state == ARENA) arena_main_loop();
-            if (state == GAME_OVER) game_over_main_loop();
+            if (state == GAME_OVER) game_over_screen_loop();
           }
           break;
 

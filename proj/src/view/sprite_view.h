@@ -19,7 +19,7 @@ int(draw_sprite)(Sprite *sprite, uint16_t x, uint16_t y, uint8_t *buffer);
 int(draw_char)(char c, uint16_t x, uint16_t y, uint32_t color);
 int(draw_string)(char str[], uint16_t x, uint16_t y, uint32_t color);
 
-
+int(draw_sprite_highlighted)(Sprite *sprite, uint16_t x, uint16_t y, uint8_t *buffer);
 
 
 

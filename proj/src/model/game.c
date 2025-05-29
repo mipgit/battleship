@@ -29,9 +29,9 @@ void game_keyboard_handler() {
     case SPACE_KEY:
       set_state(HELP); //não esquecer de que os xpm precisam de ter uma linha a dizer "press enter fot the next screen"
       break;
-    //case Q_KEY:
-    //  set_state(GAME_OVER); //pode ser preciso para testar os desenhos
-    //  break;    
+    case Q_KEY:
+      set_state(GAME_OVER); //pode ser preciso para testar os desenhos
+      break;    
     default:
       break;
   }
@@ -59,12 +59,13 @@ void help_main_loop() {
   draw_cursor(current_buffer);
   swap_buffers();
 }
-
+/*
 void game_over_main_loop() {
   draw_game_over();
   draw_cursor(current_buffer);
   swap_buffers();
 }
+*/
 
 
 
@@ -72,5 +73,6 @@ void free_buffers() {
   free_buffer(current_buffer);
   free_buffer(arena_buffer);
   free_buffer(menu_buffer);
+  free_buffer(game_over_buffer);
 }
 
