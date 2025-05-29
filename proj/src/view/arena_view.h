@@ -27,7 +27,7 @@ void draw_cell(Grid *grid, int x, int y, int cell_row, int cell_col, int hovered
 void draw_ship_status(Grid *grid, int start_x, int start_y);
 void draw_guide_ships();
 
-void draw_ship_sprite(int x, int y,  ShipType type, int orientation);
+void draw_ship_sprite(int x, int y,  ShipType type, int orientation, bool hoover);
 void draw_hit_marker(int x, int y);
 void draw_miss_marker(int x, int y);
 

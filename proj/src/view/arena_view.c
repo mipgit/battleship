@@ -101,10 +101,11 @@ void draw_cell(Grid *grid, int x, int y, int cell_row, int cell_col, int hovered
   if ((cell->state == SHIP || cell->ship_id >= 0) && !hide_ships) {
     Ship *ship = &grid->ships[cell->ship_id];
     if (ship->start_row == cell_row && ship->start_col == cell_col) {
-        draw_ship_sprite(x, y, ship->type, ship->orientation);
+        draw_ship_sprite(x, y, ship->type, ship->orientation, 0);
     }
   }
 
+  //always show cell hover
   if (cursor_x >= x && cursor_x < x + CELL_WIDTH &&
       cursor_y >= y && cursor_y < y + CELL_HEIGHT) {
     draw_rectangle(x, y, CELL_WIDTH, CELL_HEIGHT, HOVER_COLOR, current_buffer);
@@ -113,16 +114,13 @@ void draw_cell(Grid *grid, int x, int y, int cell_row, int cell_col, int hovered
 
   //only show ship hover in SETUP_PHASE
   if ((arena_phase == SETUP_PLAYER1 || arena_phase == SETUP_PLAYER2) && cell->ship_id == hovered_ship_id && hovered_ship_id >= 0) {
-      draw_rectangle(x, y, CELL_WIDTH, CELL_HEIGHT, SHIP_HOVER_COLOR, current_buffer);
+    Ship *ship = &grid->ships[hovered_ship_id];  
+    if( ship->start_row == cell_row && ship->start_col == cell_col) {
+      draw_ship_sprite(x, y, ship->type, ship->orientation, 1);
+    }
   }
 
-  //always show cell hover
-  else if (cursor_x >= x && cursor_x < x + CELL_WIDTH &&
-           cursor_y >= y && cursor_y < y + CELL_HEIGHT) {
-      draw_rectangle(x, y, CELL_WIDTH, CELL_HEIGHT, HOVER_COLOR, current_buffer);
-  }
 
-  
   if (cell->state == HIT) {
     draw_hit_marker(x, y);
   }
@@ -165,32 +163,17 @@ void draw_guide_ships() {
 
 
 
-void draw_ship_sprite(int x, int y, ShipType type, int orientation) {
+void draw_ship_sprite(int x, int y, ShipType type, int orientation, bool hoover) {
+  Sprite *sprite = NULL;
   switch (type) {
-    case SHIP_1:
-      draw_sprite(ship1, x, y, current_buffer);
-      break;
-    case SHIP_2:
-      if (orientation == 0)
-        draw_sprite(ship2h, x, y, current_buffer);
-      else
-        draw_sprite(ship2v, x, y, current_buffer);
-      break;
-    case SHIP_3:
-      if (orientation == 0)
-        draw_sprite(ship3h, x, y, current_buffer);
-      else
-        draw_sprite(ship3v, x, y, current_buffer);
-      break;
-    case SHIP_4:
-      if (orientation == 0)
-        draw_sprite(ship4h, x, y, current_buffer);
-      else
-        draw_sprite(ship4v, x, y, current_buffer);
-      break;
-    default:
-      break;
+    case SHIP_1: sprite = ship1; break;
+    case SHIP_2: sprite = (orientation == 0) ? ship2h : ship2v; break;
+    case SHIP_3: sprite = (orientation == 0) ? ship3h : ship3v; break;
+    case SHIP_4: sprite = (orientation == 0) ? ship4h : ship4v; break;
+    default: return;
   }
+  if (hoover) draw_sprite_recolor(sprite, x, y, SHIP_HOVER_COLOR, current_buffer);
+  else draw_sprite(sprite, x, y, current_buffer);
 }
 
 
