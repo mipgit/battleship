@@ -16,7 +16,6 @@
 #define OPTION_MENU_Y 300  // Y position for "Menu" option
 #define OPTION_EXIT_Y 400  // Y position for "Exit" option
 #define OPTIONS_X 250      // X position for both options
-#define ARROW_OFFSET 30    // Space for the arrow
 
 
 void draw_game_over_background(uint8_t *buffer);

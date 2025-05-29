@@ -9,6 +9,9 @@ extern int cursor_x;
 extern int cursor_y;
 extern struct packet mouse_packet;
 
+extern Sprite *menu_option;
+extern Sprite *exit_option;
+
 static GameOverOption selected_option = GO_MENU;
 
 void set_game_over_buffer() {
@@ -26,7 +29,7 @@ void init_game_over() {
 }
 
 void game_over_screen_loop() {
-  game_over_mouse_handler();
+  //game_over_mouse_handler();
   draw_game_over_screen();
   draw_cursor(current_buffer);
   swap_buffers();
@@ -35,10 +38,10 @@ void game_over_screen_loop() {
 void game_over_keyboard_handler() {
   extern uint8_t scancode;
   
-  if (scancode == 0x48) { // UP arrow
+  if (scancode == UP_ARROW_KEY) {
       selected_option = GO_MENU;
   }
-  else if (scancode == 0x50) { // DOWN arrow
+  else if (scancode == DOWN_ARROW_KEY) {
       selected_option = GO_EXIT;
   }
   else if (scancode == ENTER_KEY) {

@@ -17,20 +17,6 @@ int(draw_sprite)(Sprite *sprite, uint16_t x, uint16_t y, uint8_t *buffer) {
   return 0;
 }
 
-int(draw_string)(char str[], uint16_t x, uint16_t y, uint32_t color) {
-  for (size_t i = 0; i < strlen(str); i++) {
-    if (draw_char(str[i], x + i * 8, y, color) != 0) return 1;
-  }
-  return 0;
-}
-
-int(draw_char)(char c, uint16_t x, uint16_t y, uint32_t color) {
-  // Implementation depends on your font system
-  // This is just a placeholder
-  // You might need a font bitmap or use a simple rectangle for each character
-  return 0;
-}
-
 int(draw_sprite_highlighted)(Sprite *sprite, uint16_t x, uint16_t y, uint8_t *buffer) {
   int height = sprite->height;
   int width = sprite->width;

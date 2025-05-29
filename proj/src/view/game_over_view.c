@@ -8,18 +8,19 @@ extern vbe_mode_info_t mode_info;
 extern Sprite *game_over;
 extern Sprite *menu_option;
 extern Sprite *exit_option;
+extern Sprite *menu_shipR;
 
 
 
 void draw_game_over_background(uint8_t *buffer) {
 
-    fill_screen(0x000080, buffer); // Dark blue background
+    fill_screen(TEAL, buffer);
     
     if (game_over != NULL) {
         draw_sprite(game_over, (mode_info.XResolution - game_over->width) / 2, 50, buffer);
     }
     
-    draw_game_over_options(buffer);
+    //draw_game_over_options(buffer);
 }
 
 void draw_game_over_options(uint8_t *buffer) {
@@ -41,10 +42,14 @@ void draw_game_over_options(uint8_t *buffer) {
         }
     }
 
-    if (selected == GO_MENU) {
-      draw_string("->", OPTIONS_X - ARROW_OFFSET, OPTION_MENU_Y + (menu_option->height / 2) - 8, 0xFFFFFF);
-    } else {
-      draw_string("->", OPTIONS_X - ARROW_OFFSET, OPTION_EXIT_Y + (exit_option->height / 2) - 8, 0xFFFFFF);
+    if (menu_shipR != NULL) {
+        if (selected == GO_MENU) {
+            int ship_y = OPTION_MENU_Y + (menu_option->height / 2) - (menu_shipR->height / 2);
+            draw_sprite(menu_shipR, OPTIONS_X - menu_shipR->width - 10, ship_y, buffer);
+        } else {
+            int ship_y = OPTION_EXIT_Y + (exit_option->height / 2) - (menu_shipR->height / 2);
+            draw_sprite(menu_shipR, OPTIONS_X - menu_shipR->width - 10, ship_y, buffer);
+        }
     }
 }
 
