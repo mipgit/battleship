@@ -14,11 +14,8 @@ extern Sprite *ship4h;
 extern Sprite *ship4v;
 extern Sprite *double_grid;
 extern Sprite *single_grid;
-extern Sprite *selected_grid;
 extern Sprite *player1;
-extern Sprite *player1s;
 extern Sprite *player2;
-extern Sprite *player2s;
 
 extern Arena arena;
 extern ArenaPhase arena_phase;

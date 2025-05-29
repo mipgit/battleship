@@ -9,7 +9,6 @@
 #include "xpm/info.xpm"
 #include "xpm/batalha_naval_layout.xpm"
 #include "xpm/one_grid_layout.xpm"
-#include "xpm/selected_grid.xpm"
 #include "xpm/cursor.xpm"
 #include "xpm/ship1.xpm"
 #include "xpm/ship2h.xpm"
@@ -19,9 +18,7 @@
 #include "xpm/ship4h.xpm"
 #include "xpm/ship4v.xpm"
 #include "xpm/player1.xpm"
-#include "xpm/player1s.xpm"
 #include "xpm/player2.xpm"
-#include "xpm/player2s.xpm"
 #include "xpm/menu_shipR.xpm"
 #include "xpm/menu_shipL.xpm"
 #include "xpm/logo.xpm"
@@ -43,7 +40,6 @@ Sprite *game_over;
 Sprite *info;
 Sprite *double_grid;
 Sprite *single_grid;
-Sprite *selected_grid;
 Sprite *cursor;
 Sprite *ship1;
 Sprite *ship2h;
@@ -53,9 +49,7 @@ Sprite *ship3v;
 Sprite *ship4h;
 Sprite *ship4v;
 Sprite *player1;
-Sprite *player1s;
 Sprite *player2;
-Sprite *player2s;
 Sprite *menu_shipR;
 Sprite *menu_shipL;
 Sprite *logo;
