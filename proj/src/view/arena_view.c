@@ -163,8 +163,8 @@ void draw_guide_ships() {
   int player2_x = arena.player2_grid.sprite_x + 85;
   int player_y = arena.player1_grid.sprite_y + GRID_HEIGHT + 90;
 
-  draw_ship_status(&arena.player1_grid, player1_x, player_y);
-  draw_ship_status(&arena.player2_grid, player2_x, player_y);
+  draw_ship_status(&arena.player1_grid, player2_x, player_y); //makes more sense to draw the ships i sunk bellow me doenst it? i think so
+  draw_ship_status(&arena.player2_grid, player1_x, player_y);
 }
 
 
