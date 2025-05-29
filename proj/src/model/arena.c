@@ -246,11 +246,12 @@ void setup_phase(bool curr_lb, bool prev_lb, Grid *grid) {
   if (curr_lb && !prev_lb) {
     int row, col, ship_id;
     if (mouse_over_ship(grid, cursor_x, cursor_y, &row, &col, &ship_id)) {
+      Ship *selected_ship = &grid->ships[ship_id];
       drag_state.dragging = true;
       drag_state.origin_row = row;
       drag_state.origin_col = col;
       drag_state.ship_id = ship_id;
-      drag_state.orientation = grid->ships[ship_id].orientation;
+      drag_state.offset = (selected_ship-> orientation== 0) ? (col - selected_ship->start_col) : (row - selected_ship->start_row);
       drag_state.active_grid = grid;
     }
   }
@@ -259,17 +260,23 @@ void setup_phase(bool curr_lb, bool prev_lb, Grid *grid) {
   if (!curr_lb && prev_lb && drag_state.dragging) {
     int drop_row, drop_col;
     //we check if the mouse is over a cell
-    if (mouse_over_cell(grid, cursor_x, cursor_y, &drop_row, &drop_col) &&
-        can_place_ship(grid, drop_row, drop_col,
-                       grid->ships[drag_state.ship_id].size,
-                       drag_state.orientation,
-                       drag_state.ship_id)) {
-      move_ship(grid, drag_state.ship_id, drop_row, drop_col, drag_state.orientation);
-    
-    //if the ship cannot be placed, revert to original position    
-    } else {
-      move_ship(grid, drag_state.ship_id, drag_state.origin_row, drag_state.origin_col, drag_state.orientation);
-    }
+    if (mouse_over_cell(grid, cursor_x, cursor_y, &drop_row, &drop_col)) {
+      
+      Ship *dragged_ship = &grid->ships[drag_state.ship_id];
+      int new_start_row = drop_row;
+      int new_start_col = drop_col;
+
+      if (dragged_ship->orientation == 0) {
+        new_start_col -= drag_state.offset; 
+      } else {
+        new_start_row -= drag_state.offset; 
+      }
+
+      //if the ship can be placed, move it, else do nothing
+      if (can_place_ship(grid, new_start_row, new_start_col, dragged_ship->size, dragged_ship->orientation, drag_state.ship_id)) {
+        move_ship(grid, drag_state.ship_id, new_start_row, new_start_col);
+      }
+    }  
     
     drag_state.dragging = false;
     drag_state.active_grid = NULL;
@@ -319,18 +326,18 @@ bool mouse_over_cell(Grid *grid, int mouse_x, int mouse_y, int *row, int *col) {
 
 
 
-void move_ship(Grid *grid, int ship_id, int new_row, int new_col, int orientation) {
+void move_ship(Grid *grid, int ship_id, int new_row, int new_col) {
     //get ship info
     Ship *ship = &grid->ships[ship_id];
     int size = ship->size;
     int old_row = ship->start_row;
     int old_col = ship->start_col;
-    int old_orientation = ship->orientation;
+    int orientation = ship->orientation;
 
     //we remove ship from old position
     for (int i = 0; i < size; i++) {
-        int row = (old_orientation == 0) ? old_row : old_row + i;
-        int col = (old_orientation == 0) ? old_col + i : old_col;
+        int row = (orientation == 0) ? old_row : old_row + i;
+        int col = (orientation == 0) ? old_col + i : old_col;
         grid->cells[row][col].state = EMPTY;
         grid->cells[row][col].ship_id = -1;
     }
@@ -340,7 +347,6 @@ void move_ship(Grid *grid, int ship_id, int new_row, int new_col, int orientatio
         //place ship at new position
         ship->start_row = new_row;
         ship->start_col = new_col;
-        ship->orientation = orientation;
         for (int i = 0; i < size; i++) {
             int row = (orientation == 0) ? new_row : new_row + i;
             int col = (orientation == 0) ? new_col + i : new_col;
@@ -350,14 +356,13 @@ void move_ship(Grid *grid, int ship_id, int new_row, int new_col, int orientatio
     } else {
         //if invalid, restore to old position
         for (int i = 0; i < size; i++) {
-            int row = (old_orientation == 0) ? old_row : old_row + i;
-            int col = (old_orientation == 0) ? old_col + i : old_col;
+            int row = (orientation == 0) ? old_row : old_row + i;
+            int col = (orientation == 0) ? old_col + i : old_col;
             grid->cells[row][col].state = SHIP;
             grid->cells[row][col].ship_id = ship_id;
         }
         ship->start_row = old_row;
         ship->start_col = old_col;
-        ship->orientation = old_orientation;
     }
 }
 
