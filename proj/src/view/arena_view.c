@@ -15,9 +15,7 @@ extern Sprite *ship4v;
 extern Sprite *double_grid;
 extern Sprite *single_grid;
 extern Sprite *player1;
-extern Sprite *player1s;
 extern Sprite *player2;
-extern Sprite *player2s;
 
 extern Arena arena;
 extern ArenaPhase arena_phase;
@@ -32,14 +30,14 @@ extern int cursor_y;
 
 void draw_arena_background(uint8_t *buffer) {
   fill_screen(BETTER_BLUE, buffer);
-  draw_sprite(single_grid, arena.player1_grid.sprite_x, arena.player1_grid.sprite_y, buffer);
-  draw_sprite(single_grid, arena.player2_grid.sprite_x, arena.player2_grid.sprite_y, buffer);
 }
 
 
 
 void draw_arena() {
   memcpy(current_buffer, arena_buffer, frame_size);
+
+  draw_layout();
 
   if (arena_phase == SETUP_PLAYER1 && current_player == PLAYER_1) {
     draw_grid(&arena.player1_grid, 0);
@@ -57,13 +55,13 @@ void draw_arena() {
   }
 
   draw_player(current_player);
-  draw_guide_ships();
+  if (arena_phase == READY_PHASE) draw_guide_ships();
 }
 
 
 void draw_grid(Grid *grid, bool hide_ships) {
-    int hovered_row, hovered_col, hovered_ship_id;
-    bool hovering = mouse_over_ship(grid, cursor_x, cursor_y, &hovered_row, &hovered_col, &hovered_ship_id);
+  int hovered_row, hovered_col, hovered_ship_id;
+  bool hovering = mouse_over_ship(grid, cursor_x, cursor_y, &hovered_row, &hovered_col, &hovered_ship_id);
   
   for (int i = 0; i < GRID_ROWS; i++) {
     for (int j = 0; j < GRID_COLS; j++) {
@@ -75,39 +73,59 @@ void draw_grid(Grid *grid, bool hide_ships) {
 }
 
 
+void draw_layout() {
+  
+  if (arena_phase == SETUP_PLAYER1) {
+    draw_sprite_recolor(single_grid, arena.player1_grid.sprite_x, arena.player1_grid.sprite_y, BRIGHT_ORANGE, current_buffer);
+  } else if (arena_phase == SETUP_PLAYER2) {
+    draw_sprite_recolor(single_grid, arena.player2_grid.sprite_x, arena.player2_grid.sprite_y, BRIGHT_ORANGE, current_buffer);
+  }
+
+  if (arena_phase == READY_PHASE) {
+    if (current_player == PLAYER_1) {
+      draw_sprite(single_grid, arena.player1_grid.sprite_x, arena.player1_grid.sprite_y, current_buffer);
+      draw_sprite_recolor(single_grid, arena.player2_grid.sprite_x, arena.player2_grid.sprite_y, BRIGHT_ORANGE, current_buffer);
+    } else if (current_player == PLAYER_2) {
+      draw_sprite_recolor(single_grid, arena.player1_grid.sprite_x, arena.player1_grid.sprite_y, BRIGHT_ORANGE, current_buffer);
+      draw_sprite(single_grid, arena.player2_grid.sprite_x, arena.player2_grid.sprite_y, current_buffer);
+    }
+  }
+}
+
 
 void draw_cell(Grid *grid, int x, int y, int cell_row, int cell_col, int hovered_ship_id, bool hide_ships) {
 
   Cell *cell = &grid->cells[cell_row][cell_col];
+  Ship *ship = &grid->ships[cell->ship_id];
 
   //only draw ships at their starting position to avoid duplicates
   if ((cell->state == SHIP || cell->ship_id >= 0) && !hide_ships) {
-    Ship *ship = &grid->ships[cell->ship_id];
     if (ship->start_row == cell_row && ship->start_col == cell_col) {
-        draw_ship_sprite(x, y, ship->type, ship->orientation);
+        draw_ship_sprite(x, y, ship->type, ship->orientation, 0);
     }
   }
 
+  //always show cell hover
   if (cursor_x >= x && cursor_x < x + CELL_WIDTH &&
       cursor_y >= y && cursor_y < y + CELL_HEIGHT) {
-    draw_rectangle(x, y, CELL_WIDTH, CELL_HEIGHT, HOVER_COLOR, current_buffer);
+     if (!((arena_phase != READY_PHASE && cell->ship_id > 0) || (cell->ship_id >= 0 && ship->status == SUNK)))  //dont want to draw hoover on ships in SETUP_PHASE's
+      draw_rectangle(x, y, CELL_WIDTH, CELL_HEIGHT, HOVER_COLOR, current_buffer);
   }
 
 
   //only show ship hover in SETUP_PHASE
   if ((arena_phase == SETUP_PLAYER1 || arena_phase == SETUP_PLAYER2) && cell->ship_id == hovered_ship_id && hovered_ship_id >= 0) {
-      draw_rectangle(x, y, CELL_WIDTH, CELL_HEIGHT, SHIP_HOVER_COLOR, current_buffer);
+    if(ship->start_row == cell_row && ship->start_col == cell_col) {
+      draw_ship_sprite(x, y, ship->type, ship->orientation, 1);
+    }
   }
 
-  //always show cell hover
-  else if (cursor_x >= x && cursor_x < x + CELL_WIDTH &&
-           cursor_y >= y && cursor_y < y + CELL_HEIGHT) {
-      draw_rectangle(x, y, CELL_WIDTH, CELL_HEIGHT, HOVER_COLOR, current_buffer);
-  }
 
-  
   if (cell->state == HIT) {
-    draw_hit_marker(x, y);
+    if (ship->status == ALIVE) draw_hit_marker(x, y); 
+    else if (ship->status == SUNK && ship->start_row == cell_row && ship->start_col == cell_col) {
+      draw_ship_sprite(x, y, ship->type, ship->orientation, 0);
+    }
   }
   if (cell->state == MISS) {
     draw_miss_marker(x, y);
@@ -141,39 +159,24 @@ void draw_guide_ships() {
   int player2_x = arena.player2_grid.sprite_x + 85;
   int player_y = arena.player1_grid.sprite_y + GRID_HEIGHT + 90;
 
-  draw_ship_status(&arena.player1_grid, player1_x, player_y);
-  draw_ship_status(&arena.player2_grid, player2_x, player_y);
+  draw_ship_status(&arena.player1_grid, player2_x, player_y); //makes more sense to draw the ships i sunk bellow me doenst it? i think so
+  draw_ship_status(&arena.player2_grid, player1_x, player_y);
 }
 
 
 
 
-void draw_ship_sprite(int x, int y, ShipType type, int orientation) {
+void draw_ship_sprite(int x, int y, ShipType type, int orientation, bool hoover) {
+  Sprite *sprite = NULL;
   switch (type) {
-    case SHIP_1:
-      draw_sprite(ship1, x, y, current_buffer);
-      break;
-    case SHIP_2:
-      if (orientation == 0)
-        draw_sprite(ship2h, x, y, current_buffer);
-      else
-        draw_sprite(ship2v, x, y, current_buffer);
-      break;
-    case SHIP_3:
-      if (orientation == 0)
-        draw_sprite(ship3h, x, y, current_buffer);
-      else
-        draw_sprite(ship3v, x, y, current_buffer);
-      break;
-    case SHIP_4:
-      if (orientation == 0)
-        draw_sprite(ship4h, x, y, current_buffer);
-      else
-        draw_sprite(ship4v, x, y, current_buffer);
-      break;
-    default:
-      break;
+    case SHIP_1: sprite = ship1; break;
+    case SHIP_2: sprite = (orientation == 0) ? ship2h : ship2v; break;
+    case SHIP_3: sprite = (orientation == 0) ? ship3h : ship3v; break;
+    case SHIP_4: sprite = (orientation == 0) ? ship4h : ship4v; break;
+    default: return;
   }
+  if (hoover) draw_sprite_recolor(sprite, x, y, SHIP_HOVER_COLOR, current_buffer);
+  else draw_sprite(sprite, x, y, current_buffer);
 }
 
 
@@ -193,12 +196,18 @@ void draw_player(PlayerTurn player) {
   int player2_x = arena.player2_grid.sprite_x + GRID_WIDTH/2 - player2->width/2;
   int player_y = arena.player1_grid.sprite_x + GRID_HEIGHT + 50;
 
-  if (player == PLAYER_1) {
-    draw_sprite(player1s, player1_x, player_y, current_buffer);
-    draw_sprite(player2, player2_x, player_y, current_buffer);
-  } else if (player == PLAYER_2) {
-    draw_sprite(player2s, player2_x, player_y, current_buffer);
-    draw_sprite(player1, player1_x, player_y, current_buffer);
+  if (arena_phase == SETUP_PLAYER1) {
+    draw_sprite_recolor(player1, player1_x, player_y, BRIGHT_ORANGE, current_buffer);
+  } else if (arena_phase == SETUP_PLAYER2) {
+    draw_sprite_recolor(player2, player2_x, player_y, BRIGHT_ORANGE, current_buffer);
+  } else if (READY_PHASE) {
+    if (player == PLAYER_1) {
+      draw_sprite_recolor(player1, player1_x, player_y, BRIGHT_ORANGE, current_buffer);
+      draw_sprite(player2, player2_x, player_y, current_buffer);
+    } else if (player == PLAYER_2) {
+      draw_sprite_recolor(player2, player2_x, player_y, BRIGHT_ORANGE, current_buffer);
+      draw_sprite(player1, player1_x, player_y, current_buffer);
+    }
   }
 }
 

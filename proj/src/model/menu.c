@@ -4,6 +4,7 @@ extern uint8_t *current_buffer;
 uint8_t *menu_buffer;
 extern unsigned int frame_size;
 
+extern uint8_t scancode;
 
 
 void set_menu_buffer() {
@@ -22,6 +23,17 @@ void menu_main_loop() {
   draw_menu();
   draw_cursor(current_buffer); //mas nos ecrãs posso desenhar para o current, não é preciso fazer dco  dois
   swap_buffers();
+}
+
+
+void menu_keyboard_handler() {
+  switch(scancode) {
+    case ENTER_KEY:
+      set_state(MODE);
+      break;
+    default:
+      break;  
+  }
 }
 
 
