@@ -96,10 +96,10 @@ void draw_layout() {
 void draw_cell(Grid *grid, int x, int y, int cell_row, int cell_col, int hovered_ship_id, bool hide_ships) {
 
   Cell *cell = &grid->cells[cell_row][cell_col];
+  Ship *ship = &grid->ships[cell->ship_id];
 
   //only draw ships at their starting position to avoid duplicates
   if ((cell->state == SHIP || cell->ship_id >= 0) && !hide_ships) {
-    Ship *ship = &grid->ships[cell->ship_id];
     if (ship->start_row == cell_row && ship->start_col == cell_col) {
         draw_ship_sprite(x, y, ship->type, ship->orientation, 0);
     }
@@ -108,22 +108,24 @@ void draw_cell(Grid *grid, int x, int y, int cell_row, int cell_col, int hovered
   //always show cell hover
   if (cursor_x >= x && cursor_x < x + CELL_WIDTH &&
       cursor_y >= y && cursor_y < y + CELL_HEIGHT) {
-    if (!(arena_phase != READY_PHASE && cell->ship_id > 0)) //dont want to draw hoover on ships in SETUP_PHASE's
+     if (!((arena_phase != READY_PHASE && cell->ship_id > 0) || (cell->ship_id >= 0 && ship->status == SUNK)))  //dont want to draw hoover on ships in SETUP_PHASE's
       draw_rectangle(x, y, CELL_WIDTH, CELL_HEIGHT, HOVER_COLOR, current_buffer);
   }
 
 
   //only show ship hover in SETUP_PHASE
   if ((arena_phase == SETUP_PLAYER1 || arena_phase == SETUP_PLAYER2) && cell->ship_id == hovered_ship_id && hovered_ship_id >= 0) {
-    Ship *ship = &grid->ships[hovered_ship_id];  
-    if( ship->start_row == cell_row && ship->start_col == cell_col) {
+    if(ship->start_row == cell_row && ship->start_col == cell_col) {
       draw_ship_sprite(x, y, ship->type, ship->orientation, 1);
     }
   }
 
 
   if (cell->state == HIT) {
-    draw_hit_marker(x, y);
+    if (ship->status == ALIVE) draw_hit_marker(x, y); 
+    else if (ship->status == SUNK && ship->start_row == cell_row && ship->start_col == cell_col) {
+      draw_ship_sprite(x, y, ship->type, ship->orientation, 0);
+    }
   }
   if (cell->state == MISS) {
     draw_miss_marker(x, y);
