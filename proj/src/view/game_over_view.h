@@ -13,14 +13,18 @@
 #include "view/sprite_view.h"
 
 
-#define OPTION_MENU_Y 300  // Y position for "Menu" option
-#define OPTION_EXIT_Y 400  // Y position for "Exit" option
+#define OPTION_MENU_Y 350  // Y position for "Menu" option
+#define OPTION_EXIT_Y 450  // Y position for "Exit" option
 #define OPTIONS_X 250      // X position for both options
+
+#define WINNER_TEXT_Y 200 // Y position for the winner text
 
 
 void draw_game_over_background(uint8_t *buffer);
 
 void draw_game_over_screen();
+
+void draw_game_over_winner(uint8_t *buffer);
 
 void draw_game_over_options(uint8_t *buffer);
 

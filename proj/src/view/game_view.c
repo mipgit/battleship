@@ -52,16 +52,6 @@ void draw_info() {
   draw_sprite(info, mode_info.XResolution/2 - info->width/2, mode_info.YResolution/2 - info->height/2, current_buffer);
 }
 
-void draw_game_over() {
-  fill_screen(BLUE, current_buffer);
-
-  if (current_player == PLAYER_1) {
-    draw_sprite_recolor(player1, mode_info.XResolution/2 - player1->width/2, mode_info.YResolution/2 - player1->height/2, BRIGHT_ORANGE, current_buffer);
-  } else if (current_player == PLAYER_2) {
-    draw_sprite_recolor(player2, mode_info.XResolution/2 - player2->width/2, mode_info.YResolution/2 - player2->height/2, BRIGHT_ORANGE, current_buffer);
-  }  
-}
-
 
 
 
