@@ -5,11 +5,10 @@
 #include <minix/sysutil.h>
 #include <stdint.h>
 #include "controller/graphics.h"
-
-#include "xpm/game_over.xpm"
 #include "xpm/batalha_naval_layout.xpm"
 #include "xpm/one_grid_layout.xpm"
 #include "xpm/cursor.xpm"
+#include "xpm/bomb.xpm"
 #include "xpm/ship1.xpm"
 #include "xpm/ship2h.xpm"
 #include "xpm/ship2v.xpm"
@@ -18,9 +17,7 @@
 #include "xpm/ship4h.xpm"
 #include "xpm/ship4v.xpm"
 #include "xpm/player1.xpm"
-#include "xpm/player1s.xpm"
 #include "xpm/player2.xpm"
-#include "xpm/player2s.xpm"
 #include "xpm/menu_shipR.xpm"
 #include "xpm/menu_shipL.xpm"
 #include "xpm/logo.xpm"
@@ -29,6 +26,13 @@
 #include "xpm/start_option.xpm"
 #include "xpm/rules_option.xpm"
 #include "xpm/help_option.xpm"
+#include "xpm/game_over.xpm"
+#include "xpm/menU.xpm"
+#include "xpm/exit.xpm"
+#include "xpm/mode.xpm"
+#include "xpm/single_player.xpm"
+#include "xpm/multi_player.xpm"
+#include "xpm/setup.xpm"
 
 
 
@@ -40,11 +44,11 @@ typedef struct {
 } Sprite;
 
 
-Sprite *game_over;
 Sprite *info;
 Sprite *double_grid;
 Sprite *single_grid;
 Sprite *cursor;
+Sprite *bomb; 
 Sprite *ship1;
 Sprite *ship2h;
 Sprite *ship2v;
@@ -53,9 +57,7 @@ Sprite *ship3v;
 Sprite *ship4h;
 Sprite *ship4v;
 Sprite *player1;
-Sprite *player1s;
 Sprite *player2;
-Sprite *player2s;
 Sprite *menu_shipR;
 Sprite *menu_shipL;
 Sprite *logo;
@@ -64,7 +66,13 @@ Sprite *help_content;
 Sprite *start_option;
 Sprite *rules_option;
 Sprite *help_option;
-
+Sprite *game_over;
+Sprite *menu_option;
+Sprite *exit_option;
+Sprite *choose_mode;
+Sprite *single_player;
+Sprite *multi_player;
+Sprite *setup;
 
 
 /**

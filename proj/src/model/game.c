@@ -31,9 +31,9 @@ void game_keyboard_handler() {
     case SPACE_KEY:
        set_state(HELP); //não esquecer de que os xpm precisam de ter uma linha a dizer "press enter fot the next screen"
        break;
-    //case Q_KEY:
-    //  set_state(GAME_OVER); //pode ser preciso para testar os desenhos
-    //  break;
+    case Q_KEY:
+      set_state(GAME_OVER); //pode ser preciso para testar os desenhos
+      break;
     case ESC_KEY:
        set_state(EXIT);
        break;    
@@ -59,11 +59,6 @@ void game_mouse_handler() {
 
 
 
-void game_over_main_loop() {
-  draw_game_over();
-  draw_cursor(current_buffer);
-  swap_buffers();
-}
 
 
 
@@ -74,5 +69,6 @@ void free_buffers() {
   free_buffer(menu_buffer);
   free_buffer(rules_buffer);
   free_buffer(help_buffer);
+  free_buffer(game_over_buffer);
 }
 

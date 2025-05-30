@@ -9,20 +9,18 @@
 #include "controller/mouse.h"
 #include "controller/graphics.h"
 
+#include "model/game_macro.h"
 #include "model/game.h"
 #include "model/arena.h"
 #include "model/menu.h"
 #include "model/start.h"
 #include "model/rules.h"
 #include "model/help.h"
+#include "model/mode.h"
 #include "model/sprite.h"
+#include "model/game_over.h"
 
 
-
-
-#define FREQUENCY 60
-#define TIMER 0
-#define VIDEO_MODE 0x115
 
 
 uint8_t kbd_irq_set;
@@ -91,6 +89,12 @@ void init_states(GameState cur_state, GameState prev_state) {
   else if (cur_state == HELP && prev_state != HELP) {
     init_help();
   } 
+  else if (cur_state == GAME_OVER && prev_state != GAME_OVER) {
+    init_game_over();
+  }  
+  else if (cur_state == MODE && prev_state != MODE) {
+    init_mode();
+  }
 }
 
 
@@ -133,29 +137,38 @@ int (proj_main_loop)(int argc, char *argv[]) {
             //depois temos de dividir os handlers por ecrã
             if (state == MENU) menu_keyboard_handler();
             if (state == START) start_keyboard_handler();
-            if (state == ARENA) arena_keyboard_handler();
             if (state == RULES) rules_keyboard_handler();
             if (state == HELP) help_keyboard_handler();
+            if (state == MODE) mode_keyboard_handler();
+            if (state == ARENA) arena_keyboard_handler();
+            if (state == GAME_OVER) game_over_keyboard_handler();
             //...
           }
 
+          
           if (msg.m_notify.interrupts & mouse_irq_set) { 
             (mouse_ih)();
             if(mouse_sync_bytes()) create_packet();
             game_mouse_handler(); 
             
             //depois temos de dividir os handlers por ecrã
-            if (state == ARENA) arena_mouse_handler();
+            if (state == GAME_OVER) {
+              game_over_mouse_handler();
+            }
+            else if (state == ARENA) {
+                arena_mouse_handler();
+            }
             //...
           }
 
           if (msg.m_notify.interrupts & timer_irq_set) { 
             if (state == MENU) menu_main_loop();
             if (state == START) start_main_loop();
-            if (state == ARENA) arena_main_loop();
-            if (state == GAME_OVER) game_over_main_loop();
             if (state == RULES) rules_main_loop();
             if (state == HELP) help_main_loop();
+            if (state == MODE) mode_main_loop();
+            if (state == ARENA) arena_main_loop();
+            if (state == GAME_OVER) game_over_main_loop();
           }
           break;
 

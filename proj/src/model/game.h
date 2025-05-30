@@ -37,6 +37,7 @@ extern uint8_t *arena_buffer;
 extern uint8_t *menu_buffer;
 extern uint8_t *rules_buffer;
 extern uint8_t *help_buffer;
+extern uint8_t *game_over_buffer;
 
 
 extern GameState state;
@@ -49,7 +50,6 @@ void game_keyboard_handler();
 void game_mouse_handler();
 
 
-void game_over_main_loop();
 
 void free_buffers();
 

@@ -31,7 +31,7 @@ typedef struct {
     bool dragging;
     int ship_id;                //id of the ship being dragged
     int origin_row, origin_col; //where the drag started
-    int orientation;            //orientation of the ship being dragged
+    int offset;                 //offset from the ship's first cell to the cell where the mouse is
     Grid *active_grid;          //grid where the ship is being dragged
 } DragState;
 
@@ -53,16 +53,17 @@ void arena_keyboard_handler();
 
 void arena_mouse_handler();
 
-void handle_mouse_click(Grid *grid, int mouse_x, int mouse_y);
+bool handle_mouse_click(Grid *grid, int mouse_x, int mouse_y);
 
 
-void battle_phase(bool curr_lb, bool prev_lb);
+void battle_phase_mouse(bool curr_lb, bool prev_lb);
+void battle_phase_pc();
 void setup_phase(bool curr_lb, bool prev_lb, Grid *grid);
 
 
 bool mouse_over_ship(Grid *grid, int mouse_x, int mouse_y, int *row, int *col, int *ship_id);
 bool mouse_over_cell(Grid *grid, int mouse_x, int mouse_y, int *row, int *col);
-void move_ship(Grid *grid, int ship_id, int new_row, int new_col, int orientation);
+void move_ship(Grid *grid, int ship_id, int new_row, int new_col);
 
 bool is_ship_sunk(Grid *grid, int ship_id);
 
@@ -72,7 +73,8 @@ int coord_to_cell(const char* coord, int* row, int* col);
 bool can_place_ship(Grid *grid, int start_row, int start_col, int size, int orientation, int ship_id);
 bool add_ship(Grid *grid, int ship_id, ShipType type, int orientation, const char* coord);
 void setup_ships(Grid *grid);
-
+void setup_pc_ships(Grid *grid);
+void pc_init_available_cells(Grid *grid);
 
 
 #endif

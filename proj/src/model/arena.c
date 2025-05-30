@@ -8,11 +8,19 @@ uint8_t *arena_buffer;
 extern unsigned int frame_size;
 extern uint8_t scancode;
 
+#define MAX_CELLS (GRID_ROWS * GRID_COLS)
+#define BOMB_DELAY_FRAMES 20
+static int pc_available_rows[MAX_CELLS];
+static int pc_available_cols[MAX_CELLS];
+static int pc_available_count = 0;
+static int pc_bombs_to_play = 0;
+static int pc_bomb_timer = 0;
+
 Arena arena;
 ArenaPhase arena_phase = SETUP_PLAYER1;
 PlayerTurn current_player = PLAYER_1;
 DragState drag_state = {0, -1, 0, 0, 0, 0};
-
+extern GameMode game_mode;
 
 
 #define MAX_BOMBS_PER_TURN 5
@@ -24,6 +32,10 @@ void arena_main_loop() {
   draw_arena();
   draw_cursor(current_buffer);
   swap_buffers();
+
+  if (arena_phase == READY_PHASE && game_mode == SINGLE_PLAYER && current_player == PLAYER_2) {
+    battle_phase_pc(); 
+  } 
 }
 
 
@@ -51,7 +63,12 @@ void init_arena() {
 
   //setup ships
   setup_ships(&arena.player1_grid);
-  setup_ships(&arena.player2_grid);
+  if (game_mode == MULTI_PLAYER) setup_ships(&arena.player2_grid);
+  else if (game_mode == SINGLE_PLAYER) {
+    setup_pc_ships(&arena.player2_grid);
+    pc_init_available_cells(&arena.player1_grid);
+  }
+
 }
 
 
@@ -90,8 +107,12 @@ void arena_keyboard_handler() {
   switch (scancode) {
     case R_KEY:
       if (arena_phase == SETUP_PLAYER1 && current_player == PLAYER_1) {
-        current_player = PLAYER_2;
-        arena_phase = SETUP_PLAYER2;
+        if (game_mode == SINGLE_PLAYER) {
+          arena_phase = READY_PHASE;
+        } else {
+          current_player = PLAYER_2;
+          arena_phase = SETUP_PLAYER2;
+        }  
       } else if (arena_phase == SETUP_PLAYER2 && current_player == PLAYER_2) {
         current_player = PLAYER_1;
         arena_phase = READY_PHASE;
@@ -113,7 +134,7 @@ void arena_mouse_handler() {
   } else if (arena_phase == SETUP_PLAYER2 && current_player == PLAYER_2) {
     setup_phase(curr_lb, prev_lb, &arena.player2_grid);
   } else if (arena_phase == READY_PHASE) {
-    battle_phase(curr_lb, prev_lb);
+    battle_phase_mouse(curr_lb, prev_lb);
   }
 
   prev_lb = curr_lb;
@@ -122,7 +143,7 @@ void arena_mouse_handler() {
 
 
 //used in ready/battle phase
-void handle_mouse_click(Grid *grid, int mouse_x, int mouse_y) {
+bool handle_mouse_click(Grid *grid, int mouse_x, int mouse_y) {
   for (int i = 0; i < GRID_ROWS; i++) {
     for (int j = 0; j < GRID_COLS; j++) {
       int x, y;
@@ -133,14 +154,15 @@ void handle_mouse_click(Grid *grid, int mouse_x, int mouse_y) {
         Cell *cell = &grid->cells[i][j];
         
         if (cell->state == SHIP) {
+
           cell->state = HIT;
-          printf("Hit!\n");
+          if (game_mode == MULTI_PLAYER || current_player == PLAYER_1) {
+            bombs_remaining--;
+          }
 
           if (is_ship_sunk(grid, cell->ship_id)) {
             grid->ships[cell->ship_id].status = SUNK;
             grid->ships_remaining--;
-            printf("Ship sunk!\n");
-            printf("Ships remaining: %d\n", grid->ships_remaining);
 
             //check if any player has won
             if (grid->ships_remaining == 0) {
@@ -148,22 +170,31 @@ void handle_mouse_click(Grid *grid, int mouse_x, int mouse_y) {
             }
           }
 
+          return true;
+
         } else if (cell->state == EMPTY) {
+
           cell->state = MISS;
-          printf("Miss!\n");
+          if (game_mode == MULTI_PLAYER || current_player == PLAYER_1) {
+            bombs_remaining--;
+          }
+          
+          return true;
         }
         
-        bombs_remaining--;
-        return;
+        
       }
     }
   }
+  return false;
 }
 
 
 
 /* READY PHASE: Bombing */
-void battle_phase(bool curr_lb, bool prev_lb) {
+
+//if it is a human playing, he will use the mouse to click on the grid
+void battle_phase_mouse(bool curr_lb, bool prev_lb) {
   if (bombs_remaining > 0) { //check player still has bombsg
     if (curr_lb && !prev_lb) {
       if (current_player == PLAYER_1) {
@@ -183,6 +214,40 @@ void battle_phase(bool curr_lb, bool prev_lb) {
 }
 
 
+//if it is the pc playing, it will bomb automatically
+void battle_phase_pc() {
+  if (game_mode == SINGLE_PLAYER && current_player == PLAYER_2) {
+    if (pc_bombs_to_play == 0 && pc_available_count > 0) {
+      pc_bombs_to_play = MAX_BOMBS_PER_TURN;
+      pc_bomb_timer = 0;
+    }
+
+    if (pc_bombs_to_play > 0 && pc_available_count > 0) {
+      pc_bomb_timer++;
+      if (pc_bomb_timer >= BOMB_DELAY_FRAMES) {
+        pc_bomb_timer = 0;
+
+        int idx = rand() % pc_available_count;
+        int row = pc_available_rows[idx];
+        int col = pc_available_cols[idx];
+
+        if (handle_mouse_click(&arena.player1_grid, arena.player1_grid.x + col * CELL_WIDTH, arena.player1_grid.y + row * CELL_HEIGHT)) {
+          pc_available_rows[idx] = pc_available_rows[pc_available_count - 1];
+          pc_available_cols[idx] = pc_available_cols[pc_available_count - 1];
+          pc_available_count--;
+          pc_bombs_to_play--;
+        }
+      }
+    }
+
+    if (pc_bombs_to_play == 0 || pc_available_count == 0) {
+      current_player = PLAYER_1;
+      bombs_remaining = MAX_BOMBS_PER_TURN;
+    }
+  }
+}
+
+
 
 
 /* SETUP PHASE: Drag and drop ships */
@@ -190,11 +255,12 @@ void setup_phase(bool curr_lb, bool prev_lb, Grid *grid) {
   if (curr_lb && !prev_lb) {
     int row, col, ship_id;
     if (mouse_over_ship(grid, cursor_x, cursor_y, &row, &col, &ship_id)) {
+      Ship *selected_ship = &grid->ships[ship_id];
       drag_state.dragging = true;
       drag_state.origin_row = row;
       drag_state.origin_col = col;
       drag_state.ship_id = ship_id;
-      drag_state.orientation = grid->ships[ship_id].orientation;
+      drag_state.offset = (selected_ship-> orientation== 0) ? (col - selected_ship->start_col) : (row - selected_ship->start_row);
       drag_state.active_grid = grid;
     }
   }
@@ -203,17 +269,23 @@ void setup_phase(bool curr_lb, bool prev_lb, Grid *grid) {
   if (!curr_lb && prev_lb && drag_state.dragging) {
     int drop_row, drop_col;
     //we check if the mouse is over a cell
-    if (mouse_over_cell(grid, cursor_x, cursor_y, &drop_row, &drop_col) &&
-        can_place_ship(grid, drop_row, drop_col,
-                       grid->ships[drag_state.ship_id].size,
-                       drag_state.orientation,
-                       drag_state.ship_id)) {
-      move_ship(grid, drag_state.ship_id, drop_row, drop_col, drag_state.orientation);
-    
-    //if the ship cannot be placed, revert to original position    
-    } else {
-      move_ship(grid, drag_state.ship_id, drag_state.origin_row, drag_state.origin_col, drag_state.orientation);
-    }
+    if (mouse_over_cell(grid, cursor_x, cursor_y, &drop_row, &drop_col)) {
+      
+      Ship *dragged_ship = &grid->ships[drag_state.ship_id];
+      int new_start_row = drop_row;
+      int new_start_col = drop_col;
+
+      if (dragged_ship->orientation == 0) {
+        new_start_col -= drag_state.offset; 
+      } else {
+        new_start_row -= drag_state.offset; 
+      }
+
+      //if the ship can be placed, move it, else do nothing
+      if (can_place_ship(grid, new_start_row, new_start_col, dragged_ship->size, dragged_ship->orientation, drag_state.ship_id)) {
+        move_ship(grid, drag_state.ship_id, new_start_row, new_start_col);
+      }
+    }  
     
     drag_state.dragging = false;
     drag_state.active_grid = NULL;
@@ -263,18 +335,18 @@ bool mouse_over_cell(Grid *grid, int mouse_x, int mouse_y, int *row, int *col) {
 
 
 
-void move_ship(Grid *grid, int ship_id, int new_row, int new_col, int orientation) {
+void move_ship(Grid *grid, int ship_id, int new_row, int new_col) {
     //get ship info
     Ship *ship = &grid->ships[ship_id];
     int size = ship->size;
     int old_row = ship->start_row;
     int old_col = ship->start_col;
-    int old_orientation = ship->orientation;
+    int orientation = ship->orientation;
 
     //we remove ship from old position
     for (int i = 0; i < size; i++) {
-        int row = (old_orientation == 0) ? old_row : old_row + i;
-        int col = (old_orientation == 0) ? old_col + i : old_col;
+        int row = (orientation == 0) ? old_row : old_row + i;
+        int col = (orientation == 0) ? old_col + i : old_col;
         grid->cells[row][col].state = EMPTY;
         grid->cells[row][col].ship_id = -1;
     }
@@ -284,7 +356,6 @@ void move_ship(Grid *grid, int ship_id, int new_row, int new_col, int orientatio
         //place ship at new position
         ship->start_row = new_row;
         ship->start_col = new_col;
-        ship->orientation = orientation;
         for (int i = 0; i < size; i++) {
             int row = (orientation == 0) ? new_row : new_row + i;
             int col = (orientation == 0) ? new_col + i : new_col;
@@ -294,14 +365,13 @@ void move_ship(Grid *grid, int ship_id, int new_row, int new_col, int orientatio
     } else {
         //if invalid, restore to old position
         for (int i = 0; i < size; i++) {
-            int row = (old_orientation == 0) ? old_row : old_row + i;
-            int col = (old_orientation == 0) ? old_col + i : old_col;
+            int row = (orientation == 0) ? old_row : old_row + i;
+            int col = (orientation == 0) ? old_col + i : old_col;
             grid->cells[row][col].state = SHIP;
             grid->cells[row][col].ship_id = ship_id;
         }
         ship->start_row = old_row;
         ship->start_col = old_col;
-        ship->orientation = old_orientation;
     }
 }
 
@@ -427,5 +497,67 @@ void setup_ships(Grid *grid) {
   add_ship(grid, 6, SHIP_3, 1, "F7");
   add_ship(grid, 7, SHIP_2, 0, "H9"); 
 }
+
+
+void setup_pc_ships(Grid *grid) {
+  ShipType ships_type[NUM_SHIPS] = {SHIP_1, SHIP_1, SHIP_3, SHIP_2, SHIP_1, SHIP_4, SHIP_3, SHIP_2};
+
+  //from what i read we should move this to the main function !!!!!!!!!!!
+  static int seeded = 0;
+  if (!seeded) { srand(time(NULL)); seeded = 1; }
+
+  //we randomly place ships on the grid
+  for (int ship_id = 0; ship_id < NUM_SHIPS; ship_id++) {
+    int placed = 0;
+    int orientation, row, col, size = SHIP_TYPE_TO_SIZE(ships_type[ship_id]);
+    while (!placed) {
+      orientation = rand() % 2; 
+      if (orientation == 0) {  //horizontal
+        row = rand() % GRID_ROWS;
+        col = rand() % (GRID_COLS - size + 1);
+      } else { //vertical
+        row = rand() % (GRID_ROWS - size + 1);
+        col = rand() % GRID_COLS;
+      }
+      if (can_place_ship(grid, row, col, size, orientation, ship_id)) {
+        grid->ships[ship_id].type = ships_type[ship_id];
+        grid->ships[ship_id].size = size;
+        grid->ships[ship_id].orientation = orientation;
+        grid->ships[ship_id].start_row = row;
+        grid->ships[ship_id].start_col = col;
+        grid->ships[ship_id].status = ALIVE;
+        for (int i = 0; i < size; i++) {
+          int r = (orientation == 0) ? row : row + i;
+          int c = (orientation == 0) ? col + i : col;
+          grid->cells[r][c].state = SHIP;
+          grid->cells[r][c].ship_id = ship_id;
+        }
+        placed = 1;
+      }
+    }
+  }
+}
+
+
+//we trace the available cells for the pc to bomb (avaliable cells: EMPTY or SHIP)
+void pc_init_available_cells(Grid *grid) {
+  pc_available_count = 0;
+  for (int i = 0; i < GRID_ROWS; i++) {
+    for (int j = 0; j < GRID_COLS; j++) {
+      if (grid->cells[i][j].state != HIT && grid->cells[i][j].state != MISS) {
+
+        pc_available_rows[pc_available_count] = i; //we store the index of the cells'row
+        pc_available_cols[pc_available_count] = j; //we store the index of the cells'col
+
+        /*whenever we call these lists on iindex 'pc_available_count' we will be given 
+        the coordinates (row and col respectively) of a available cell*/
+        pc_available_count++; 
+      }
+    }
+  }
+}
+
+
+
 
 

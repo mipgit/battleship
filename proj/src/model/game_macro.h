@@ -1,6 +1,13 @@
 #ifndef GAME_MACRO_H
 #define GAME_MACRO_H
 
+
+#define FREQUENCY 60
+#define TIMER 0
+#define VIDEO_MODE 0x115
+
+
+
 #define GRID_ROWS 10
 #define GRID_COLS 10
 #define GRID_HEIGHT 378
@@ -23,7 +30,8 @@
 #define S_KEY 0x1F
 #define UP_ARROW_KEY 0x48
 #define DOWN_ARROW_KEY 0x50
-
+#define ONE_KEY 0x82
+#define TWO_KEY 0x83
 
 
 #define BLACK 0x000000
@@ -34,11 +42,14 @@
 #define YELLOW 0xFFFF00
 #define PURPLE 0x800080
 #define HOVER_COLOR 0xAAAAFF
+#define SHIP_COLOR 0x1a2630
 #define SHIP_HOVER_COLOR 0xdb67b8
 #define ORANGE 0xFFA500
+#define BRIGHT_ORANGE 0xf09b13
 #define NAVY_BLUE 0x293f87
 #define TEAL 0x297487
 #define WHITE 0xFFFFFF
+#define CREAM 0xeec8ce
 
 
 
@@ -109,6 +120,10 @@ typedef enum {
 
 
 
+typedef enum {
+  SINGLE_PLAYER,
+  MULTI_PLAYER,
+} GameMode;
 
 
 

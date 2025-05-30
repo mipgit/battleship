@@ -44,7 +44,7 @@ void start_keyboard_handler() {
   } 
   else if (scancode == ENTER_KEY) {
       if (selected_option == GO_START) {
-          set_state(ARENA);
+          set_state(MODE);
       }
       else if (selected_option == GO_RULES) {
           set_state(RULES);
