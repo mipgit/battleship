@@ -71,6 +71,8 @@ int load_sprites() {
   help = create_sprite((xpm_map_t) help_xpm);
   go_back = create_sprite((xpm_map_t) back_xpm);
   help_options = create_sprite((xpm_map_t) options_xpm);
+  rules_text = create_sprite((xpm_map_t) rules_text_xpm);
+  rules = create_sprite((xpm_map_t) rules_xpm);
 
   return 0;
 }
@@ -111,6 +113,8 @@ void free_sprites() {
   destroy_sprite(star);
   destroy_sprite(press_enter);
   destroy_sprite(wins);
+  destroy_sprite(rules_text);
+  destroy_sprite(rules);
 }
 
 

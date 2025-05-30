@@ -69,11 +69,13 @@
 #define SHIP_COLOR 0x1a2630
 #define SHIP_HOVER_COLOR 0xdb67b8
 #define ORANGE 0xFFA500
+#define DARK_ORANGE 0xb57a3e
 #define BRIGHT_ORANGE 0xf09b13
 #define NAVY_BLUE 0x293f87
 #define TEAL 0x297487
 #define WHITE 0xFFFFFF
 #define CREAM 0xeec8ce
+#define LILAC 0xA27EBA
 
 // ---------------- Type Definitions ----------------
 

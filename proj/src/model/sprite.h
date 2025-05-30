@@ -40,14 +40,18 @@
 #include "xpm/menu/star.xpm"
 #include "xpm/menu/press_enter.xpm"
 
-#include "xpm/logo.xpm"
-#include "xpm/rules.xpm"
-#include "xpm/game_over.xpm"
-#include "xpm/wins.xpm"
+#include "xpm/game_over/game_over.xpm"
+#include "xpm/game_over/wins.xpm"
+
+#include "xpm/rules/rules_text.xpm"
+#include "xpm/rules/rules.xpm"
 
 #include "xpm/help/back.xpm"
 #include "xpm/help/help.xpm"
 #include "xpm/help/options.xpm"
+
+#include "xpm/logo.xpm"
+
 
 
 typedef struct {
@@ -81,6 +85,8 @@ Sprite *moon;
 Sprite *cloud;
 Sprite *star;
 Sprite *press_enter;
+Sprite *rules_text;
+Sprite *rules;
 
 
 Sprite *start_option;
