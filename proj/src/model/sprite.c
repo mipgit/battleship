@@ -57,6 +57,9 @@ int load_sprites() {
   logo = create_sprite((xpm_map_t) logo_xpm);
   sun = create_sprite((xpm_map_t) sun_xpm);
   moon = create_sprite((xpm_map_t) moon_xpm);
+  cloud = create_sprite((xpm_map_t) cloud_xpm);
+  star = create_sprite((xpm_map_t) star_xpm);
+  ocean = create_sprite((xpm_map_t) ocean_xpm);
 
 
   if (!menu || !game_over || !info) {
@@ -91,4 +94,9 @@ void free_sprites() {
   destroy_sprite(logo);
   destroy_sprite(sun);
   destroy_sprite(moon);
+  destroy_sprite(cloud);
+  destroy_sprite(star);
+  destroy_sprite(ocean);
 }
+
+
