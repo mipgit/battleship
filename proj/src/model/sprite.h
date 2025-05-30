@@ -37,7 +37,7 @@
 #include "xpm/moon.xpm"
 #include "xpm/cloud.xpm"
 #include "xpm/star.xpm"
-#include "xpm/ocean.xpm"
+#include "xpm/press_enter.xpm"
 
 
 
@@ -82,7 +82,7 @@ Sprite *sun;
 Sprite *moon;
 Sprite *cloud;
 Sprite *star;
-Sprite *ocean;
+Sprite *press_enter;
 
 
 /**

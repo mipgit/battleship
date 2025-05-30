@@ -38,6 +38,9 @@ extern uint8_t *menu_buffer;
 extern uint8_t *rules_buffer;
 extern uint8_t *help_buffer;
 extern uint8_t *game_over_buffer;
+extern uint8_t *start_buffer;
+extern uint8_t *mode_buffer;
+
 
 
 extern GameState state;

@@ -67,6 +67,8 @@ void free_buffers() {
   free_buffer(current_buffer);
   free_buffer(arena_buffer);
   free_buffer(menu_buffer);
+  free_buffer(start_buffer);
+  free_buffer(mode_buffer);
   free_buffer(rules_buffer);
   free_buffer(help_buffer);
   free_buffer(game_over_buffer);

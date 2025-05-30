@@ -10,9 +10,11 @@ extern Sprite *menu_shipL;
 extern Sprite *logo;
 extern Sprite *sun; 
 extern Sprite *moon;
+extern Sprite *press_enter;
 
-#define DAY_START_HOUR 1
-#define DAY_END_HOUR 3
+#define DAY_START_HOUR 6
+#define DAY_START_MINUTE 0
+#define DAY_END_HOUR 20
 #define DAY_END_MINUTE 30
 #define LIGHT_BLUE 0x8DBCC7 
 #define DARK_BLUE  0x213448 
@@ -44,12 +46,17 @@ void draw_menu_background(uint8_t *buffer) {
     draw_sprite(other, 200, 340, buffer);
     draw_sprite(other, 500, 255, buffer);
     draw_sprite(other, 650, 350, buffer);
-    draw_sprite(ocean, 0, 500, buffer);
+    draw_rectangle(0, 500, 800, 100, TEAL, buffer);
+    draw_sprite(press_enter, 250, 530, buffer);
 
 }
 
 bool daytime(uint8_t hour, uint8_t minute) {
-  return (hour > DAY_START_HOUR && (hour < DAY_END_HOUR || (hour == DAY_END_HOUR && minute < DAY_END_MINUTE)));
+  if (hour < DAY_START_HOUR) return false;
+  if (hour > DAY_END_HOUR) return false;
+  if (hour == DAY_START_HOUR && minute < DAY_START_MINUTE) return false;
+  if (hour == DAY_END_HOUR && minute >= DAY_END_MINUTE) return false;
+  return true;
 }
 
 

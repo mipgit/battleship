@@ -26,6 +26,7 @@
 uint8_t kbd_irq_set;
 uint8_t timer_irq_set;
 uint32_t mouse_irq_set;
+uint8_t rtc_irq_set;
 
 extern int cursor_x;
 extern int cursor_y;
@@ -34,7 +35,7 @@ extern int cursor_y;
 int main(int argc, char *argv[]) {
   lcf_set_language("EN-US");
   lcf_trace_calls("/home/lcom/labs/grupo_2leic03_5/proj/src/debug/trace.txt");
-  lcf_log_output("/home/lcom/labs/proj/src/debug/output.txt");
+  lcf_log_output("/home/lcom/labs/grupo_2leic03_5/proj/src/debug/output.txt");
   if (lcf_start(argc, argv)) return 1;
   lcf_cleanup();
   return 0;
@@ -49,9 +50,11 @@ int start_devices() {
   if (timer_subscribe_int(&timer_irq_set) != 0) {return 1;}
   if (kbd_subscribe_int(&kbd_irq_set) != 0) {return 1;}
   if (mouse_subscribe_int(&mouse_irq_set) != 0) {return 1;}
+  if (rtc_subscribe_int(&rtc_irq_set) != 0) {return 1;}
 
   if (mouse_set_stream_mode() != 0) {return 1;}
   if (_mouse_enable_data_reporting() != 0) {return 1;}
+  if (rtc_enable_update_int() != 0) {return 1;}
 
   if (set_frame_buffer(VIDEO_MODE) != 0) {return 1;}
   if (set_graphics_mode(VIDEO_MODE) != 0) {return 1;}
@@ -169,6 +172,16 @@ int (proj_main_loop)(int argc, char *argv[]) {
             if (state == ARENA) arena_main_loop();
             if (state == GAME_OVER) game_over_main_loop();
           }
+
+          if (msg.m_notify.interrupts & BIT(rtc_irq_set)) {
+            rtc_ih(); 
+            if (state == MENU) {
+              draw_menu_background(menu_buffer);
+            }
+          }
+
+
+
           break;
 
         default:
