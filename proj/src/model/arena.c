@@ -154,7 +154,11 @@ bool handle_mouse_click(Grid *grid, int mouse_x, int mouse_y) {
         Cell *cell = &grid->cells[i][j];
         
         if (cell->state == SHIP) {
+
           cell->state = HIT;
+          if (game_mode == MULTI_PLAYER || current_player == PLAYER_1) {
+            bombs_remaining--;
+          }
 
           if (is_ship_sunk(grid, cell->ship_id)) {
             grid->ships[cell->ship_id].status = SUNK;
@@ -166,14 +170,19 @@ bool handle_mouse_click(Grid *grid, int mouse_x, int mouse_y) {
             }
           }
 
+          return true;
+
         } else if (cell->state == EMPTY) {
+
           cell->state = MISS;
+          if (game_mode == MULTI_PLAYER || current_player == PLAYER_1) {
+            bombs_remaining--;
+          }
+          
+          return true;
         }
         
-        if (game_mode == MULTI_PLAYER || current_player == PLAYER_1) {
-          bombs_remaining--;
-        }
-        return true;
+        
       }
     }
   }
