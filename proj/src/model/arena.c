@@ -262,25 +262,35 @@ void setup_phase(bool curr_lb, bool prev_lb, bool curr_rb, bool prev_rb, Grid *g
     int row, col, ship_id;
     if (mouse_over_ship(grid, cursor_x, cursor_y, &row, &col, &ship_id)) {
       Ship *ship = &grid->ships[ship_id];
-      int new_orientation = 1 - ship->orientation;
       int size = ship->size;
-      int start_row = ship->start_row;
-      int start_col = ship->start_col;
+      int old_ori = ship->orientation;
+      int new_ori = 1 - old_ori;
 
-      //we check if the ship can be placed in the new orientation
-      if (can_place_ship(grid, start_row, start_col, size, new_orientation, ship_id)) {
+      //we calculate the offset of the ship from its starting position
+      int offset = (old_ori == 0) ? (col - ship->start_col) : (row - ship->start_row);
+
+      //we compute the new starting position based on the offset
+      int new_start_row = (new_ori == 0) ? row : row - offset;
+      int new_start_col = (new_ori == 0) ? col - offset : col;
+
+
+      //we check if the ship can be placed with the new orientation
+      if (can_place_ship(grid, new_start_row, new_start_col, size, new_ori, ship_id)) {
+
         //we remove ship from old orientation
         for (int i = 0; i < size; i++) {
-          int r = (ship->orientation == 0) ? start_row : start_row + i;
-          int c = (ship->orientation == 0) ? start_col + i : start_col;
+          int r = (ship->orientation == 0) ? ship->start_row : ship->start_row + i;
+          int c = (ship->orientation == 0) ? ship->start_col + i : ship->start_col;
           grid->cells[r][c].state = EMPTY;
           grid->cells[r][c].ship_id = -1;
         }
         //and then we place ship in new orientation
-        ship->orientation = new_orientation;
+        ship->orientation = new_ori;
+        ship->start_row = new_start_row;
+        ship->start_col = new_start_col;
         for (int i = 0; i < size; i++) {
-          int r = (new_orientation == 0) ? start_row : start_row + i;
-          int c = (new_orientation == 0) ? start_col + i : start_col;
+          int r = (new_ori == 0) ? new_start_row : new_start_row + i;
+          int c = (new_ori == 0) ? new_start_col + i : new_start_col;
           grid->cells[r][c].state = SHIP;
           grid->cells[r][c].ship_id = ship_id;
         }
@@ -396,7 +406,7 @@ void move_ship(Grid *grid, int ship_id, int new_row, int new_col) {
 
     //we try to place at new position
     if (can_place_ship(grid, new_row, new_col, size, orientation, ship_id)) {
-        //place ship at new position
+        //if we can, we place it at new position
         ship->start_row = new_row;
         ship->start_col = new_col;
         for (int i = 0; i < size; i++) {
@@ -449,12 +459,12 @@ void cell_to_pixel(Grid *grid, int row, int col, int* x, int* y) {
 int coord_to_cell(const char* coord, int* row, int* col) {
 
   if (coord == NULL || strlen(coord) < 2) {
-    return 1; // error: invalid coordinate
+    return 1; //error: invalid coordinate
   }
 
   char col_letter = coord[0];
   if (col_letter < 'A' || col_letter > 'J') {
-    return 1; // error: invalid column letter
+    return 1; //error: invalid column letter
   }
   *col = col_letter - 'A';
 
@@ -464,10 +474,10 @@ int coord_to_cell(const char* coord, int* row, int* col) {
   } else if (coord[1] == '1' && coord[2] == '0') {
     row_num = 10;
   } else {
-    return 1; // error: invalid row number
+    return 1; //error: invalid row number
   } 
 
-  *row = row_num -1; // converting to index (0-9)
+  *row = row_num -1; //converting to index (0-9)
 
   if (*row < 0 || *row >= GRID_ROWS) return 1;
   return 0; 
@@ -479,9 +489,9 @@ int coord_to_cell(const char* coord, int* row, int* col) {
 bool can_place_ship(Grid *grid, int start_row, int start_col, int size, int orientation, int ship_id) {
   if (start_row < 0 || start_col < 0) return false;
 
-  if (orientation == 0) { // horizontal
+  if (orientation == 0) { //horizontal
     if (start_col + size > GRID_COLS || start_row >= GRID_ROWS) return false;
-  } else { // vertical
+  } else { //vertical
     if (start_row + size > GRID_ROWS || start_col >= GRID_COLS) return false;
   }
 
