@@ -19,6 +19,7 @@
 extern uint8_t *rules_buffer;
 
 
+
 void set_rules_buffer();
 void init_rules();
 void rules_main_loop();
