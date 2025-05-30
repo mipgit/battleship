@@ -44,10 +44,10 @@ void draw_arena() {
   //NEEDS FIXING
   if (arena_phase == SETUP_PLAYER1 && current_player == PLAYER_1) {
     draw_grid(&arena.player1_grid, 0);
-    draw_sprite(setup, arena.player2_grid.sprite_x + 50, arena.player2_grid.sprite_y, current_buffer);
+    draw_sprite(setup, arena.player2_grid.sprite_x + 20, arena.player2_grid.sprite_y + 10, current_buffer);
   } else if (arena_phase == SETUP_PLAYER2 && current_player == PLAYER_2) {
     draw_grid(&arena.player2_grid, 0);
-    draw_sprite(setup, arena.player1_grid.sprite_x + 50 , arena.player1_grid.sprite_y, current_buffer);
+    draw_sprite(setup, arena.player1_grid.sprite_x + 20, arena.player1_grid.sprite_y + 10, current_buffer);
   
   } else if (arena_phase == BATTLE_PHASE) {
     if (current_player == PLAYER_1) {
