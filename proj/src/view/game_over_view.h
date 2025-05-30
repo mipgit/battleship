@@ -14,8 +14,8 @@
 
 
 #define OPTION_MENU_Y 350  // Y position for "Menu" option
-#define OPTION_EXIT_Y 450  // Y position for "Exit" option
-#define OPTIONS_X 250      // X position for both options
+#define OPTION_EXIT_Y 410  // Y position for "Exit" option
+#define OPTIONS_X 280      // X position for both options
 
 #define WINNER_TEXT_Y 200 // Y position for the winner text
 

@@ -57,8 +57,8 @@ int load_sprites() {
   rules_option = create_sprite((xpm_map_t) rules_option_xpm);
   help_option = create_sprite((xpm_map_t) help_option_xpm);
   game_over = create_sprite((xpm_map_t) game_over_xpm);
-  menu_option = create_sprite((xpm_map_t) menU_xpm);  // o u está maiúsculo pq estava a dar erro
-  exit_option = create_sprite((xpm_map_t) exit_xpm);
+  menu_option = create_sprite((xpm_map_t) menu_option_xpm);  // o u está maiúsculo pq estava a dar erro
+  exit_option = create_sprite((xpm_map_t) exit_option_xpm);
   choose_mode = create_sprite((xpm_map_t) mode_xpm);
   single_player = create_sprite((xpm_map_t) single_player_xpm);
   multi_player = create_sprite((xpm_map_t) multi_player_xpm);
