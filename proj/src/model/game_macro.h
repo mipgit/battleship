@@ -35,6 +35,7 @@
 #define ORANGE 0xFFA500
 #define NAVY_BLUE 0x293f87
 #define TEAL 0x297487
+#define WHITE 0xFFFFFF
 
 
 

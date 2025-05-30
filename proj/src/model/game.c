@@ -19,21 +19,21 @@ void game_keyboard_handler() {
     case M_KEY:
       set_state(MENU); //barquinho, farol e as cores mudam consoante a hora do dia
       break;
-    case R_KEY:
-      set_state(RULES); //regras do jogo (o que é o battleship)
-      break;
-    case S_KEY:
-      set_state(START); //ecrã para mudar de jogador
-      break;
-    case ENTER_KEY:
-      set_state(ARENA); //para o jogador escolher o modo de jogo
-      break;
+    //case R_KEY:
+    //  set_state(RULES); //regras do jogo (o que é o battleship)
+    //  break;
+    //case S_KEY:
+    //  set_state(START); //ecrã para mudar de jogador
+    //  break;
+    //case ENTER_KEY:
+    //  set_state(ARENA); //para o jogador escolher o modo de jogo
+    //  break;
     case SPACE_KEY:
        set_state(HELP); //não esquecer de que os xpm precisam de ter uma linha a dizer "press enter fot the next screen"
        break;
-    case Q_KEY:
-      set_state(GAME_OVER); //pode ser preciso para testar os desenhos
-      break;
+    //case Q_KEY:
+    //  set_state(GAME_OVER); //pode ser preciso para testar os desenhos
+    //  break;
     case ESC_KEY:
        set_state(EXIT);
        break;    
@@ -58,11 +58,6 @@ void game_mouse_handler() {
 
 
 
-void help_main_loop() {
-  draw_info();
-  draw_cursor(current_buffer);
-  swap_buffers();
-}
 
 void game_over_main_loop() {
   draw_game_over();
@@ -70,17 +65,7 @@ void game_over_main_loop() {
   swap_buffers();
 }
 
-void rules_main_loop() {
-  draw_rules_background();
-  draw_cursor(current_buffer);
-  swap_buffers();
-}
 
-void help_main_loop() {
-  draw_info();
-  draw_cursor(current_buffer);
-  swap_buffers();
-}
 
 
 void free_buffers() {

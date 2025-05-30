@@ -6,10 +6,7 @@
 #include <stdint.h>
 #include "controller/graphics.h"
 
-#include "xpm/arena.xpm"
-#include "xpm/menu.xpm"
 #include "xpm/game_over.xpm"
-#include "xpm/info.xpm"
 #include "xpm/batalha_naval_layout.xpm"
 #include "xpm/one_grid_layout.xpm"
 #include "xpm/cursor.xpm"
@@ -59,6 +56,8 @@ Sprite *player2s;
 Sprite *menu_shipR;
 Sprite *menu_shipL;
 Sprite *logo;
+Sprite *rules_content;
+Sprite *help_content;
 
 
 /**

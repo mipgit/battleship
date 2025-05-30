@@ -49,8 +49,6 @@ void game_keyboard_handler();
 void game_mouse_handler();
 
 
-void menu_main_loop();
-void rules_main_loop();
 void game_over_main_loop();
 void help_main_loop();
 

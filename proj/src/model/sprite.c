@@ -36,7 +36,6 @@ void destroy_sprite(Sprite *sp) {
 
 int load_sprites() {
   game_over = create_sprite((xpm_map_t) game_over_xpm);
-  info = create_sprite((xpm_map_t) info_xpm);
   double_grid = create_sprite((xpm_map_t) grid_xpm);
   single_grid = create_sprite((xpm_map_t) single_grid_xpm);
   cursor = create_sprite((xpm_map_t) cursor_xpm);
