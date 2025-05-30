@@ -22,7 +22,6 @@ GameState get_previous_state() {
 //feito para testar os ecrãs
 void game_keyboard_handler() {
   switch (scancode) {
-
     case M_KEY:
       set_state(MENU);
       scancode = 0; 
@@ -35,9 +34,6 @@ void game_keyboard_handler() {
        if (state != HELP && state != RULES) set_state(HELP);
        scancode = 0;
        break;   
-    case S_KEY:
-      set_state(GAME_OVER); //pode ser preciso para testar os desenhos
-      break;
     case ESC_KEY:
        set_state(EXIT);
        break;    

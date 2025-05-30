@@ -44,6 +44,7 @@
 #include "xpm/rules.xpm"
 #include "xpm/help.xpm"
 #include "xpm/game_over.xpm"
+#include "xpm/wins.xpm"
 
 
 typedef struct {
@@ -93,6 +94,7 @@ Sprite *logo;
 Sprite *rules_content;
 Sprite *help_content;
 Sprite *game_over;
+Sprite *wins;
 
 
 /**

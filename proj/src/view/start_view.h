@@ -16,9 +16,9 @@
 
 #define OPTIONS_X         300   // X position for all options
 
-#define OPTION_START_Y    270   // Y position for "Start"
-#define OPTION_RULES_Y    340   // Y position for "Rules"
-#define OPTION_HELP_Y     410   // Y position for "Help"
+#define OPTION_START_Y    280   // Y position for "Start"
+#define OPTION_RULES_Y    350   // Y position for "Rules"
+#define OPTION_HELP_Y     420   // Y position for "Help"
 
 
 void draw_start_background(uint8_t *buffer);
