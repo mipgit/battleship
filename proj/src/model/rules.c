@@ -30,8 +30,8 @@ void rules_main_loop() {
 
 void rules_keyboard_handler() {
   switch (scancode) {
-    case S_KEY:
-      set_state(ARENA);
+    case Q_KEY:
+      set_state(HELP);
     default:
       break;
   }

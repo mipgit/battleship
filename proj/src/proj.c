@@ -13,6 +13,7 @@
 #include "model/arena.h"
 #include "model/menu.h"
 #include "model/rules.h"
+#include "model/help.h"
 #include "model/sprite.h"
 
 
@@ -74,7 +75,7 @@ int close_devices() {
 
 
 void init_states(GameState cur_state, GameState prev_state) {
-  if (cur_state == ARENA && prev_state != ARENA && prev_state != HELP) { //em vez de HELP tem de se mudar dps para START!!!!
+  if (cur_state == ARENA && prev_state != ARENA) { //em vez de HELP tem de se mudar dps para START!!!!
     init_arena();
   }
   else if (cur_state == MENU && prev_state != MENU) {
@@ -82,6 +83,9 @@ void init_states(GameState cur_state, GameState prev_state) {
   } 
   else if (cur_state == RULES && prev_state != RULES) {
     init_rules();
+  } 
+  else if (cur_state == HELP && prev_state != HELP) {
+    init_help();
   } 
 }
 
@@ -126,6 +130,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
             if (state == MENU) menu_keyboard_handler();
             if (state == ARENA) arena_keyboard_handler();
             if (state == RULES) rules_keyboard_handler();
+            if (state == HELP) help_keyboard_handler();
             //...
           }
 
@@ -144,6 +149,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
             if (state == ARENA) arena_main_loop();
             if (state == GAME_OVER) game_over_main_loop();
             if (state == RULES) rules_main_loop();
+            if (state == HELP) help_main_loop();
           }
           break;
 

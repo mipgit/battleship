@@ -73,5 +73,6 @@ void free_buffers() {
   free_buffer(arena_buffer);
   free_buffer(menu_buffer);
   free_buffer(rules_buffer);
+  free_buffer(help_buffer);
 }
 

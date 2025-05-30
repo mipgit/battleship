@@ -5,8 +5,14 @@
 
 #include <minix/sysutil.h>
 #include <lcom/lcf.h>
+
 #include "controller/graphics.h"
+
+#include "model/game_macro.h"
 #include "model/game.h"
+#include "model/sprite.h"
+#include "model/menu.h"
+#include "view/sprite_view.h"
 
 /**
  * @brief Draws the static help/controls screen (XPM)

@@ -50,7 +50,6 @@ void game_mouse_handler();
 
 
 void game_over_main_loop();
-void help_main_loop();
 
 void free_buffers();
 
