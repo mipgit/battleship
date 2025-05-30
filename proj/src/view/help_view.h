@@ -1,3 +1,12 @@
+/**
+ * @file help_view.h
+ * @brief Handles the visual representation of the Help screen
+ * 
+ * This file contains declarations for functions related to rendering
+ * the Help screen, which provides information about game controls and
+ * instructions to the player.
+ */
+
 #ifndef HELP_VIEW_H
 #define HELP_VIEW_H
 

@@ -18,8 +18,13 @@
 #include "view/sprite_view.h"
 
 /**
- * @brief Draws the mouse cursor on the screen.
- * @param buffer Pointer to the graphics buffer where the cursor will be drawn.
+ * @brief Draws the mouse cursor on the screen
+ * 
+ * Renders the appropriate cursor sprite based on the current game state:
+ * - During the BATTLE_PHASE in the ARENA state, displays a bomb cursor
+ * - Otherwise, displays the standard cursor sprite
+ *
+ * @param buffer Pointer to the graphics buffer where the cursor will be drawn
  */
 void draw_cursor(uint8_t *buffer);
 
