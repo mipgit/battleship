@@ -91,4 +91,12 @@ int (fill_screen)(uint32_t color, uint8_t *buffer);
 int (swap_buffers)();
 
 /**
- * @brief Frees memory allocate*
+ * @brief Frees memory allocated for a buffer.
+ *
+ * @param buffer Pointer to the buffer to free
+ * @return 0 on success, non-zero otherwise
+ */
+int (free_buffer)(uint8_t *buffer);
+
+
+#endif
