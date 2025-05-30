@@ -29,6 +29,9 @@
 #include "xpm/logo.xpm"
 #include "xpm/sun.xpm"
 #include "xpm/moon.xpm"
+#include "xpm/cloud.xpm"
+#include "xpm/star.xpm"
+#include "xpm/ocean.xpm"
 
 
 
@@ -62,6 +65,9 @@ Sprite *menu_shipL;
 Sprite *logo;
 Sprite *sun;
 Sprite *moon;
+Sprite *cloud;
+Sprite *star;
+Sprite *ocean;
 
 
 /**
@@ -92,3 +98,4 @@ void free_sprites();
 
 
 #endif 
+
