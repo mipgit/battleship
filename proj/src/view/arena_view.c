@@ -49,7 +49,7 @@ void draw_arena() {
     draw_grid(&arena.player2_grid, 0);
     draw_sprite(setup, arena.player1_grid.sprite_x + 50 , arena.player1_grid.sprite_y, current_buffer);
   
-  } else if (arena_phase == READY_PHASE) {
+  } else if (arena_phase == BATTLE_PHASE) {
     if (current_player == PLAYER_1) {
       draw_grid(&arena.player1_grid, 1);
       draw_grid(&arena.player2_grid, 1);
@@ -60,7 +60,7 @@ void draw_arena() {
   }
 
   draw_player(current_player);
-  if (arena_phase == READY_PHASE) draw_guide_ships();
+  if (arena_phase == BATTLE_PHASE) draw_guide_ships();
 }
 
 
@@ -86,7 +86,7 @@ void draw_layout() {
     draw_sprite_recolor(single_grid, arena.player2_grid.sprite_x, arena.player2_grid.sprite_y, BRIGHT_ORANGE, current_buffer);
   }
 
-  if (arena_phase == READY_PHASE) {
+  if (arena_phase == BATTLE_PHASE) {
     if (current_player == PLAYER_1) {
       draw_sprite(single_grid, arena.player1_grid.sprite_x, arena.player1_grid.sprite_y, current_buffer);
       draw_sprite_recolor(single_grid, arena.player2_grid.sprite_x, arena.player2_grid.sprite_y, BRIGHT_ORANGE, current_buffer);
@@ -113,7 +113,7 @@ void draw_cell(Grid *grid, int x, int y, int cell_row, int cell_col, int hovered
   //always show cell hover
   if (cursor_x >= x && cursor_x < x + CELL_WIDTH &&
       cursor_y >= y && cursor_y < y + CELL_HEIGHT) {
-     if (!((arena_phase != READY_PHASE && cell->ship_id > 0) || (cell->ship_id >= 0 && ship->status == SUNK)))  //dont want to draw hoover on ships in SETUP_PHASE's
+     if (!((arena_phase != BATTLE_PHASE && cell->ship_id > 0) || (cell->ship_id >= 0 && ship->status == SUNK)))  //dont want to draw hoover on ships in SETUP_PHASE's
       draw_rectangle(x, y, CELL_WIDTH, CELL_HEIGHT, HOVER_COLOR, current_buffer);
   }
 
@@ -205,7 +205,7 @@ void draw_player(PlayerTurn player) {
     draw_sprite_recolor(player1, player1_x, player_y, BRIGHT_ORANGE, current_buffer);
   } else if (arena_phase == SETUP_PLAYER2) {
     draw_sprite_recolor(player2, player2_x, player_y, BRIGHT_ORANGE, current_buffer);
-  } else if (READY_PHASE) {
+  } else if (BATTLE_PHASE) {
     if (player == PLAYER_1) {
       draw_sprite_recolor(player1, player1_x, player_y, BRIGHT_ORANGE, current_buffer);
       draw_sprite(player2, player2_x, player_y, current_buffer);

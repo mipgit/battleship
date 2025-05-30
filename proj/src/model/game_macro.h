@@ -108,7 +108,7 @@ typedef struct {
 typedef enum {
   SETUP_PLAYER1,
   SETUP_PLAYER2,
-  READY_PHASE
+  BATTLE_PHASE
 } ArenaPhase;
 
 

@@ -33,7 +33,7 @@ void arena_main_loop() {
   draw_cursor(current_buffer);
   swap_buffers();
 
-  if (arena_phase == READY_PHASE && game_mode == SINGLE_PLAYER && current_player == PLAYER_2) {
+  if (arena_phase == BATTLE_PHASE && game_mode == SINGLE_PLAYER && current_player == PLAYER_2) {
     battle_phase_pc(); 
   } 
 }
@@ -108,14 +108,14 @@ void arena_keyboard_handler() {
     case R_KEY:
       if (arena_phase == SETUP_PLAYER1 && current_player == PLAYER_1) {
         if (game_mode == SINGLE_PLAYER) {
-          arena_phase = READY_PHASE;
+          arena_phase = BATTLE_PHASE;
         } else {
           current_player = PLAYER_2;
           arena_phase = SETUP_PLAYER2;
         }  
       } else if (arena_phase == SETUP_PLAYER2 && current_player == PLAYER_2) {
         current_player = PLAYER_1;
-        arena_phase = READY_PHASE;
+        arena_phase = BATTLE_PHASE;
       }
       break;
     default:
@@ -133,7 +133,7 @@ void arena_mouse_handler() {
     setup_phase(curr_lb, prev_lb, &arena.player1_grid);
   } else if (arena_phase == SETUP_PLAYER2 && current_player == PLAYER_2) {
     setup_phase(curr_lb, prev_lb, &arena.player2_grid);
-  } else if (arena_phase == READY_PHASE) {
+  } else if (arena_phase == BATTLE_PHASE) {
     battle_phase_mouse(curr_lb, prev_lb);
   }
 
@@ -142,7 +142,7 @@ void arena_mouse_handler() {
 
 
 
-//used in ready/battle phase
+//used in battle phase, human playing
 bool handle_mouse_click(Grid *grid, int mouse_x, int mouse_y) {
   for (int i = 0; i < GRID_ROWS; i++) {
     for (int j = 0; j < GRID_COLS; j++) {
@@ -191,7 +191,7 @@ bool handle_mouse_click(Grid *grid, int mouse_x, int mouse_y) {
 
 
 
-/* READY PHASE: Bombing */
+/* BATTLE PHASE: Bombing */
 
 //if it is a human playing, he will use the mouse to click on the grid
 void battle_phase_mouse(bool curr_lb, bool prev_lb) {
@@ -199,7 +199,7 @@ void battle_phase_mouse(bool curr_lb, bool prev_lb) {
     if (curr_lb && !prev_lb) {
       if (current_player == PLAYER_1) {
         handle_mouse_click(&arena.player2_grid, cursor_x, cursor_y);
-      } else if (current_player == PLAYER_2) {
+      } else if (current_player == PLAYER_2 && game_mode == MULTI_PLAYER) {
         handle_mouse_click(&arena.player1_grid, cursor_x, cursor_y);
       }
     }
