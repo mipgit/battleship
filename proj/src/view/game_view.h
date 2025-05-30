@@ -17,11 +17,6 @@
 
 void draw_cursor(uint8_t *buffer);
 
-//void draw_screen();
-
-void draw_menu();
-void draw_info();
-void draw_game_over();
 
 
 

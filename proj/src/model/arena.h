@@ -43,7 +43,7 @@ extern DragState drag_state;
 void arena_main_loop();
 
 void set_arena_buffer();
-void init_arena(); //de cada vez que o jogo acabar, se o utilizador quiser outro jogo chamamos esta func
+void init_arena(); 
 
 void init_grid(Grid *grid, int sprite_x, int sprite_y);
 

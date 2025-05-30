@@ -1,5 +1,3 @@
-// INCOMPLETO
-
 #ifndef HELP_VIEW_H
 #define HELP_VIEW_H
 

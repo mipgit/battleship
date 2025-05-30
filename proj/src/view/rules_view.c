@@ -1,5 +1,3 @@
-// INCOMPLETO
-
 #include "rules_view.h"
 
 extern Sprite* rules_content;  

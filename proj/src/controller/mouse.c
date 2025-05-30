@@ -128,7 +128,7 @@ if it is not, we return false
 bool (mouse_sync_bytes)() {
 
     if (byte_index == 0 && !(current_byte & IS_FIRST_BYTE)) {
-        printf("Invalid byte!\n");
+        //printf("Invalid byte!\n");
         return false;
     }
 

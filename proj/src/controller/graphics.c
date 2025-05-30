@@ -11,7 +11,6 @@ uint8_t *frame_buffer;
 uint8_t *current_buffer;
 
 
-
 //frame size
 unsigned int frame_size = 0;
 
@@ -107,7 +106,7 @@ int (draw_pixel)(uint16_t x, uint16_t y, uint32_t color, uint8_t *buffer) {
   //index (in bytes) of the location of the pixel to draw
   unsigned int index = (x + mode_info.XResolution * y) * bytes_per_pixel;
 
-  //using the frame buffer pointer, we copy n bytes of the color given on the right place (index)
+  //using the buffer pointer, we copy n bytes of the color given on the right place (index)
   if (memcpy(&buffer[index], &color, bytes_per_pixel) == NULL) return 1;
   
   return 0;

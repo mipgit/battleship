@@ -1,5 +1,3 @@
-// INCOMPLETO
-
 #include "help_view.h"
 
 extern Sprite* logo;  

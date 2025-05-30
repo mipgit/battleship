@@ -144,7 +144,8 @@ void arena_mouse_handler() {
 
 
 
-//used in battle phase, human playing
+
+//used in battle phase
 bool handle_mouse_click(Grid *grid, int mouse_x, int mouse_y) {
   for (int i = 0; i < GRID_ROWS; i++) {
     for (int j = 0; j < GRID_COLS; j++) {
@@ -216,7 +217,7 @@ void battle_phase_mouse(bool curr_lb, bool prev_lb) {
 }
 
 
-//if it is the pc playing, it will bomb automatically
+//if it is the pc playing, it will bomb randomly
 void battle_phase_pc() {
   if (game_mode == SINGLE_PLAYER && current_player == PLAYER_2) {
     if (pc_bombs_to_play == 0 && pc_available_count > 0) {
@@ -555,7 +556,8 @@ void setup_ships(Grid *grid) {
 void setup_pc_ships(Grid *grid) {
   ShipType ships_type[NUM_SHIPS] = {SHIP_1, SHIP_1, SHIP_3, SHIP_2, SHIP_1, SHIP_4, SHIP_3, SHIP_2};
 
-  //from what i read we should move this to the main function !!!!!!!!!!!
+  //from what i read we we can only call srand once in the program
+  //so we use a static variable to ensure it is only called once
   static int seeded = 0;
   if (!seeded) { srand(time(NULL)); seeded = 1; }
 

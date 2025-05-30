@@ -1,7 +1,7 @@
 #include "controller/rtc.h"
 
 
-static int rtc_hook_id = 8; //RTC IRQ is 8
+static int rtc_hook_id = 8; //RTC IRQ is 8 so might as well use it as hook_id
 
 
 int rtc_subscribe_int(uint8_t *bit_no) {

@@ -1,5 +1,3 @@
-// INCOMPLETO
-
 #ifndef RULES_VIEW_H
 #define RULES_VIEW_H
 

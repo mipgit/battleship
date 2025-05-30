@@ -22,5 +22,4 @@ void draw_mode(uint8_t *buffer);
 
 
 
-
 #endif
