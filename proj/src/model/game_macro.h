@@ -1,3 +1,8 @@
+/**
+ * @file game_macro.h
+ * @brief Constants, enums, and structures for the Battleship game
+ */
+
 #ifndef GAME_MACRO_H
 #define GAME_MACRO_H
 

@@ -1,3 +1,12 @@
+/**
+ * @file sprite.h
+ * @brief Sprite management for the Battleship game
+ * 
+ * This file contains declarations for sprite-related functionality, including
+ * sprite creation, destruction, and manipulation. It also declares all the game
+ * sprites used across different game screens.
+ */
+
 #ifndef SPRITE_H
 #define SPRITE_H
 
@@ -47,80 +56,159 @@
 #include "xpm/wins.xpm"
 
 
+/**
+ * @struct Sprite
+ * @brief Represents a sprite with its dimensions and pixel map
+ */
 typedef struct {
-  //int x, y; // current position
-  int width, height; // dimensions
-  //int xspeed, yspeed; // current speed
-  uint32_t *map; // the pixmap (uint32_t !!!!!!!!!!!!)
+  int width;   ///< Width of the sprite in pixels
+  int height;  ///< Height of the sprite in pixels
+  uint32_t *map; ///< Pointer to the sprite's pixel data
 } Sprite;
 
 
-Sprite *cursor;
-Sprite *bomb; 
+/// @brief Cursor sprite controlled by the mouse
+extern Sprite *cursor;
 
-Sprite *ship1;
-Sprite *ship2h;
-Sprite *ship2v;
-Sprite *ship3h;
-Sprite *ship3v;
-Sprite *ship4h;
-Sprite *ship4v;
+/// @brief Bomb sprite used for attacks
+extern Sprite *bomb;
 
-Sprite *player1;
-Sprite *player2;
-Sprite *setup;
-Sprite *single_grid;
+/// @brief One-cell ship sprite
+extern Sprite *ship1;
 
-Sprite *menu_shipR;
-Sprite *menu_shipL;
-Sprite *sun;
-Sprite *moon;
-Sprite *cloud;
-Sprite *star;
-Sprite *press_enter;
+/// @brief Two-cell horizontal ship sprite
+extern Sprite *ship2h;
 
+/// @brief Two-cell vertical ship sprite
+extern Sprite *ship2v;
 
-Sprite *start_option;
-Sprite *rules_option;
-Sprite *help_option;
-Sprite *menu_option;
-Sprite *exit_option;
+/// @brief Three-cell horizontal ship sprite
+extern Sprite *ship3h;
 
-Sprite *choose_mode;
-Sprite *single_player;
-Sprite *multi_player;
+/// @brief Three-cell vertical ship sprite
+extern Sprite *ship3v;
 
-Sprite *logo;
-Sprite *rules_content;
-Sprite *help_content;
-Sprite *game_over;
-Sprite *wins;
+/// @brief Four-cell horizontal ship sprite
+extern Sprite *ship4h;
+
+/// @brief Four-cell vertical ship sprite
+extern Sprite *ship4v;
+
+/// @brief Player 1 label sprite
+extern Sprite *player1;
+
+/// @brief Player 2 label sprite
+extern Sprite *player2;
+
+/// @brief Setup screen sprite
+extern Sprite *setup;
+
+/// @brief Single grid layout sprite
+extern Sprite *single_grid;
+
+/// @brief Right-facing menu ship decoration sprite
+extern Sprite *menu_shipR;
+
+/// @brief Left-facing menu ship decoration sprite
+extern Sprite *menu_shipL;
+
+/// @brief Sun decoration sprite
+extern Sprite *sun;
+
+/// @brief Moon decoration sprite
+extern Sprite *moon;
+
+/// @brief Cloud decoration sprite
+extern Sprite *cloud;
+
+/// @brief Star decoration sprite
+extern Sprite *star;
+
+/// @brief "Press Enter" prompt sprite
+extern Sprite *press_enter;
+
+/// @brief "Start" menu option sprite
+extern Sprite *start_option;
+
+/// @brief "Rules" menu option sprite
+extern Sprite *rules_option;
+
+/// @brief "Help" menu option sprite
+extern Sprite *help_option;
+
+/// @brief "Menu" option sprite
+extern Sprite *menu_option;
+
+/// @brief "Exit" option sprite
+extern Sprite *exit_option;
+
+/// @brief Mode selection screen title sprite
+extern Sprite *choose_mode;
+
+/// @brief Single player mode option sprite
+extern Sprite *single_player;
+
+/// @brief Multiplayer mode option sprite
+extern Sprite *multi_player;
+
+/// @brief Game logo sprite
+extern Sprite *logo;
+
+/// @brief Rules screen content sprite
+extern Sprite *rules_content;
+
+/// @brief Help screen content sprite
+extern Sprite *help_content;
+
+/// @brief Game over screen title sprite
+extern Sprite *game_over;
+
+/// @brief Winner announcement sprite
+extern Sprite *wins;
 
 
 /**
-* Creates a new sprite with pixmap "pic",
-* with specified position (within the
-* screen limits) and speed;
-* Does not draw the sprite on the screen.
-*
-* @param pic lines of strings, same
-* as xpm_map_t (has const protectors)
-* @return NULL on invalid pixmap.
-*/
+ * @brief Creates a new sprite from an XPM
+ * 
+ * Allocates memory for a sprite structure and loads the provided XPM image
+ * into its pixel map.
+ *
+ * @param sprite XPM data to convert into a sprite
+ * @return Pointer to the new sprite on success, NULL on failure
+ */
 Sprite *create_sprite(xpm_map_t sprite);
 
 void destroy_sprite(Sprite *sp);
 
 
 
+/**
+ * @brief Destroys a sprite and frees associated memory
+ * 
+ * @param sp Pointer to the sprite to destroy
+ */
+void destroy_sprite(Sprite *sp);
+
+/**
+ * @brief Moves a sprite according to its speed
+ * 
+ * @param sp Pointer to the sprite to move
+ * @return 0 on success, non-zero otherwise
+ */
 int move_sprite(Sprite *sp);
 
-/* Some useful non-visible functions */
-//static int draw_sprite(Sprite *sp, char *base); ->noutro sitio
-//static int check_collision(Sprite *sp, char *base); ->might need this
-
-//loaders and unloaders
+/**
+ * @brief Loads all game sprites from their XPM files
+ * 
+ * Creates all sprites used in the game by loading their XPM data.
+ * 
+ * @return 0 on success, non-zero on failure
+ */
 int load_sprites();
+
+/**
+ * @brief Frees all game sprites and their associated memory
+ */
 void free_sprites();
 
 
