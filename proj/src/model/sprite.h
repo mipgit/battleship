@@ -42,9 +42,12 @@
 
 #include "xpm/logo.xpm"
 #include "xpm/rules.xpm"
-#include "xpm/help.xpm"
 #include "xpm/game_over.xpm"
 #include "xpm/wins.xpm"
+
+#include "xpm/help/back.xpm"
+#include "xpm/help/help.xpm"
+#include "xpm/help/options.xpm"
 
 
 typedef struct {
@@ -95,6 +98,10 @@ Sprite *rules_content;
 Sprite *help_content;
 Sprite *game_over;
 Sprite *wins;
+
+Sprite *help;
+Sprite *help_options;
+Sprite *go_back;
 
 
 /**

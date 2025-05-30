@@ -68,6 +68,9 @@ int load_sprites() {
   star = create_sprite((xpm_map_t) star_xpm);
   press_enter = create_sprite((xpm_map_t) press_enter_xpm);
   wins = create_sprite((xpm_map_t) wins_xpm);
+  help = create_sprite((xpm_map_t) help_xpm);
+  go_back = create_sprite((xpm_map_t) back_xpm);
+  help_options = create_sprite((xpm_map_t) options_xpm);
 
   return 0;
 }

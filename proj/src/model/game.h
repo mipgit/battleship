@@ -35,10 +35,10 @@ extern uint8_t byte_index;
 extern struct packet mouse_packet;
 
 /// @brief Current cursor x-coordinate
-extern int cursor_x;
+int cursor_x;
 
 /// @brief Current cursor y-coordinate
-extern int cursor_y;
+int cursor_y;
 
 /// @brief VBE mode information for the current graphics mode
 extern vbe_mode_info_t mode_info;
