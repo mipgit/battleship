@@ -29,7 +29,6 @@ void init_game_over() {
 }
 
 void game_over_main_loop() {
-  //game_over_mouse_handler();
   draw_game_over_screen();
   draw_cursor(current_buffer);
   swap_buffers();
@@ -46,7 +45,7 @@ void game_over_keyboard_handler() {
   }
   else if (scancode == ENTER_KEY) {
       if (selected_option == GO_MENU) {
-          set_state(MENU);
+          set_state(START);
       }
       else if (selected_option == GO_EXIT) {
           set_state(EXIT);

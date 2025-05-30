@@ -44,9 +44,11 @@ extern uint8_t *mode_buffer;
 
 
 extern GameState state;
+extern GameState previous_state;
 
 void set_state(GameState new_state);
 GameState get_state();
+GameState get_previous_state();
 
 void game_timer_handler();
 void game_keyboard_handler();

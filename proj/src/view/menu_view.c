@@ -24,8 +24,6 @@ void draw_menu_background(uint8_t *buffer) {
         return;
     }
 
-    printf("Current time: %02d:%02d\n", rtc_info.hours, rtc_info.minutes);
-
     uint32_t background;
     Sprite *sky;
     Sprite *other;

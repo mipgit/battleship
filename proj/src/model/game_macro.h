@@ -27,6 +27,7 @@
 #define M_KEY 0x32
 #define ENTER_KEY 0x1C
 #define R_KEY 0x13
+#define H_KEY 0x23
 #define S_KEY 0x1F
 #define UP_ARROW_KEY 0x48
 #define DOWN_ARROW_KEY 0x50

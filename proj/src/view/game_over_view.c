@@ -60,12 +60,7 @@ void draw_game_over_options(uint8_t *buffer) {
 }
 
 
-void draw_game_over_winner(uint8_t *buffer) {
-
-  if (current_player != PLAYER_1 && current_player != PLAYER_2) { //TIRAR ISTO DEPOIS !!!!!!!!!
-    current_player = PLAYER_1;
-  }   
-
+void draw_game_over_winner(uint8_t *buffer) {  
   if (current_player == PLAYER_1) {
     draw_sprite_recolor(player1, mode_info.XResolution/2 - player1->width/2, WINNER_TEXT_Y, BRIGHT_ORANGE, buffer);
   } else if (current_player == PLAYER_2) {

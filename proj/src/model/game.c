@@ -2,9 +2,12 @@
 
 
 GameState state = MENU;
+GameState previous_state = MENU;
 
 
 void set_state(GameState new_state) {
+  if (new_state == state) return;
+  previous_state = state;
   state = new_state;
 }
 
@@ -12,26 +15,27 @@ GameState get_state() {
   return state;
 }
 
+GameState get_previous_state() {
+  return previous_state;
+}
+
 //feito para testar os ecrãs
 void game_keyboard_handler() {
   switch (scancode) {
 
     case M_KEY:
-      set_state(MENU); //barquinho, farol e as cores mudam consoante a hora do dia
+      set_state(MENU);
+      scancode = 0; 
       break;
-    //case R_KEY:
-    //  set_state(RULES); //regras do jogo (o que é o battleship)
-    //  break;
-    //case S_KEY:
-    //  set_state(START); //ecrã para mudar de jogador
-    //  break;
-    //case ENTER_KEY:
-    //  set_state(ARENA); //para o jogador escolher o modo de jogo
-    //  break;
     case SPACE_KEY:
-       set_state(HELP); //não esquecer de que os xpm precisam de ter uma linha a dizer "press enter fot the next screen"
+       if (state != RULES && state != HELP) set_state(RULES); 
+       scancode = 0;
        break;
-    case Q_KEY:
+    case H_KEY:
+       if (state != HELP && state != RULES) set_state(HELP);
+       scancode = 0;
+       break;   
+    case S_KEY:
       set_state(GAME_OVER); //pode ser preciso para testar os desenhos
       break;
     case ESC_KEY:

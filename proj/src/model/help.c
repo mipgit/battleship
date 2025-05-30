@@ -24,12 +24,13 @@ void help_main_loop() {
 }
 
 void help_keyboard_handler() {
-    switch (scancode) {
-        case Q_KEY:
-            set_state(START);
-            break;
-        default:
-            break;
-    }
+  switch (scancode) {
+    case Q_KEY:
+      set_state(get_previous_state());
+      scancode = 0;
+      break;
+    default:
+      break;
+  }
 }
 

@@ -77,27 +77,28 @@ int close_devices() {
 
 
 void init_states(GameState cur_state, GameState prev_state) {
-  if (cur_state == ARENA && prev_state != ARENA) { //em vez de HELP tem de se mudar dps para START!!!!
-    init_arena();
-  }
-  else if (cur_state == MENU && prev_state != MENU) {
+
+  if ((cur_state == MENU && prev_state != MENU)) {
     init_menu();
   } 
-  else if (cur_state == START && prev_state != START) {
+  else if ((cur_state == START && prev_state != START && prev_state != HELP && prev_state != RULES)) {
     init_start();
   } 
+  else if ((cur_state == ARENA && prev_state != ARENA && prev_state != HELP && prev_state != RULES)) {
+    init_arena();
+  }
+  else if ((cur_state == GAME_OVER && prev_state != GAME_OVER)) {
+    init_game_over();
+  }
+  else if ((cur_state == MODE && prev_state != MODE && prev_state != HELP && prev_state != RULES)) {
+    init_mode();
+  }
   else if (cur_state == RULES && prev_state != RULES) {
     init_rules();
   } 
   else if (cur_state == HELP && prev_state != HELP) {
     init_help();
   } 
-  else if (cur_state == GAME_OVER && prev_state != GAME_OVER) {
-    init_game_over();
-  }  
-  else if (cur_state == MODE && prev_state != MODE) {
-    init_mode();
-  }
 }
 
 
@@ -120,6 +121,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
   while (get_state() != EXIT) { 
 
     GameState cur_state = get_state();
+
     init_states(cur_state, prev_state);
     prev_state = cur_state;
     
@@ -139,12 +141,12 @@ int (proj_main_loop)(int argc, char *argv[]) {
 
             //depois temos de dividir os handlers por ecrã
             if (state == MENU) menu_keyboard_handler();
-            if (state == START) start_keyboard_handler();
-            if (state == RULES) rules_keyboard_handler();
-            if (state == HELP) help_keyboard_handler();
-            if (state == MODE) mode_keyboard_handler();
-            if (state == ARENA) arena_keyboard_handler();
-            if (state == GAME_OVER) game_over_keyboard_handler();
+            else if (state == START) start_keyboard_handler();
+            else if (state == RULES) rules_keyboard_handler();
+            else if (state == HELP) help_keyboard_handler();
+            else if (state == MODE) mode_keyboard_handler();
+            else if (state == ARENA) arena_keyboard_handler();
+            else if (state == GAME_OVER) game_over_keyboard_handler();
             //...
           }
 
