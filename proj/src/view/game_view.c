@@ -19,7 +19,7 @@ extern ArenaPhase arena_phase;
 
 
 void draw_cursor(uint8_t *buffer) {
-  if (arena_phase == READY_PHASE) draw_sprite(bomb, cursor_x, cursor_y, buffer);
+  if (get_state() == ARENA && arena_phase == READY_PHASE) draw_sprite(bomb, cursor_x, cursor_y, buffer);
   else draw_sprite(cursor, cursor_x, cursor_y, buffer);
 }
 
