@@ -1,25 +1,47 @@
 #ifndef GAME_MACRO_H
 #define GAME_MACRO_H
 
-
+/// @brief Target game update frequency in Hz (used with timer)
 #define FREQUENCY 60
+
+/// @brief Timer number used for configuration
 #define TIMER 0
+
+/// @brief Video mode used for graphics
 #define VIDEO_MODE 0x115
 
+// ---------------- Grid Definitions ----------------
 
-
+/// @brief Number of rows in the game grid
 #define GRID_ROWS 10
+
+/// @brief Number of columns in the game grid
 #define GRID_COLS 10
+
+/// @brief Pixel height of the entire grid
 #define GRID_HEIGHT 378
+
+/// @brief Pixel width of the entire grid
 #define GRID_WIDTH 396
 
+/// @brief Pixel width of a single cell in the grid
 #define CELL_WIDTH 33
+
+/// @brief Pixel height of a single cell in the grid
 #define CELL_HEIGHT 33
 
+/// @brief Total number of ships in the game
 #define NUM_SHIPS 8
 
+/**
+ * @brief Converts a ShipType enum to its size.
+ * 
+ * @param type The ShipType to evaluate.
+ * @return The size of the ship, or 0 if NO_SHIP.
+ */
 #define SHIP_TYPE_TO_SIZE(type) ((type == NO_SHIP) ? 0 : (int)type)
 
+// ---------------- Key Mappings ----------------
 
 #define ESC_KEY 0x81
 #define Q_KEY 0x10
@@ -34,6 +56,7 @@
 #define ONE_KEY 0x82
 #define TWO_KEY 0x83
 
+// ---------------- Color Definitions (Hex RGB) ----------------
 
 #define BLACK 0x000000
 #define RED 0xFF0000
@@ -52,80 +75,109 @@
 #define WHITE 0xFFFFFF
 #define CREAM 0xeec8ce
 
+// ---------------- Type Definitions ----------------
 
-
+/**
+ * @enum ShipType
+ * @brief Types of ships in the game.
+ */
 typedef enum {
-    NO_SHIP,
-    SHIP_1,
-    SHIP_2,
-    SHIP_3,
-    SHIP_4,
+    NO_SHIP, ///< No ship
+    SHIP_1,  ///< Smallest ship
+    SHIP_2,  ///< Medium ship
+    SHIP_3,  ///< Large ship
+    SHIP_4,  ///< Largest ship
 } ShipType;
 
-
+/**
+ * @enum ShipStatus
+ * @brief The status of a ship.
+ */
 typedef enum {
-    ALIVE,
-    SUNK
+    ALIVE, ///< The ship is still afloat
+    SUNK   ///< The ship has been destroyed
 } ShipStatus;
 
-
+/**
+ * @struct Ship
+ * @brief Represents a ship in the game.
+ */
 typedef struct {
-    ShipType type;
-    int size;
-    int orientation; // 0->horizontal and 1->vertical ?
-    int start_row, start_col;
-    ShipStatus status; 
+    ShipType type;       ///< The ship's type
+    int size;            ///< The ship's size (number of cells)
+    int orientation;     ///< 0 for horizontal, 1 for vertical
+    int start_row;       ///< Row where the ship starts
+    int start_col;       ///< Column where the ship starts
+    ShipStatus status;   ///< Current status of the ship
 } Ship;
 
-
+/**
+ * @enum CellState
+ * @brief The state of a grid cell.
+ */
 typedef enum {
-    EMPTY,
-    SHIP,
-    HIT,
-    MISS,
+    EMPTY, ///< No ship and not attacked
+    SHIP,  ///< Ship present
+    HIT,   ///< Ship was hit
+    MISS   ///< Attack missed
 } CellState;
 
-
+/**
+ * @struct Cell
+ * @brief Represents a cell in the grid.
+ */
 typedef struct {
-    CellState state;
-    int ship_id; //-1 if no ship
+    CellState state; ///< Current state of the cell
+    int ship_id;     ///< Index of the ship occupying the cell, -1 if none
 } Cell;
 
-
+/**
+ * @struct Grid
+ * @brief Represents a player's grid.
+ */
 typedef struct {
-    Cell cells[GRID_ROWS][GRID_COLS];
-    Ship ships[NUM_SHIPS];
-    int ships_remaining; //to check if player has ships left (if 0 then player lost)
-    int sprite_x, sprite_y; //position of grid sprite (it has coordinates etc)
-    int x, y; //position of the actual first cell
+    Cell cells[GRID_ROWS][GRID_COLS]; ///< 2D array of grid cells
+    Ship ships[NUM_SHIPS];            ///< Array of ships
+    int ships_remaining;              ///< Ships left (0 = defeated)
+    int sprite_x, sprite_y;           ///< Position of the grid sprite
+    int x, y;                         ///< Coordinates of the top-left cell
 } Grid;
 
-
+/**
+ * @struct Arena
+ * @brief Represents the full game arena with both players' grids.
+ */
 typedef struct {
-    Grid player1_grid;
-    Grid player2_grid;
+    Grid player1_grid; ///< Grid for player 1
+    Grid player2_grid; ///< Grid for player 2
 } Arena;
 
-
+/**
+ * @enum ArenaPhase
+ * @brief Current phase of the game.
+ */
 typedef enum {
-  SETUP_PLAYER1,
-  SETUP_PLAYER2,
-  BATTLE_PHASE
+  SETUP_PLAYER1, ///< Player 1 is placing ships
+  SETUP_PLAYER2, ///< Player 2 is placing ships
+  BATTLE_PHASE   ///< Active battle between players
 } ArenaPhase;
 
-
+/**
+ * @enum PlayerTurn
+ * @brief Indicates which player's turn it is.
+ */
 typedef enum {
-  PLAYER_1,
-  PLAYER_2
+  PLAYER_1, ///< Player 1's turn
+  PLAYER_2  ///< Player 2's turn
 } PlayerTurn;
 
-
-
+/**
+ * @enum GameMode
+ * @brief Game mode selected by the player(s).
+ */
 typedef enum {
-  SINGLE_PLAYER,
-  MULTI_PLAYER,
+  SINGLE_PLAYER, ///< Playing against AI
+  MULTI_PLAYER,  ///< Two-player mode
 } GameMode;
 
-
-
-#endif
+#endif // GAME_MACRO_H
