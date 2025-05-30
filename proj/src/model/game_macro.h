@@ -50,6 +50,7 @@
 #define TEAL 0x297487
 #define WHITE 0xFFFFFF
 #define CREAM 0xeec8ce
+#define LILAC 0xA27EBA
 
 
 

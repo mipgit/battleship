@@ -21,7 +21,6 @@
 #include "xpm/menu_shipR.xpm"
 #include "xpm/menu_shipL.xpm"
 #include "xpm/logo.xpm"
-#include "xpm/rules.xpm"
 #include "xpm/help.xpm"
 #include "xpm/start_option.xpm"
 #include "xpm/rules_option.xpm"
@@ -38,6 +37,8 @@
 #include "xpm/cloud.xpm"
 #include "xpm/star.xpm"
 #include "xpm/press_enter.xpm"
+#include "xpm/rules_text.xpm"
+#include "xpm/rules.xpm"
 
 
 
@@ -83,6 +84,8 @@ Sprite *moon;
 Sprite *cloud;
 Sprite *star;
 Sprite *press_enter;
+Sprite *rules_text;
+Sprite *rules;
 
 
 /**

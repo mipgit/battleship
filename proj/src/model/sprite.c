@@ -68,6 +68,8 @@ int load_sprites() {
   cloud = create_sprite((xpm_map_t) cloud_xpm);
   star = create_sprite((xpm_map_t) star_xpm);
   press_enter = create_sprite((xpm_map_t) press_enter_xpm);
+  rules_text = create_sprite((xpm_map_t) rules_text_xpm);
+  rules = create_sprite((xpm_map_t) rules_xpm);
 
   return 0;
 }
@@ -109,6 +111,8 @@ void free_sprites() {
   destroy_sprite(cloud);
   destroy_sprite(star);
   destroy_sprite(press_enter);
+  destroy_sprite(rules_text);
+  destroy_sprite(rules);
 }
 
 
