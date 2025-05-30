@@ -16,6 +16,7 @@ extern Sprite *double_grid;
 extern Sprite *single_grid;
 extern Sprite *player1;
 extern Sprite *player2;
+extern Sprite *setup;
 
 extern Arena arena;
 extern ArenaPhase arena_phase;
@@ -39,10 +40,14 @@ void draw_arena() {
 
   draw_layout();
 
+
+  //NEEDS FIXING
   if (arena_phase == SETUP_PLAYER1 && current_player == PLAYER_1) {
     draw_grid(&arena.player1_grid, 0);
+    draw_sprite(setup, arena.player2_grid.sprite_x + 50, arena.player2_grid.sprite_y, current_buffer);
   } else if (arena_phase == SETUP_PLAYER2 && current_player == PLAYER_2) {
     draw_grid(&arena.player2_grid, 0);
+    draw_sprite(setup, arena.player1_grid.sprite_x + 50 , arena.player1_grid.sprite_y, current_buffer);
   
   } else if (arena_phase == READY_PHASE) {
     if (current_player == PLAYER_1) {

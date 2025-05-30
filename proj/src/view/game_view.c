@@ -6,6 +6,7 @@ extern Sprite *cursor;
 extern Sprite *menu_shipR;
 extern Sprite *menu_shipL;
 extern Sprite *logo;
+extern Sprite *bomb;
 
 extern vbe_mode_info_t mode_info;
 extern uint8_t *current_buffer;
@@ -14,11 +15,12 @@ extern int cursor_x;
 extern int cursor_y;
 
 extern PlayerTurn current_player;
-extern Sprite *player1s;
-extern Sprite *player2s;
+extern ArenaPhase arena_phase;
+
 
 void draw_cursor(uint8_t *buffer) {
-  draw_sprite(cursor, cursor_x, cursor_y, buffer);
+  if (arena_phase == READY_PHASE) draw_sprite(bomb, cursor_x, cursor_y, buffer);
+  else draw_sprite(cursor, cursor_x, cursor_y, buffer);
 }
 
 /*

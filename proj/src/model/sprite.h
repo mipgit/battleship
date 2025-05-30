@@ -9,6 +9,7 @@
 #include "xpm/batalha_naval_layout.xpm"
 #include "xpm/one_grid_layout.xpm"
 #include "xpm/cursor.xpm"
+#include "xpm/bomb.xpm"
 #include "xpm/ship1.xpm"
 #include "xpm/ship2h.xpm"
 #include "xpm/ship2v.xpm"
@@ -27,6 +28,7 @@
 #include "xpm/mode.xpm"
 #include "xpm/single_player.xpm"
 #include "xpm/multi_player.xpm"
+#include "xpm/setup.xpm"
 
 
 
@@ -42,6 +44,7 @@ Sprite *info;
 Sprite *double_grid;
 Sprite *single_grid;
 Sprite *cursor;
+Sprite *bomb; 
 Sprite *ship1;
 Sprite *ship2h;
 Sprite *ship2v;
@@ -60,6 +63,7 @@ Sprite *exit_option;
 Sprite *choose_mode;
 Sprite *single_player;
 Sprite *multi_player;
+Sprite *setup;
 
 
 /**
