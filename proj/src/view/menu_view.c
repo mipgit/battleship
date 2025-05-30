@@ -11,8 +11,8 @@ extern Sprite *logo;
 extern Sprite *sun; 
 extern Sprite *moon;
 
-#define DAY_START_HOUR 7
-#define DAY_END_HOUR 18
+#define DAY_START_HOUR 1
+#define DAY_END_HOUR 3
 #define DAY_END_MINUTE 30
 #define LIGHT_BLUE 0x8DBCC7 
 #define DARK_BLUE  0x213448 
@@ -26,17 +26,25 @@ void draw_menu_background(uint8_t *buffer) {
 
     uint32_t background;
     Sprite *sky;
+    Sprite *other;
     if (daytime(rtc_info.hours, rtc_info.minutes)) {
         background = LIGHT_BLUE; 
         sky = sun; 
+        other = cloud; 
     } else {
         background = DARK_BLUE;
         sky = moon;
+        other = star;
     }
 
     fill_screen(background, buffer);
-    draw_sprite(logo, 5, 130, buffer);
-    draw_sprite(sky, 40, 20, buffer);
+    draw_sprite(logo, 5, 20, buffer);
+    draw_sprite(sky, 350, 240, buffer);
+    draw_sprite(other, 30, 270, buffer);
+    draw_sprite(other, 200, 340, buffer);
+    draw_sprite(other, 500, 255, buffer);
+    draw_sprite(other, 650, 350, buffer);
+    draw_sprite(ocean, 0, 500, buffer);
 
 }
 
@@ -50,7 +58,7 @@ void draw_menu() {
 
   static int x = 0;
   static int dx = 2;
-  int y = 400 - menu_shipR->height / 2;
+  int y = 500 - menu_shipR->height / 2;
 
   x += dx;
   if (x < 0) {
@@ -65,5 +73,7 @@ void draw_menu() {
   Sprite *sprite_to_draw = (dx > 0) ? menu_shipR : menu_shipL;
   draw_sprite(sprite_to_draw, x, y, current_buffer);
 }
+
+
 
 
