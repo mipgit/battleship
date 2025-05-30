@@ -128,11 +128,13 @@ void arena_keyboard_handler() {
 void arena_mouse_handler() {
   static bool prev_lb = false;
   bool curr_lb = mouse_packet.lb;
+  static bool prev_rb = false;
+  bool curr_rb = mouse_packet.rb;
 
   if (arena_phase == SETUP_PLAYER1 && current_player == PLAYER_1) {
-    setup_phase(curr_lb, prev_lb, &arena.player1_grid);
+    setup_phase(curr_lb, prev_lb, curr_rb, prev_rb, &arena.player1_grid);
   } else if (arena_phase == SETUP_PLAYER2 && current_player == PLAYER_2) {
-    setup_phase(curr_lb, prev_lb, &arena.player2_grid);
+    setup_phase(curr_lb, prev_lb, curr_rb, prev_rb, &arena.player2_grid);
   } else if (arena_phase == BATTLE_PHASE) {
     battle_phase_mouse(curr_lb, prev_lb);
   }
@@ -251,7 +253,48 @@ void battle_phase_pc() {
 
 
 /* SETUP PHASE: Drag and drop ships */
-void setup_phase(bool curr_lb, bool prev_lb, Grid *grid) {
+void setup_phase(bool curr_lb, bool prev_lb, bool curr_rb, bool prev_rb, Grid *grid) {
+
+
+  //RIGHT BUTTON: Rotate ships
+
+  if (curr_rb && !prev_rb && !drag_state.dragging) {
+    int row, col, ship_id;
+    if (mouse_over_ship(grid, cursor_x, cursor_y, &row, &col, &ship_id)) {
+      Ship *ship = &grid->ships[ship_id];
+      int new_orientation = 1 - ship->orientation;
+      int size = ship->size;
+      int start_row = ship->start_row;
+      int start_col = ship->start_col;
+
+      //we check if the ship can be placed in the new orientation
+      if (can_place_ship(grid, start_row, start_col, size, new_orientation, ship_id)) {
+        //we remove ship from old orientation
+        for (int i = 0; i < size; i++) {
+          int r = (ship->orientation == 0) ? start_row : start_row + i;
+          int c = (ship->orientation == 0) ? start_col + i : start_col;
+          grid->cells[r][c].state = EMPTY;
+          grid->cells[r][c].ship_id = -1;
+        }
+        //and then we place ship in new orientation
+        ship->orientation = new_orientation;
+        for (int i = 0; i < size; i++) {
+          int r = (new_orientation == 0) ? start_row : start_row + i;
+          int c = (new_orientation == 0) ? start_col + i : start_col;
+          grid->cells[r][c].state = SHIP;
+          grid->cells[r][c].ship_id = ship_id;
+        }
+      }
+    }
+  }
+  prev_rb = curr_rb;
+
+
+
+
+
+  //LEFT BUTTON: Drag and drop ships
+
   if (curr_lb && !prev_lb) {
     int row, col, ship_id;
     if (mouse_over_ship(grid, cursor_x, cursor_y, &row, &col, &ship_id)) {

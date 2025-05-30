@@ -58,7 +58,7 @@ bool handle_mouse_click(Grid *grid, int mouse_x, int mouse_y);
 
 void battle_phase_mouse(bool curr_lb, bool prev_lb);
 void battle_phase_pc();
-void setup_phase(bool curr_lb, bool prev_lb, Grid *grid);
+void setup_phase(bool curr_lb, bool prev_lb, bool curr_rb, bool prev_rb, Grid *grid);
 
 
 bool mouse_over_ship(Grid *grid, int mouse_x, int mouse_y, int *row, int *col, int *ship_id);
