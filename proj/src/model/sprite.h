@@ -5,7 +5,6 @@
 #include <minix/sysutil.h>
 #include <stdint.h>
 #include "controller/graphics.h"
-#include "xpm/info.xpm"
 #include "xpm/batalha_naval_layout.xpm"
 #include "xpm/one_grid_layout.xpm"
 #include "xpm/cursor.xpm"
@@ -22,6 +21,11 @@
 #include "xpm/menu_shipR.xpm"
 #include "xpm/menu_shipL.xpm"
 #include "xpm/logo.xpm"
+#include "xpm/rules.xpm"
+#include "xpm/help.xpm"
+#include "xpm/start_option.xpm"
+#include "xpm/rules_option.xpm"
+#include "xpm/help_option.xpm"
 #include "xpm/game_over.xpm"
 #include "xpm/menU.xpm"
 #include "xpm/exit.xpm"
@@ -57,6 +61,11 @@ Sprite *player2;
 Sprite *menu_shipR;
 Sprite *menu_shipL;
 Sprite *logo;
+Sprite *rules_content;
+Sprite *help_content;
+Sprite *start_option;
+Sprite *rules_option;
+Sprite *help_option;
 Sprite *game_over;
 Sprite *menu_option;
 Sprite *exit_option;

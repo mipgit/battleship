@@ -35,7 +35,6 @@ void destroy_sprite(Sprite *sp) {
 
 
 int load_sprites() {
-  info = create_sprite((xpm_map_t) info_xpm);
   double_grid = create_sprite((xpm_map_t) grid_xpm);
   single_grid = create_sprite((xpm_map_t) single_grid_xpm);
   cursor = create_sprite((xpm_map_t) cursor_xpm);
@@ -52,8 +51,12 @@ int load_sprites() {
   menu_shipR = create_sprite((xpm_map_t) menu_shipR_xpm);
   menu_shipL = create_sprite((xpm_map_t) menu_shipL_xpm);
   logo = create_sprite((xpm_map_t) logo_xpm);
+  rules_content = create_sprite((xpm_map_t) rules_xpm);
+  help_content = create_sprite((xpm_map_t) help_xpm);
+  start_option = create_sprite((xpm_map_t) start_option_xpm);
+  rules_option = create_sprite((xpm_map_t) rules_option_xpm);
+  help_option = create_sprite((xpm_map_t) help_option_xpm);
   game_over = create_sprite((xpm_map_t) game_over_xpm);
-  if (game_over == NULL) return 1;
   menu_option = create_sprite((xpm_map_t) menU_xpm);  // o u está maiúsculo pq estava a dar erro
   exit_option = create_sprite((xpm_map_t) exit_xpm);
   choose_mode = create_sprite((xpm_map_t) mode_xpm);
@@ -84,6 +87,11 @@ void free_sprites() {
   destroy_sprite(menu_shipR);
   destroy_sprite(menu_shipL);
   destroy_sprite(logo);
+  destroy_sprite(rules_content);
+  destroy_sprite(help_content);
+  destroy_sprite(start_option);
+  destroy_sprite(rules_option);
+  destroy_sprite(help_option);
   destroy_sprite(menu_option);
   destroy_sprite(exit_option);
   destroy_sprite(choose_mode);

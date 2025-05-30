@@ -23,30 +23,6 @@ void draw_cursor(uint8_t *buffer) {
   else draw_sprite(cursor, cursor_x, cursor_y, buffer);
 }
 
-/*
-void draw_screen() {
-  switch (get_state()) {
-    case MENU:
-      draw_menu();
-      break;
-    case INFO:
-      draw_info();
-      break;
-    case ARENA:
-      draw_arena();
-      break;
-    case GAME_OVER:
-      draw_game_over();
-      break;
-    case EXIT:
-      fill_screen(BLACK, current_buffer);
-      break;
-  }
-  draw_cursor(current_buffer);
-}
-*/
-
-
 
 
 void draw_info() {

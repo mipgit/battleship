@@ -1,5 +1,5 @@
-#ifndef MENU_H
-#define MENU_H
+#ifndef RULES_H
+#define RULES_H
 
 #include <lcom/lcf.h>
 #include <minix/sysutil.h>
@@ -13,17 +13,17 @@
 #include "model/game_macro.h"
 #include "model/game.h"
 #include "view/game_view.h"
-#include "view/menu_view.h"
+#include "view/rules_view.h"
 
 
-extern uint8_t *menu_buffer;
+extern uint8_t *rules_buffer;
 
 
-void set_menu_buffer();
-void init_menu();
-void menu_main_loop();
-void menu_keyboard_handler();
 
+void set_rules_buffer();
+void init_rules();
+void rules_main_loop();
+void rules_keyboard_handler();
 
 
 

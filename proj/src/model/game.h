@@ -35,6 +35,8 @@ extern vbe_mode_info_t mode_info;
 extern uint8_t *current_buffer;
 extern uint8_t *arena_buffer;
 extern uint8_t *menu_buffer;
+extern uint8_t *rules_buffer;
+extern uint8_t *help_buffer;
 extern uint8_t *game_over_buffer;
 
 
@@ -48,9 +50,6 @@ void game_keyboard_handler();
 void game_mouse_handler();
 
 
-void menu_main_loop();
-void help_main_loop();
-//void game_over_main_loop();
 
 void free_buffers();
 

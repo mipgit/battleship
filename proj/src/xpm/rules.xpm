@@ -1,4 +1,4 @@
-static char *menu_xpm[] = {
+static char *rules_xpm[] = {
 /* XPM */
 /* columns rows colors chars-per-pixel */
 "575 537 47 1 ",

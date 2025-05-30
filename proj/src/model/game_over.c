@@ -28,7 +28,7 @@ void init_game_over() {
   selected_option = GO_MENU;
 }
 
-void game_over_screen_loop() {
+void game_over_main_loop() {
   //game_over_mouse_handler();
   draw_game_over_screen();
   draw_cursor(current_buffer);

@@ -18,7 +18,6 @@ int(draw_sprite)(Sprite *sprite, uint16_t x, uint16_t y, uint8_t *buffer) {
 }
 
 
-
 int(draw_sprite_highlighted)(Sprite *sprite, uint16_t x, uint16_t y, uint8_t *buffer) {
   int height = sprite->height;
   int width = sprite->width;

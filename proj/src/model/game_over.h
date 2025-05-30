@@ -26,7 +26,7 @@ extern uint8_t *game_over_buffer;
 
 void set_game_over_buffer();
 void init_game_over();
-void game_over_screen_loop();
+void game_over_main_loop();
 
 
 void game_over_keyboard_handler();
