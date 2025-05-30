@@ -30,8 +30,9 @@ void menu_main_loop() {
 
 void menu_keyboard_handler() {
   switch(scancode) {
-    case S_KEY:
+    case ENTER_KEY:
       set_state(START);
+      scancode = 0;
       break;
     default:
       break;  
