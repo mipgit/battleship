@@ -107,7 +107,7 @@ void init_states(GameState cur_state, GameState prev_state) {
 int (proj_main_loop)(int argc, char *argv[]) {
 
   if (start_devices() != 0) {return close_devices();}
-  if (load_sprites() != 0) {return 1;} //maybe create a function that loads only the initial sprites (if user exits game imm we save time)
+  if (load_sprites() != 0) {return 1;} 
 
   cursor_x = 410;
   cursor_y = 310;
