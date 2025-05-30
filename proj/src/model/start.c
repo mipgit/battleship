@@ -56,6 +56,51 @@ void start_keyboard_handler() {
 }
 
 
+bool is_mouse_over_start_option(StartOption option) {
+  switch(option) {
+    case GO_START:
+      return (cursor_x >= OPTIONS_X &&
+              cursor_x <= OPTIONS_X + start_option->width &&
+              cursor_y >= OPTION_START_Y &&
+              cursor_y <= OPTION_START_Y + start_option->height);
+    case GO_RULES:
+      return (cursor_x >= OPTIONS_X &&
+              cursor_x <= OPTIONS_X + rules_option->width &&
+              cursor_y >= OPTION_RULES_Y &&
+              cursor_y <= OPTION_RULES_Y + rules_option->height);
+    case GO_HELP:
+      return (cursor_x >= OPTIONS_X &&
+              cursor_x <= OPTIONS_X + help_option->width &&
+              cursor_y >= OPTION_HELP_Y &&
+              cursor_y <= OPTION_HELP_Y + help_option->height);
+    default:
+      return false;
+  }
+}
+
+
+void start_mouse_handler() {
+  if (is_mouse_over_start_option(GO_START)) {
+    selected_option = GO_START;
+    if (mouse_packet.lb) {
+      set_state(MODE);
+    }
+  }
+  else if (is_mouse_over_start_option(GO_RULES)) {
+    selected_option = GO_RULES;
+    if (mouse_packet.lb) {
+      set_state(RULES);
+    }
+  }
+  else if (is_mouse_over_start_option(GO_HELP)) {
+    selected_option = GO_HELP;
+    if (mouse_packet.lb) {
+      set_state(HELP);
+    }
+  }
+}
+
+
 StartOption get_start_option() {
   return selected_option;
 }

@@ -31,6 +31,8 @@ void set_start_buffer();
 void init_start();
 void start_main_loop();
 void start_keyboard_handler();
+bool is_mouse_over_start_option(StartOption option);
+void start_mouse_handler();
 
 StartOption get_start_option();
 void set_start_option(StartOption option);

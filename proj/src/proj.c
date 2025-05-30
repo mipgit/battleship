@@ -152,12 +152,11 @@ int (proj_main_loop)(int argc, char *argv[]) {
             game_mouse_handler(); 
             
             //depois temos de dividir os handlers por ecrã
-            if (state == GAME_OVER) {
-              game_over_mouse_handler();
-            }
-            else if (state == ARENA) {
-                arena_mouse_handler();
-            }
+            if (state == ARENA) arena_mouse_handler();
+            if (state == START) start_mouse_handler();
+            if (state == GAME_OVER) game_over_mouse_handler();
+            
+
             //...
           }
 
