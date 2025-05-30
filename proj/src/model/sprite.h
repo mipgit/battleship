@@ -28,6 +28,7 @@
 #include "xpm/menu_shipL.xpm"
 #include "xpm/logo.xpm"
 #include "xpm/rules.xpm"
+#include "xpm/help.xpm"
 
 
 

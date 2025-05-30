@@ -21,7 +21,7 @@ void draw_cursor(uint8_t *buffer) {
   draw_sprite(cursor, cursor_x, cursor_y, buffer);
 }
 
-/*
+
 void draw_screen() {
   switch (get_state()) {
     case MENU:
@@ -42,7 +42,6 @@ void draw_screen() {
   }
   draw_cursor(current_buffer);
 }
-*/
 
 
 

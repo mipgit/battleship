@@ -1,7 +1,6 @@
 #include "game.h"
 
 
-
 GameState state = MENU;
 
 
@@ -12,24 +11,6 @@ void set_state(GameState new_state) {
 GameState get_state() {
   return state;
 }
-
-//   MENU, // Menu initial (barquinho, farol e as cores mudam consoante a hora do dia)
-//   RULES, // Regras do jogo (o que é o battleship)
-//   HELP, // Help state (para o jogadro ver como se joga e atalhos do teclado)
-//   MODE, // Mode selection state (when the player selects the game mode)
-//   START, // Ecrã para mudar de jogador
-//   ARENA, // Arena do jogo (onde o jogo acontece)
-//   GAME_OVER, // Fim do jogo (quando o jogador perde)
-//   EXIT, // Exit state (when the game is over and the player exits)
-
-
-//   #define ESC_KEY 0x81
-// #define Q_KEY 0x10
-// #define SPACE_KEY 0x39
-// #define M_KEY 0x32
-// #define ENTER_KEY 0x1C
-// #define R_KEY 0x13
-// #define S_KEY 0x1F
 
 //feito para testar os ecrãs
 void game_keyboard_handler() {
@@ -47,15 +28,15 @@ void game_keyboard_handler() {
     case ENTER_KEY:
       set_state(ARENA); //para o jogador escolher o modo de jogo
       break;
-    // case SPACE_KEY:
-    //   set_state(HELP); //não esquecer de que os xpm precisam de ter uma linha a dizer "press enter fot the next screen"
-    //   break;
+    case SPACE_KEY:
+       set_state(HELP); //não esquecer de que os xpm precisam de ter uma linha a dizer "press enter fot the next screen"
+       break;
     case Q_KEY:
       set_state(GAME_OVER); //pode ser preciso para testar os desenhos
       break;
-    // case ESC_KEY:
-    //   set_state(EXIT);
-    //   break;    
+    case ESC_KEY:
+       set_state(EXIT);
+       break;    
     default:
       break;
   }
@@ -95,6 +76,11 @@ void rules_main_loop() {
   swap_buffers();
 }
 
+void help_main_loop() {
+  draw_info();
+  draw_cursor(current_buffer);
+  swap_buffers();
+}
 
 
 void free_buffers() {
