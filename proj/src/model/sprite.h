@@ -26,6 +26,9 @@
 #include "xpm/logo.xpm"
 #include "xpm/rules.xpm"
 #include "xpm/help.xpm"
+#include "xpm/start_option.xpm"
+#include "xpm/rules_option.xpm"
+#include "xpm/help_option.xpm"
 
 
 
@@ -58,6 +61,10 @@ Sprite *menu_shipL;
 Sprite *logo;
 Sprite *rules_content;
 Sprite *help_content;
+Sprite *start_option;
+Sprite *rules_option;
+Sprite *help_option;
+
 
 
 /**

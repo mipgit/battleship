@@ -21,6 +21,9 @@
 #define ENTER_KEY 0x1C
 #define R_KEY 0x13
 #define S_KEY 0x1F
+#define UP_ARROW_KEY 0x48
+#define DOWN_ARROW_KEY 0x50
+
 
 
 #define BLACK 0x000000

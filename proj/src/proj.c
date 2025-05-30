@@ -12,6 +12,7 @@
 #include "model/game.h"
 #include "model/arena.h"
 #include "model/menu.h"
+#include "model/start.h"
 #include "model/rules.h"
 #include "model/help.h"
 #include "model/sprite.h"
@@ -81,6 +82,9 @@ void init_states(GameState cur_state, GameState prev_state) {
   else if (cur_state == MENU && prev_state != MENU) {
     init_menu();
   } 
+  else if (cur_state == START && prev_state != START) {
+    init_start();
+  } 
   else if (cur_state == RULES && prev_state != RULES) {
     init_rules();
   } 
@@ -128,6 +132,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
 
             //depois temos de dividir os handlers por ecrã
             if (state == MENU) menu_keyboard_handler();
+            if (state == START) start_keyboard_handler();
             if (state == ARENA) arena_keyboard_handler();
             if (state == RULES) rules_keyboard_handler();
             if (state == HELP) help_keyboard_handler();
@@ -146,6 +151,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
 
           if (msg.m_notify.interrupts & timer_irq_set) { 
             if (state == MENU) menu_main_loop();
+            if (state == START) start_main_loop();
             if (state == ARENA) arena_main_loop();
             if (state == GAME_OVER) game_over_main_loop();
             if (state == RULES) rules_main_loop();

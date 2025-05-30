@@ -29,9 +29,8 @@ void menu_main_loop() {
 
 void menu_keyboard_handler() {
   switch(scancode) {
-    case ENTER_KEY:
-      printf("rules!\n");
-      set_state(RULES);
+    case S_KEY:
+      set_state(START);
       break;
     default:
       break;  

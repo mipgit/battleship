@@ -25,8 +25,8 @@ void help_main_loop() {
 
 void help_keyboard_handler() {
     switch (scancode) {
-        case S_KEY:
-            set_state(ARENA);
+        case Q_KEY:
+            set_state(START);
             break;
         default:
             break;

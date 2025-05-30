@@ -26,10 +26,10 @@ void rules_main_loop() {
 void rules_keyboard_handler() {
     switch (scancode) {
       case Q_KEY:
-        set_state(MENU);
-        break;
+          set_state(START);
+          break;
       default:
-        break;
+          break;
     }
 }
 

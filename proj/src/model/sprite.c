@@ -55,6 +55,9 @@ int load_sprites() {
   logo = create_sprite((xpm_map_t) logo_xpm);
   rules_content = create_sprite((xpm_map_t) rules_xpm);
   help_content = create_sprite((xpm_map_t) help_xpm);
+  start_option = create_sprite((xpm_map_t) start_option_xpm);
+  rules_option = create_sprite((xpm_map_t) rules_option_xpm);
+  help_option = create_sprite((xpm_map_t) help_option_xpm);
 
   return 0;
 }
@@ -83,5 +86,8 @@ void free_sprites() {
   destroy_sprite(logo);
   destroy_sprite(rules_content);
   destroy_sprite(help_content);
+  destroy_sprite(start_option);
+  destroy_sprite(rules_option);
+  destroy_sprite(help_option);
 }
 
