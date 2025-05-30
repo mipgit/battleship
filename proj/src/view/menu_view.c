@@ -11,27 +11,33 @@ extern Sprite *logo;
 extern Sprite *sun; 
 extern Sprite *moon;
 
-#define DAY_START_HOUR 6
-#define DAY_END_HOUR 8
-#define DAY_END_MINUTE 17
+#define DAY_START_HOUR 7
+#define DAY_END_HOUR 18
+#define DAY_END_MINUTE 30
+#define LIGHT_BLUE 0x8DBCC7 
+#define DARK_BLUE  0x213448 
 
 void draw_menu_background(uint8_t *buffer) {
-    fill_screen(TEAL, buffer);
-    draw_sprite(logo, 5, 55, buffer);
-
-    uint8_t current_hour, current_minute;
-
-    if (read_rtc_time(&current_hour, &current_minute) != 0) {
+    if (read_rtc_time() != 0) {
         return;
     }
 
-    printf("Current time: %02d:%02d\n", current_hour, current_minute);
+    printf("Current time: %02d:%02d\n", rtc_info.hours, rtc_info.minutes);
 
-    if (daytime(current_hour, current_minute)) {
-        draw_sprite(sun, 500, 500, buffer);
+    uint32_t background;
+    Sprite *sky;
+    if (daytime(rtc_info.hours, rtc_info.minutes)) {
+        background = LIGHT_BLUE; 
+        sky = sun; 
     } else {
-        draw_sprite(moon, 200, 500, buffer);
+        background = DARK_BLUE;
+        sky = moon;
     }
+
+    fill_screen(background, buffer);
+    draw_sprite(logo, 5, 130, buffer);
+    draw_sprite(sky, 40, 20, buffer);
+
 }
 
 bool daytime(uint8_t hour, uint8_t minute) {
