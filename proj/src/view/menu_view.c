@@ -8,13 +8,48 @@ extern vbe_mode_info_t mode_info;
 extern Sprite *menu_shipR;
 extern Sprite *menu_shipL;
 extern Sprite *logo;
+extern Sprite *sun; 
+extern Sprite *moon;
 
-
-
+#define DAY_START_HOUR 1
+#define DAY_END_HOUR 3
+#define DAY_END_MINUTE 30
+#define LIGHT_BLUE 0x8DBCC7 
+#define DARK_BLUE  0x213448 
 
 void draw_menu_background(uint8_t *buffer) {
-  fill_screen(TEAL, buffer);
-  draw_sprite(logo, 5, 55, buffer);
+    if (read_rtc_time() != 0) {
+        return;
+    }
+
+    printf("Current time: %02d:%02d\n", rtc_info.hours, rtc_info.minutes);
+
+    uint32_t background;
+    Sprite *sky;
+    Sprite *other;
+    if (daytime(rtc_info.hours, rtc_info.minutes)) {
+        background = LIGHT_BLUE; 
+        sky = sun; 
+        other = cloud; 
+    } else {
+        background = DARK_BLUE;
+        sky = moon;
+        other = star;
+    }
+
+    fill_screen(background, buffer);
+    draw_sprite(logo, 5, 20, buffer);
+    draw_sprite(sky, 350, 240, buffer);
+    draw_sprite(other, 30, 270, buffer);
+    draw_sprite(other, 200, 340, buffer);
+    draw_sprite(other, 500, 255, buffer);
+    draw_sprite(other, 650, 350, buffer);
+    draw_sprite(ocean, 0, 500, buffer);
+
+}
+
+bool daytime(uint8_t hour, uint8_t minute) {
+  return (hour > DAY_START_HOUR && (hour < DAY_END_HOUR || (hour == DAY_END_HOUR && minute < DAY_END_MINUTE)));
 }
 
 
@@ -23,7 +58,7 @@ void draw_menu() {
 
   static int x = 0;
   static int dx = 2;
-  int y = 400 - menu_shipR->height / 2;
+  int y = 500 - menu_shipR->height / 2;
 
   x += dx;
   if (x < 0) {
@@ -38,5 +73,7 @@ void draw_menu() {
   Sprite *sprite_to_draw = (dx > 0) ? menu_shipR : menu_shipL;
   draw_sprite(sprite_to_draw, x, y, current_buffer);
 }
+
+
 
 

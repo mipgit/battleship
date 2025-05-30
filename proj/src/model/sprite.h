@@ -33,6 +33,11 @@
 #include "xpm/single_player.xpm"
 #include "xpm/multi_player.xpm"
 #include "xpm/setup.xpm"
+#include "xpm/sun.xpm"
+#include "xpm/moon.xpm"
+#include "xpm/cloud.xpm"
+#include "xpm/star.xpm"
+#include "xpm/ocean.xpm"
 
 
 
@@ -73,6 +78,11 @@ Sprite *choose_mode;
 Sprite *single_player;
 Sprite *multi_player;
 Sprite *setup;
+Sprite *sun;
+Sprite *moon;
+Sprite *cloud;
+Sprite *star;
+Sprite *ocean;
 
 
 /**
@@ -103,3 +113,4 @@ void free_sprites();
 
 
 #endif 
+

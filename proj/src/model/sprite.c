@@ -63,6 +63,12 @@ int load_sprites() {
   single_player = create_sprite((xpm_map_t) single_player_xpm);
   multi_player = create_sprite((xpm_map_t) multi_player_xpm);
   setup = create_sprite((xpm_map_t) setup_xpm);
+  sun = create_sprite((xpm_map_t) sun_xpm);
+  moon = create_sprite((xpm_map_t) moon_xpm);
+  cloud = create_sprite((xpm_map_t) cloud_xpm);
+  star = create_sprite((xpm_map_t) star_xpm);
+  ocean = create_sprite((xpm_map_t) ocean_xpm);
+
   return 0;
 }
 
@@ -98,5 +104,11 @@ void free_sprites() {
   destroy_sprite(single_player);
   destroy_sprite(multi_player);
   destroy_sprite(setup);
+  destroy_sprite(sun);
+  destroy_sprite(moon);
+  destroy_sprite(cloud);
+  destroy_sprite(star);
+  destroy_sprite(ocean);
 }
+
 
