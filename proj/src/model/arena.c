@@ -234,7 +234,11 @@ void battle_phase_pc() {
         int row = pc_available_rows[idx];
         int col = pc_available_cols[idx];
 
-        if (handle_mouse_click(&arena.player1_grid, arena.player1_grid.x + col * CELL_WIDTH, arena.player1_grid.y + row * CELL_HEIGHT)) {
+        //we don't have the position of the cursor here, so we have to simulate it
+        int x, y;
+        cell_to_pixel(&arena.player1_grid, row, col, &x, &y);
+
+        if (handle_mouse_click(&arena.player1_grid, x, y)) {
           pc_available_rows[idx] = pc_available_rows[pc_available_count - 1];
           pc_available_cols[idx] = pc_available_cols[pc_available_count - 1];
           pc_available_count--;
