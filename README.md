@@ -1,6 +1,7 @@
 # LCOM Project
 
 LCOM Project for group GRUPO_2LEIC03_5.
+Please see report for more details.
 
 Group members:
 
