@@ -87,14 +87,11 @@ The Mouse facilitates cursor control, menu navigation, and in-game actions like 
 
 <p align="center"><em>Figures 3 and 4 - Start hover options & Arena hover ships.</em></p>
 
----
 
 ### 3.4 Video Card
 
 The Video Card is central to game visuals, setting display resolution and color depth via `set_graphics_mode`. Its core feature is triple buffering for smooth animations: drawing to an off-screen `current_buffer`, then quickly copying it to the visible `frame_buffer` using `memcpy()`, while also maintaining additional screen-specific buffers (like _menu_buffer_, _arena_buffer_, etc.) for each UI or game state. It offers low-level drawing functions such as `draw_pixel`, `draw_hline`, and `draw_rectangle` that operate on these buffers. This functionality enables the rendering of all game elements, including **game boards**, **ships**, **hit/miss indicators**, **dynamic sprites**, and all **UI screens** (menus, rules, help, game over backgrounds), along with comprehensive color management.
 
-
----
 
 ### 3.5 Real Time Clock
 
@@ -123,7 +120,7 @@ Lastly, one of the standout features of our project is the ability to play in ei
 
 <p align="center"><em>Figure 6 - Mode menu.</em></p>
 
-
+---
 
 ## 5. Final thoughts
 
@@ -135,9 +132,8 @@ These technical hurdles taught us the importance of debugging not just the code 
 
 For documentation, we aimed to be both efficient and accurate. We used GitHub Copilot to help generate Doxygen comments, ensuring consistent and correct descriptions while minimizing the time spent on repetitive tasks. This allowed us to maintain a clear and well-documented codebase without compromising development time.
 
-
-
 ---
+
 
 ## Conclusion
 
@@ -145,6 +141,7 @@ Overall, this project gave us the opportunity to apply the concepts learned thro
 
 🎥 *Get a deeper insight into the project by watching our [Demo Video](https://uporto.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=64151e56-1441-4645-9376-b2ef0147aa14)!*
 
+---
 
 ## Collaborators
 
